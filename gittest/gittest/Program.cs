@@ -12,5 +12,7 @@ namespace gittest
 		{
             Console.WriteLine("hello everyone");
         }
+			Console.WriteLine("hi~~");
+		}
 	}
 }
