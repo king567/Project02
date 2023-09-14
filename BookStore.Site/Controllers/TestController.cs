@@ -13,5 +13,9 @@ namespace BookStore.Site.Controllers
         {
             return View();
         }
+        public ActionResult Create()
+        {
+            return View();
+        }
     }
 }
