@@ -17,5 +17,9 @@ namespace BookStore.Site.Controllers
         {
             return View();
         }
+        public ActionResult Edit()
+        {
+            return View();
+        }
     }
 }
