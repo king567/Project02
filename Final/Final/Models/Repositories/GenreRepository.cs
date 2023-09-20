@@ -68,5 +68,18 @@ namespace Final.Models.Repositories
 				db.SaveChanges();
 			}
 		}
+
+		// 根據 MediaInfo Id 刪除對應 MediaInfos_Genres_Rel 資料
+		public void DeleteMediaInfosGenresRelByMediaInfoId(int id)
+		{
+			using (var db = new AppDbContext())
+			{
+				var mediaInfosGenresRelToDelete = db.MediaInfos_Genres_Rel.Where(e => e.MediaInfoId == id).ToList();
+
+				db.MediaInfos_Genres_Rel.RemoveRange(mediaInfosGenresRelToDelete);
+
+				db.SaveChanges();
+			}
+		}
 	}
 }

@@ -13,24 +13,29 @@ namespace Final.Controllers
     {
         public IHttpActionResult Get(string title)
         {
-            CriteriaDTO criteria = new CriteriaDTO()
-            {
-                Id = null,
-                Title = title,
-                OverView = string.Empty,
-                CategoryId = null,
-                Genres = new List<int>() {/* 12, 53 */},
-                Otts = new List<int>() { },
-                ReleaseDate = null,
-                RemovalDate = null
-            };
+            //CriteriaDTO criteria = new CriteriaDTO()
+            //{
+            //    Id = null,
+            //    Title = title,
+            //    OverView = string.Empty,
+            //    CategoryId = null,
+            //    Genres = new List<int>() {/* 12, 53 */},
+            //    Otts = new List<int>() { },
+            //    ReleaseDate = null,
+            //    RemovalDate = null
+            //};
 
             var db = new MediaInfoRepository();
-            var data = db.Search(criteria);
+            int genreId = 26;
+            List<int> genres = new List<int>() { 18,10770,16 };
+            db.UpdateMediaInfoGenreIfChanged(genreId, genres);
+			//var data = db.Search(criteria);
+			//var getFutureMediaInfos = db.GetMediaInfosWithinNextOneMonth();
 
-			List<MediaInfosRelPageDTO> dtos = data.Select(e => AutoMapperHelper.MapperObj.Map<MediaInfosRelPageDTO>(e)).ToList();
 
-			return Ok(dtos);
+			//List<MediaInfosRelPageDTO> dtos = getFutureMediaInfos.Select(e => AutoMapperHelper.MapperObj.Map<MediaInfosRelPageDTO>(e)).ToList();
+
+			return Ok("hello");
 		}
     }
 }
