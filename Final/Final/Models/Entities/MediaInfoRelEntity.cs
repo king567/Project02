@@ -18,8 +18,6 @@ namespace Final.Models.Entities
 
 		public string OverView { get; set; }
 
-		public DateTime? ReleaseDate { get; set; }
-
 		public bool? Adult { get; set; }
 
 		public int? Popularity { get; set; }

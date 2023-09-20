@@ -20,14 +20,12 @@ namespace Final.Models.EFModels
 
         public int Id { get; set; }
 
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         [StringLength(150)]
         public string Title { get; set; }
 
         public string OverView { get; set; }
-
-        public DateTime? ReleaseDate { get; set; }
 
         public bool? Adult { get; set; }
 

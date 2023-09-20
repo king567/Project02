@@ -56,9 +56,12 @@ namespace Final.Models.Repositories
 				// 现在，mediaInfos 包含了关联的 Category、Genres 和 OttTypes
 
 				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
 					.Include(m => m.Category)
 					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
 					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
 					.ToList();
 
 				return mediaInfos;
@@ -66,88 +69,28 @@ namespace Final.Models.Repositories
 
 		}
 
-		// Dapper 取指定的MediaInfo資料
+		// 取指定的MediaInfo Id 資料
 
 		public List<MediaInfo> GetMediaInfo(int id)
 		{
 			using (var db = new AppDbContext())
 			{
 				//db.Database.Connection.Open();
-
 				//string query = "SELECT * FROM MediaInfos WHERE Id = @Id";
 				//var mediaInfo = db.Database.Connection.QueryFirstOrDefault<MediaInfo>(query, new { Id = id });
 
-				var mediaInfo = db.MediaInfos
+				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
 					.Where(m => m.Id == id)
 					.Include(m => m.Category)
 					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
 					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
 					.ToList();
 
-				return mediaInfo;
+				return mediaInfos;
 			}
-		}
-
-		// 測試
-
-		public List<Movie> GetMediaInfoData()
-		{
-			using (var db = new AppDbContext())
-			{
-				string sql = @"
-SELECT 
-m.*, 
-c.Name AS CategoryName, 
-g.Id AS GenreId,g.Name AS GenreName,  
-ot.Id AS OttId,ot.Name AS OttName,  motr.Release_Date, motr.Removal_Date
-FROM MediaInfos AS m
-LEFT JOIN Categories AS c ON m.CategoryId = c.Id
-LEFT JOIN MediaInfos_Genres_Rel AS mgr ON m.Id = mgr.MediaInfoId
-LEFT JOIN MediaInfos_OttTypes_Rel AS motr ON m.Id = motr.MediaInfoId
-LEFT JOIN Genres AS g ON mgr.GenreId = g.Id
-LEFT JOIN OttTypes AS ot ON motr.OttTypeId = ot.Id";
-
-				//建立字典
-				var lookup = new Dictionary<int, Movie>();
-				var movies = db.Database.Connection.Query<Movie, Entities.Genre, Ott, Movie>(sql, (movie, genre, ott) =>
-				{
-					movie.Genre = new List<Entities.Genre> { genre };
-					movie.Ott = new List<Ott> { ott };
-					// 如果字典中沒有這個movie的話，就加入字典
-					if (!lookup.ContainsKey(movie.Id))
-					{
-						lookup.Add(movie.Id, movie);
-					}
-					// 如果字典裡面Genre的Id不等於現在的Id的話，就加入字典
-					if (lookup[movie.Id].Genre.FirstOrDefault(g => g.GenreId == genre.GenreId) == null)
-					{
-						lookup[movie.Id].Genre.Add(genre);
-					}
-					// 如果字典裡面Ott的Id不等於現在的Id的話，就加入字典
-					if (lookup[movie.Id].Ott.FirstOrDefault(o => o.OttId == ott.OttId) == null)
-					{
-						lookup[movie.Id].Ott.Add(ott);
-					}
-
-					return movie;
-					//return movie;
-				}, splitOn: "GenreId,OttId")
-				//.GroupBy(m => m.Id)
-				//.Select(group =>
-				//{
-				//	var movie = group.First();
-				//	movie.Genre = group.Select(m => m.Genre.Single()).ToList();
-				//	movie.Ott = group.Select(m => m.Ott.Single()).ToList();
-				//	return movie;
-				//})
-				.ToList();
-
-				// 取出字典裡面的值
-				movies = lookup.Values.ToList();
-
-				return movies;
-			}
-			
 		}
 
 		// 取得分頁的MediaInfo資料 並包含Category、Genres、OttTypes
@@ -155,80 +98,126 @@ LEFT JOIN OttTypes AS ot ON motr.OttTypeId = ot.Id";
 		{
 			using (var db = new AppDbContext())
 			{
-				var getCategory = db.MediaInfos
-					.Include(m => m.Category).ToList();
-
 				var mediaInfos = db.MediaInfos
 					.AsNoTracking()
-					//.Include(m => m.Category)
+					.Include(m => m.Category)
 					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
 					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
 					.OrderBy(m => m.Id)
 					.Skip((page - 1) * pageSize)
 					.Take(pageSize)
 					.ToList();
 
-				mediaInfos.ForEach( info=> info.MediaInfos_Genres_Rel.Select(g => new GenresDTO
-				{
-					Id = g.GenreId,
-					Name = g.Genre.Name
-				}).ToList()
-				);
-
-				mediaInfos.ForEach(info => info.MediaInfos_OttTypes_Rel.Select(g => new OttTypesDTO
-				{
-					Id = g.OttTypeId,
-					Name = g.OttType.Name,
-					ReleaseDate = g.Release_Date,
-					RemovalDate = g.Removal_Date
-				}).ToList()
-);
-				foreach (var mediaInfo in mediaInfos)
-				{
-					// 單獨查詢並載入 Category 對象
-					var category = db.Categories.FirstOrDefault(c => c.Id == mediaInfo.CategoryId);
-
-					if (category != null)
-					{
-						mediaInfo.Category = category;
-					}
-				}
-				//var dtos = new List<MediaInfosRelPageDTO>();
-
-				//for (var i = 0; i < mediaInfos.Count; i++)
-				//{
-				//	var dto = new MediaInfosRelPageDTO();
-
-				//	dto.Id = mediaInfos[i].Id;
-				//	dto.CategoryId = mediaInfos[i].CategoryId;
-				//	dto.Title = mediaInfos[i].Title;
-				//	dto.OverView = mediaInfos[i].OverView;
-				//	dto.Adult = (bool)mediaInfos[i].Adult;
-				//	dto.Popularity = (double)mediaInfos[i].Popularity;
-				//	dto.OriginalLanguage = mediaInfos[i].OriginalLanguage;
-				//	dto.OriginalTitle = mediaInfos[i].OriginalTitle;
-				//	dto.Video = (bool)mediaInfos[i].Video;
-				//	dto.BackdropPath = mediaInfos[i].BackdropPath;
-				//	dto.PosterPath = mediaInfos[i].PosterPath;
-				//	dto.Genre = mediaInfos[i].MediaInfos_Genres_Rel.Select(g => new GenresDTO
-				//	{
-				//		Id = g.GenreId,
-				//		Name = g.Genre.Name
-				//	}).ToList();
-				//	dto.OttType = mediaInfos[i].MediaInfos_OttTypes_Rel.Select(o => new OttTypesDTO
-				//	{
-				//		Id = o.OttTypeId,
-				//		Name = o.OttType.Name,
-				//		ReleaseDate = o.Release_Date,
-				//		RemovalDate = o.Removal_Date,
-				//	}).ToList();
-
-				//	dtos.Add(dto);
-				//};
-
 				return mediaInfos;
 			}
 		}
-			
+
+		// 進階查詢
+		public List<MediaInfo> Search(CriteriaDTO criteria)
+		{
+			//CriteriaDTO criteria
+			using (var db = new AppDbContext())
+			{
+				var query = db.MediaInfos
+					.AsNoTracking()
+					.Include(m => m.Category)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType));
+
+
+				// 如果為 Null 的話，就不查詢
+				if (criteria.Title != string.Empty && criteria.Title != null)
+				{
+					query = query.Where(p => p.Title.Contains(criteria.Title));
+				}
+				// 如果為 Null 的話，就不查詢
+				if (criteria.CategoryId.HasValue)
+				{
+					query = query.Where(c => c.Category.Id == criteria.CategoryId);
+				}
+				// 如果為 Null 的話，就不查詢
+				if (criteria.Genres.Count != 0)
+				{
+					query = query.Where(m => m.MediaInfos_Genres_Rel.Any(rel => criteria.Genres.Contains(rel.Genre.Id)));
+				}
+				// 如果為 Null 的話，就不查詢
+				if (criteria.Otts.Count != 0)
+				{
+					query = query.Where(o => o.MediaInfos_OttTypes_Rel.Any(rel => criteria.Otts.Contains(rel.OttType.Id)));
+				}
+
+				var mediaInfos = query.ToList();
+
+				return mediaInfos;
+			}
+
+		}
+
+		// 測試
+
+//		public List<Movie> GetMediaInfoData()
+//		{
+//			using (var db = new AppDbContext())
+//			{
+//				string sql = @"
+//SELECT 
+//m.*, 
+//c.Name AS CategoryName, 
+//g.Id AS GenreId,g.Name AS GenreName,  
+//ot.Id AS OttId,ot.Name AS OttName,  motr.Release_Date, motr.Removal_Date
+//FROM MediaInfos AS m
+//LEFT JOIN Categories AS c ON m.CategoryId = c.Id
+//LEFT JOIN MediaInfos_Genres_Rel AS mgr ON m.Id = mgr.MediaInfoId
+//LEFT JOIN MediaInfos_OttTypes_Rel AS motr ON m.Id = motr.MediaInfoId
+//LEFT JOIN Genres AS g ON mgr.GenreId = g.Id
+//LEFT JOIN OttTypes AS ot ON motr.OttTypeId = ot.Id";
+
+//				//建立字典
+//				var lookup = new Dictionary<int, Movie>();
+//				var movies = db.Database.Connection.Query<Movie, Entities.Genre, Ott, Movie>(sql, (movie, genre, ott) =>
+//				{
+//					movie.Genre = new List<Entities.Genre> { genre };
+//					movie.Ott = new List<Ott> { ott };
+//					// 如果字典中沒有這個movie的話，就加入字典
+//					if (!lookup.ContainsKey(movie.Id))
+//					{
+//						lookup.Add(movie.Id, movie);
+//					}
+//					// 如果字典裡面Genre的Id不等於現在的Id的話，就加入字典
+//					if (lookup[movie.Id].Genre.FirstOrDefault(g => g.GenreId == genre.GenreId) == null)
+//					{
+//						lookup[movie.Id].Genre.Add(genre);
+//					}
+//					// 如果字典裡面Ott的Id不等於現在的Id的話，就加入字典
+//					if (lookup[movie.Id].Ott.FirstOrDefault(o => o.OttId == ott.OttId) == null)
+//					{
+//						lookup[movie.Id].Ott.Add(ott);
+//					}
+
+//					return movie;
+//					//return movie;
+//				}, splitOn: "GenreId,OttId")
+//				//.GroupBy(m => m.Id)
+//				//.Select(group =>
+//				//{
+//				//	var movie = group.First();
+//				//	movie.Genre = group.Select(m => m.Genre.Single()).ToList();
+//				//	movie.Ott = group.Select(m => m.Ott.Single()).ToList();
+//				//	return movie;
+//				//})
+//				.ToList();
+
+//				// 取出字典裡面的值
+//				movies = lookup.Values.ToList();
+
+//				return movies;
+//			}
+
+//		}
+
 	}
 }

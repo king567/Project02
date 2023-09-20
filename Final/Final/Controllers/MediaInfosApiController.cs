@@ -30,12 +30,9 @@ namespace Final.Controllers
         // web api 取得指定的MediaInfo Id資料
         public IHttpActionResult GetMediaInfo(int id)
         {
-            //var data = new MediaInfoRepository().GetMediaInfo(id);
 			List<MediaInfosRelDTO> mediaInfosDTO = new MediaInfoService().GetMediaInfo(id);
 
 			List<MediaInfosRelVm> vm = mediaInfosDTO.Convert2VM();
-
-			// 還要轉成 dto
 
 			return Ok(vm);
         }
@@ -44,17 +41,17 @@ namespace Final.Controllers
         [HttpGet]
         [Route("api/GetPage")]
 		// Web API 取得 MediaInfo 的分頁資料
-        public IHttpActionResult GetMediaInfoPage()
+        // 測試網址: http://localhost:53403/api/GetPage?page=1&pageSize=5
+        public IHttpActionResult GetMediaInfoPage(int page,int pageSize)
         {
-			int page = 1, pageSize = 5;
-			// 還要轉成 dto
-			List<MediaInfo> entities = new MediaInfoRepository().GetMediaInfoPage(page, pageSize);
+			//int page = 1, pageSize = 5;
+			
+            List<MediaInfosRelDTO> dtos = new MediaInfoService().GetMediaInfosPage(page, pageSize);
 
-			//List<MediaInfosRelPageDTO> dtos = AutoMapperHelper.MapperObj.Map<List<MediaInfosRelPageDTO>>(Entities);
-			List<MediaInfosRelPageDTO> dtos = entities.Select(e => AutoMapperHelper.MapperObj.Map<MediaInfosRelPageDTO>(e)).ToList() ;
+            // DTO 轉成 VM
+			List<MediaInfosRelVm> vm = dtos.Convert2VM();
 
-
-			return Ok(dtos);
+			return Ok(vm);
 		}
 
     }
