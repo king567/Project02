@@ -1,0 +1,388 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="~/Content/MediaInfo/bootstrap.min.css" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"> -->
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- css -->
+    <!-- 使用Bootstrap CSS -->
+    <link rel="stylesheet" href="~/Content/MediaInfo/bootstrap.css" />
+    <!-- 使用Select2 CSS -->
+    <link rel="stylesheet" href="~/Content/MediaInfo/select2.min.css" />
+    <!-- 使用最新版本的 Bootstrap Select CSS -->
+    <link rel="stylesheet" href="~/Content/MediaInfo/bootstrap-select.css" />
+    <!-- 使用最新版本的 Font Awesome CSS -->
+    <link rel="stylesheet" href="~/Content/MediaInfo/font-awesome.css" />
+
+    <!-- js -->
+    <!-- 使用最新版本的 jQuery -->
+    <!-- <script src="js/jquery-3.6.0.min.js"></script> -->
+    <!-- 使用最新版本的 Bootstrap JS -->
+    
+    <script src="~/Scripts/MediaInfo/bootstrap.bundle.min.js"></script>
+    <!-- 使用最新版本的 Bootstrap Select JS -->
+    <script src="~/Scripts/MediaInfo/bootstrap-select.js"></script>
+    <!-- 使用最新版本的 Moment.js -->
+    <script src="~/Scripts/MediaInfo/moment.min.js"></script>
+    <!-- Include Bootstrap DateTimePicker JS and Moment.js -->
+    <script src="~/Scripts/MediaInfo/moment-locale-zh-tw.js"></script>
+    <!-- 使用最新版本的 Tempus Dominus for Bootstrap 4 -->
+    <script src="~/Scripts/MediaInfo/tempusdominus-bootstrap-4.min.js"></script>
+</head>
+<body>
+
+    <div class="container text-center mt-5" id="customSearchInput">
+        <div class="row align-items-center">
+            <div class="col-12 d-flex justify-content-between">
+                <div class="col-9 input-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="請輸入欲查詢內容" />
+                    <button class="btn btn-outline-secondary"
+                            type="button"
+                            id="btnSearch"
+                            data-toggle="collapse"
+                            data-target="#searchResults"
+                            aria-expanded="false"
+                            aria-controls="searchResults">
+                        搜尋
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-primary"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#advancedSearch"
+                            aria-expanded="false"
+                            aria-controls="advancedSearch">
+                        篩選條件
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="collapse mt-3" id="advancedSearch">
+            <div class="card card-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-lg-4 mb-3">
+                                <label for="categorySelect">影片類別：</label>
+                                <select class="form-control" id="categorySelect">
+                                    <option>請選擇</option>
+                                    <option>電影</option>
+                                    <option>電視劇</option>
+                                    <option>動漫</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <label for="platformSelect">OTT平台：</label>
+                                <select class="selectpicker form-control"
+                                        multiple
+                                        data-live-search="true"
+                                        id="platformSelect">
+                                    <option>Netflix</option>
+                                    <option>Youtube</option>
+                                    <option>TVBS</option>
+                                    <option>Disney+</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <label for="typeSelect">影片類型:</label>
+                                <select class="selectpicker form-control"
+                                        multiple
+                                        data-live-search="true"
+                                        id="typeSelect">
+                                    <option>愛情片</option>
+                                    <option>動作片</option>
+                                    <option>恐怖片</option>
+                                    <option>戰爭片</option>
+                                    <option>家庭片</option>
+                                    <option>科幻片</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="startDatePicker">起始時間：</label>
+                                <div class="input-group date"
+                                     id="startDatePicker"
+                                     data-target-input="nearest">
+                                    <input type="text"
+                                           class="form-control datetimepicker-input"
+                                           data-target="#startDatePicker" />
+                                    <div class="input-group-append"
+                                         data-target="#startDatePicker"
+                                         data-toggle="datetimepicker">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="endDatePicker">最終時間：</label>
+                                <div class="input-group date"
+                                     id="endDatePicker"
+                                     data-target-input="nearest">
+                                    <input type="text"
+                                           class="form-control datetimepicker-input"
+                                           data-target="#endDatePicker" />
+                                    <div class="input-group-append"
+                                         data-target="#endDatePicker"
+                                         data-toggle="datetimepicker">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 列出影片表 begin -->
+    <table id="example"
+           class="table table-striped table-bordered"
+           style="width: 100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>標題</th>
+                <th>簡介</th>
+                <th>影片類別</th>
+                <th>影片類型</th>
+                <th>上映平台</th>
+                <th>上映日期</th>
+                <th>封面路徑</th>
+                <th>編輯</th>
+                <th>刪除</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <!-- 列出影片表 end -->
+
+
+    <script>
+
+        var jsonData = [];
+
+        var tempData = [];
+
+        $(document).ready(function () {
+            
+            // 取得api資料
+
+            // 初始化 Bootstrap Select
+            $(".selectpicker").selectpicker();
+
+            // Initialize DateTimePickers
+            $(function () {
+                $("#startDatePicker").datetimepicker({
+                    format: "YYYY-MM-DD",
+                    locale: "zh-tw", // 使用中文本地化
+                });
+
+                $("#endDatePicker").datetimepicker({
+                    format: "YYYY-MM-DD",
+                    locale: "zh-tw", // 使用中文本地化
+                });
+            });
+
+            // 初始化Datatables
+            var table = $("#example").DataTable({
+                dom: "lrtp",
+                responsive: true,
+                pagelength: 10,
+                pagingType: "full_numbers",
+                searching: false,
+                ajax : {
+                    url: "/api/MediaInfosApi",
+                    type: "GET",
+                    dataType: "json",
+                    "dataSrc": "",
+                    //success: function (data) {
+                    //    //jsonData = data;
+                    //},
+                },
+                columns: [
+                    { data: "Id" },
+                    { data: "Title" },
+                    { data: "OverView" },
+                    { data: "CategoryId" },
+                    {
+                        data: "GenreId",
+                        render: function (data, type, row) {
+                            // 在这里自定义列的内容，添加徽章
+                            var badgeHtml = "";
+                            for (var i = 0; i < data.length; i++) {
+                                badgeHtml +=
+                                    '<span class="badge rounded-pill bg-info text-white">' +
+                                    data[i] +
+                                    "</span> ";
+                            }
+                            return badgeHtml;
+                        },
+                    },
+                    {
+                        data: "OttTypeId",
+                        render: function (data, type, row) {
+                            // 在这里自定义列的内容，添加徽章
+                            var badgeHtml = "";
+                            for (var i = 0; i < data.length; i++) {
+                                badgeHtml +=
+                                    '<span class="badge rounded-pill bg-info text-white">' +
+                                    data[i] +
+                                    "</span> ";
+                            }
+                            return badgeHtml;
+                        },
+                    },
+                    { data: "ReleaseDate" },
+                    {
+                        data: "PosterPath", render: function (data, type, row) {
+                            return '<a href="#" class="link-underline-dark">' + data + '</a>';
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<button type="button" class="btn btn-success">Edit</button>';
+                        },
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<button type="button" class="btn btn-danger">Delete</button>';
+                        },
+                    },
+                ],
+            });
+
+            function filterByKey(data, inputValue, filterKey) {
+                // 檢查傳入的參數是否為陣列
+                if (!Array.isArray(inputValue) || inputValue.length === 0) {
+                    console.error("無效的篩選條件");
+                    return [];
+                }
+
+                // 使用 filter 函数筛选匹配的电影数据
+                var filteredData = data.filter(function (movie) {
+
+                    return inputValue.every(function (inputValue) {
+                        return movie[filterKey].includes(inputValue);
+                    });
+                    // return inputValue.some(function (inputValue) {
+                    //   return movie[filterKey].includes(inputValue);
+                    // });
+                });
+
+                tempData = filteredData;
+
+                return filteredData;
+            }
+
+            function initDatatable(data) {
+                tempData = jsonData;
+                table.clear();
+                table.rows.add(data);
+                table.rows().invalidate().draw();
+            }
+
+            $("#btnSearch").click(function () {
+                // 清除表格的筛选条件
+                table.search("").columns().search("").draw();
+
+                // 重新載入json資料
+                initDatatable(jsonData);
+
+                var searchText = $(".input-group input").val();
+                var categorySelectValue = $("#categorySelect").val();
+                var platformSelectValue = $("#platformSelect").val();
+                var typeSelectValue = $("#typeSelect").val();
+                var startDateValue = $("#startDatePicker").find("input").val();
+                var endDateValue = $("#endDatePicker").find("input").val();
+
+                if (searchText.length > 0) {
+                    table.search(searchText);
+                }
+
+                if (categorySelectValue != "請選擇") {
+                    table.column(3).search(categorySelectValue);
+                }
+
+                if (typeSelectValue.length > 0) {
+                    // 測試搜尋
+                    // table.column(4).search(typeSelectValue);
+
+                    // // 清除表格数据
+                    table.clear();
+                    // console.log(filterByKey(jsonData, typeSelectValue, "影片類型"));
+                    // 添加匹配的数据到表格
+                    table.rows.add(filterByKey(tempData, typeSelectValue, "影片類型"));
+                    // 重新加载匹配的数据
+                    table.rows().invalidate().draw();
+                }
+
+                if (platformSelectValue.length > 0) {
+                    // table.column(5).search(platformSelectValue);
+                    // 清除表格数据
+                    table.clear();
+
+                    // 添加匹配的数据到表格
+                    table.rows.add(
+                        filterByKey(tempData, platformSelectValue, "上映平台")
+                    );
+
+                    // 重新加载匹配的数据
+                    table.rows().invalidate().draw();
+                }
+
+                $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+                    var startDate = moment(startDateValue, "YYYY-MM-DD");
+                    var endDate = moment(endDateValue, "YYYY-MM-DD");
+
+                    var date = moment(data[6], "YYYY-MM-DD");
+
+                    if (startDate._isValid === false && endDate._isValid === false) {
+                        return true;
+                    }
+                    if (startDate._isValid === false && endDate.isSameOrAfter(date)) {
+                        return true;
+                    }
+                    if (startDate.isSameOrBefore(date) && endDate._isValid === false) {
+                        return true;
+                    }
+                    if (startDate.isSameOrBefore(date) && endDate.isSameOrAfter(date)) {
+                        return true;
+                    }
+                    return false;
+                });
+
+                table.draw(); // 重繪查詢結果
+
+                $.fn.dataTable.ext.search.pop();
+            });
+        });
+    </script>
+</body>
+</html>
+

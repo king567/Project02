@@ -1,0 +1,18 @@
+a{
+    text-decoration: none;
+    color: black;
+}
+#typeId .list-group-horizontal {
+    display: flex;
+    flex-wrap: wrap; /* 設定換行 */
+}
+
+/* 設定每個列表項目的寬度，以確保每行顯示10個項目 */
+#typeId .list-group-item {
+    width: calc(10% - 10px); /* 考慮間距，10%是因為您希望每行顯示10個項目 */
+    /* margin-right: 10px; 設定項目之間的間距
+    /* margin-bottom: 10px; 設定項目下方的間距  */
+    margin-bottom: 10px;
+    border: 1px solid #ccc; /* 添加邊框 */
+    box-sizing: border-box; /* 確保邊框不會增加項目的寬度 */
+}

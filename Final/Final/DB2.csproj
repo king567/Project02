@@ -48,6 +48,9 @@
     <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.10.1.1\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.151\lib\net461\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -147,10 +150,20 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BlacklistReasonsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MediaInfosApiController.cs" />
+    <Compile Include="Controllers\MediaInfosController.cs" />
+    <Compile Include="Controllers\OttsApiController.cs" />
     <Compile Include="Controllers\PayTypesController.cs" />
+    <Compile Include="Controllers\TestApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DTOs\CategoryDTO.cs" />
+    <Compile Include="Models\DTOs\GenresDTO.cs" />
+    <Compile Include="Models\DTOs\MediaInfosRelDTO.cs" />
+    <Compile Include="Models\DTOs\MediaInfosOttTypesRelDTO.cs" />
+    <Compile Include="Models\DTOs\MediaInfosRelPageDTO.cs" />
+    <Compile Include="Models\DTOs\OttTypesDTO.cs" />
     <Compile Include="Models\EFModels\ActivityPermission.cs" />
     <Compile Include="Models\EFModels\AppDbContext.cs" />
     <Compile Include="Models\EFModels\Blacklist.cs" />
@@ -178,7 +191,20 @@
     <Compile Include="Models\EFModels\User.cs" />
     <Compile Include="Models\EFModels\Vipitem.cs" />
     <Compile Include="Models\EFModels\VipPrize.cs" />
+    <Compile Include="Models\Entities\GenresEntity.cs" />
+    <Compile Include="Models\Entities\MediaInfoRelEntity.cs" />
+    <Compile Include="Models\Entities\MediaInfoResultEntity.cs" />
+    <Compile Include="Models\Entities\MediaInfosGenresRelEntity.cs" />
+    <Compile Include="Models\Entities\MediaInfosOttTypesRelEntity.cs" />
+    <Compile Include="Models\Entities\Movie.cs" />
+    <Compile Include="Models\Entities\OttTypesEntity.cs" />
+    <Compile Include="Models\Repositories\CategoryRepository.cs" />
+    <Compile Include="Models\Repositories\GenreRepository.cs" />
+    <Compile Include="Models\Repositories\MediaInfoRepository.cs" />
+    <Compile Include="Models\Repositories\OttRepository.cs" />
+    <Compile Include="Models\Services\MediaInfoService.cs" />
     <Compile Include="Models\ViewModels\BlacklistReasonVm.cs" />
+    <Compile Include="Models\ViewModels\MediaInfosRelVm.cs" />
     <Compile Include="Models\ViewModels\PayTypeVm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -199,6 +225,17 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\MediaInfo\bootstrap-grid.css" />
+    <Content Include="Content\MediaInfo\bootstrap-grid.min.css" />
+    <Content Include="Content\MediaInfo\bootstrap-reboot.css" />
+    <Content Include="Content\MediaInfo\bootstrap-reboot.min.css" />
+    <Content Include="Content\MediaInfo\bootstrap-select.css" />
+    <Content Include="Content\MediaInfo\bootstrap-submenu.min.css" />
+    <Content Include="Content\MediaInfo\bootstrap.css" />
+    <Content Include="Content\MediaInfo\bootstrap.min.css" />
+    <Content Include="Content\MediaInfo\font-awesome.css" />
+    <Content Include="Content\MediaInfo\select2.min.css" />
+    <Content Include="Content\MediaInfo\selectTypes.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -208,6 +245,21 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\MediaInfo\bootstrap-grid.css.map" />
+    <Content Include="Content\MediaInfo\bootstrap-grid.min.css.map" />
+    <Content Include="Content\MediaInfo\bootstrap-reboot.css.map" />
+    <Content Include="Content\MediaInfo\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\MediaInfo\bootstrap-submenu.min.css.map" />
+    <Content Include="Content\MediaInfo\bootstrap.css.map" />
+    <Content Include="Content\MediaInfo\bootstrap.min.css.map" />
+    <Content Include="Content\webfonts\fa-brands-400.ttf" />
+    <Content Include="Content\webfonts\fa-brands-400.woff2" />
+    <Content Include="Content\webfonts\fa-regular-400.ttf" />
+    <Content Include="Content\webfonts\fa-regular-400.woff2" />
+    <Content Include="Content\webfonts\fa-solid-900.ttf" />
+    <Content Include="Content\webfonts\fa-solid-900.woff2" />
+    <Content Include="Content\webfonts\fa-v4compatibility.ttf" />
+    <Content Include="Content\webfonts\fa-v4compatibility.woff2" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -218,6 +270,17 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MediaInfo\bootstrap-select.js" />
+    <Content Include="Scripts\MediaInfo\bootstrap-submenu.js" />
+    <Content Include="Scripts\MediaInfo\bootstrap.bundle.js" />
+    <Content Include="Scripts\MediaInfo\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\MediaInfo\bootstrap.js" />
+    <Content Include="Scripts\MediaInfo\bootstrap.min.js" />
+    <Content Include="Scripts\MediaInfo\jquery-3.6.0.min.js" />
+    <Content Include="Scripts\MediaInfo\moment-locale-zh-tw.js" />
+    <Content Include="Scripts\MediaInfo\moment.min.js" />
+    <Content Include="Scripts\MediaInfo\popper.min-2.11.8.js" />
+    <Content Include="Scripts\MediaInfo\tempusdominus-bootstrap-4.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -240,9 +303,16 @@
     <Content Include="Views\BlacklistReasons\Index.cshtml" />
     <Content Include="Views\BlacklistReasons\Create.cshtml" />
     <Content Include="Views\BlacklistReasons\Edit.cshtml" />
+    <Content Include="Views\MediaInfos\Index.cshtml" />
+    <Content Include="Scripts\MediaInfo\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\MediaInfo\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\MediaInfo\bootstrap.js.map" />
+    <Content Include="Scripts\MediaInfo\bootstrap.min.js.map" />
+    <Content Include="Scripts\MediaInfo\popper.min.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\Utilities\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

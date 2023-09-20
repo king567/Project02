@@ -8,7 +8,7 @@ using System.Web;
 
 namespace Final.Models.ViewModels
 {
-    [DataContract]
+    //[DataContract]
     public class RatingVm
     {
         public int Id { get; set; }
@@ -29,8 +29,8 @@ namespace Final.Models.ViewModels
         [Display(Name = "評分時間")]
         public DateTime? CreatedTime { get; set; }
 
-        public virtual MediaInfo MediaInfo { get; set; }
+        //public virtual MediaInfo MediaInfo { get; set; }
 
-        public virtual Member Member { get; set; }
+        //public virtual Member Member { get; set; }
     }
 }
