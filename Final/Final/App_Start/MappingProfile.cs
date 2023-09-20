@@ -17,9 +17,10 @@ namespace Final.App_Start
 			// 可以二個方向都寫, 但也可以直接用 ReverseMap() 來反轉,表示二個方向都要做
 			CreateMap<BlacklistReason, BlacklistReasonVm>().ReverseMap();
 			CreateMap<PayType, PayTypeVm>().ReverseMap();
+            CreateMap<Member, MemberVm>();
 
-			// 這裡的寫法是為了讓 AutoMapper 知道要如何將 MediaInfo 轉換成 MediaInfosRelDTO
-			CreateMap<MediaInfo, MediaInfosRelDTO>()
+            // 這裡的寫法是為了讓 AutoMapper 知道要如何將 MediaInfo 轉換成 MediaInfosRelDTO
+            CreateMap<MediaInfo, MediaInfosRelDTO>()
 			.ForMember(
 				dest => dest.GenreId, opt => opt.MapFrom(src => src.MediaInfos_Genres_Rel.Select(rel => rel.GenreId))
 			)

@@ -1,40 +1,135 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - 我的 ASP.NET 應用程式</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @*@Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")*@
+    <!-- 使用Bootstrap CSS -->
+    <link rel="stylesheet" href="~/Content/sidebarstyle.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
+    <!-- 使用最新版本的 Font Awesome CSS -->
+    <link rel="stylesheet" href="~/Content/font-awesome.css" />
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+    @*@RenderSection("css", required: false)*@
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
-            @Html.ActionLink("應用程式名稱", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="切換導覽" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("首頁", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("關於", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("連絡人", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                </ul>
-            </div>
+    <!-- 導覽列 begin-->
+    <div class="sidebar close">
+        <div class="logo-details" id="logoname">
+            <i class='bx bxl-c-plus-plus'></i>
+            <span class="logo_name">Brand</span>
         </div>
-    </nav>
+        <ul class="nav-links">
+            <li>
+                <a href="/Home/Index">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="link_name">首頁</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">會員維護</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link" id="member">
+                    <a href="#">
+                        <i class='bx bx-user'></i>
+                        <span class="link_name">會員維護</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">會員維護</a></li>
+                    <li><a href="/Members/Index">會員</a></li>
+                    <li><a href="#">VIP</a></li>
+                    <li><a href="/PayTypes/Index">VIP方案</a></li>
+                    <li><a href="#">黑名單</a></li>
+                    <li><a href="/BlacklistReasons/Index">黑名單理由</a></li>
+                    <li><a href="/Ratings/Index">評論</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-film'></i>
+                    <span class="link_name">影片資訊管理</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">影片資訊管理</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-intersect'></i>
+                        <span class="link_name">活動管理</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">活動管理</a></li>
+                    <li><a href="#">VIP抽獎</a></li>
+                    <li><a href="#">積分商城</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-spreadsheet'></i>
+                    <span class="link_name">最新消息管理</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">最新消息管理</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-compass'></i>
+                    <span class="link_name">FAQ管理</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">FAQ管理</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="profile-details">
+                    <div class="name-job" style="margin-left:20px;">
+                        <div class="profile_name">Prem Shahi</div>
+                    </div>
+                    <i class='bx bx-log-out'></i>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- 導覽列 end-->
+    <section class="home-section">
+        <div class="home-content">
+            <i class="bx bx-menu"></i>
+            <span class="text">Brand</span>
+        </div>
+
+        <div class="m-3">
+            @RenderBody()
+        </div>
+    </section>
     <div class="container body-content">
-        @RenderBody()
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - 我的 ASP.NET 應用程式</p>
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
+    <script src="/Scripts/sidebarscript.js"></script>
+    @*@RenderSection("scripts", required: false)*@
+
 </body>
 </html>

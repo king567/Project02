@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewBag.Title = "會員維護";
+}
+
+@*Title*@
+<div class="home-content">
+    <span class="text">會員維護</span>
+</div>
+
+@*搜尋欄位和複選框*@
+<div class="scrollable-container">
+    <div class="content m-3">
+        <input type="text" id="memberNameInput" placeholder="搜尋姓名">
+        <input type="checkbox" id="vipCheckbox">
+        <label for="vipCheckbox">VIP會員</label>
+        <input type="checkbox" id="blacklistCheckbox">
+        <label for="blacklistCheckbox">黑名單</label>
+        <button id="searchButton" class="btn btn-outline-secondary" type="button">搜尋</button>
+    </div>
+</div>
+<div class="table-container">
+    <table id="memberTable" class="table table-striped table-hover table-bordered table-sm" style="width:100%;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>帳號</th>
+                <th>姓名</th>
+                <th>生日</th>
+                <th>Email</th>
+                <th>VIP結束日</th>
+                <th>停權結束日</th>
+                <th>創建日期</th>
+                <th>刪除</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        var table = $("#memberTable").DataTable({
+            // DataTable 選項設置
+            dom: "lrtp",
+            responsive: true,
+            pageLength: 10,
+            pagingType: "full_numbers",
+            ajax: {
+                url: "/api/MembersApi/",
+                method: "POST",
+                dataType: "json",
+                data: function (d) {
+                    d.name = $("#memberNameInput").val();
+                    d.vip = $("#vipCheckbox").is(":checked");
+                    d.blacklist = $("#blacklistCheckbox").is(":checked");
+                },
+                dataSrc: ""
+            },
+            columns: [
+                { data: "Id" },
+                { data: "Account" },
+                { data: "Name" },
+                {
+                    //使用 DataTables 的 render 選項来自定義日期的顯示方式
+                    data: "BirthOfDate",
+                    render: function (data, type, row) {
+                        //僅在數據類型是顯示時（非排序或搜索等情况下）才格式化日期
+                        if (type === 'display') {
+                            // 使用 JavaScript 的日期對象將日期格式化為年月日
+                            var date = new Date(data);
+                            return date.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                        }
+                        return data;
+                    }
+                },
+                { data: "Email" },
+                {
+                    data: "VipEnddate",
+                    render: function (data, type, row) {
+                        if (type === 'display' && data) {
+                            return formatDateTime(data);
+                        }
+                        return data;
+                    }
+
+                },
+                {
+                    data: "BlacklistEnddate",
+                    render: function (data, type, row) {
+                        if (type === 'display' && data) {
+                            return formatDateTime(data);
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: "CreatedTime",
+                    render: function (data, type, row) {
+                        if (type === 'display') {
+                            var date = new Date(data);
+                            return date.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> 刪除 </button > ';
+
+                    },
+                },
+            ]
+        });
+
+        // 更新表格數據的函数
+        function updateTable() {
+            var memberName = $("#memberNameInput").val();
+            var isVIP = $("#vipCheckbox").is(":checked");
+            var isBlacklist = $("#blacklistCheckbox").is(":checked");
+
+            table.ajax.url("/api/MembersApi/Search?name=" + memberName + "&vip=" + isVIP + "&blacklist=" + isBlacklist).load();
+        }
+
+        // 監聽搜尋按鈕點擊事件
+        $("#searchButton").click(function () {
+            updateTable();
+        });
+
+        // 監聽會員名稱输入框的 Enter 鍵按下事件
+        $("#memberNameInput").keypress(function (e) {
+            if (e.which === 13) { // 13 代表 Enter 鍵
+                updateTable();
+            }
+        });
+    });
+
+
+
+    //自訂日期時間格式
+    function formatDateTime(dateTimeString) {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+
+        const dateTime = new Date(dateTimeString);
+        return dateTime.toLocaleDateString('zh-TW', options);
+    }
+
+</script>
+
+

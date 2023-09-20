@@ -3,31 +3,60 @@
 }
 
 <main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+    <style>
+        #title {
+            font-size: 30px;
+            background-color: lemonchiffon;
+            width: 950px;
+            height: 35px;
+        }
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+        .no-underline {
+            text-decoration: none;
+            color: saddlebrown;
+            font-size: 35px;
+            margin-top: 20px;
+            margin-left: 60px;
+        }
+    </style>
+    <div class="m-3" id="title">您好,{User.Name}! 您已登入,目前時間為 @DateTime.Now</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <a class="no-underline bx bx-user" href="">會員</a>
+            </div>
+            <div class="col-4">
+                <a class="no-underline bx bx-user-check" href="">VIP</a>
+            </div>
+            <div class="col-4">
+                <a class="no-underline bx bx-user-check" href="">VIP方案</a>
+            </div>
+            <div class="col-4">
+                <a class="no-underline bx bx-user-x" href="">黑名單</a>
+            </div>
+            <div class="col-4">
+                <a class="no-underline bx bx-user-x" href="">黑名單理由</a>
+            </div>
+            <div class="col-4">
+                <a class="no-underline bx bx-comment-detail" href="">評論</a>
+            </div>
+            <div class="col-4">
+                <a class="no-underline bx bx-film" href="">影片資訊管理</a>
+            </div>
+            <div class="col-4">
+                <a class="no-underline bx bx-news" href="">最新消息</a>
+            </div>
+            <div class="col-4">
+                <a class="no-underline bx bx-question-mark" href="">FAQ</a>
+            </div>
+        </div>
     </div>
+    @*<img src="~/Images/background-2.jpg" style="object-fit: cover; height:120px; margin-top: 10px; border-radius: 30%;" alt="Alternate Text" />
+        <img src="~/Images/background-2.jpg" style="object-fit: cover; height: 120px; margin-top: 10px; border-radius: 30%;" alt="Alternate Text" />
+        <img src="~/Images/background-2.jpg" style="object-fit: cover; height: 120px; margin-top: 10px; border-radius: 30%;" alt="Alternate Text" />
+        <img src="~/Images/background-2.jpg" style="object-fit: cover; height: 120px; margin-top: 10px; border-radius: 30%;" alt="Alternate Text" />
+        <img src="~/Images/background-2.jpg" style="object-fit: cover; height: 110px; margin-top: 10px; border-radius: 30%;" alt="Alternate Text" />
+        <img src="~/Images/background-2.jpg" style="object-fit: cover; height: 110px; margin-top: 10px; border-radius: 30%;" alt="Alternate Text" />*@
+
+
 </main>
