@@ -223,6 +223,7 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap-reboot.rtl.css" />
     <Content Include="Content\bootstrap-reboot.rtl.min.css" />
+    <Content Include="Content\bootstrap-select.css" />
     <Content Include="Content\bootstrap-utilities.css" />
     <Content Include="Content\bootstrap-utilities.min.css" />
     <Content Include="Content\bootstrap-utilities.rtl.css" />
@@ -231,6 +232,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\boxicons.css" />
+    <Content Include="Content\font-awesome.css" />
     <Content Include="Content\MediaInfo\bootstrap-grid.css" />
     <Content Include="Content\MediaInfo\bootstrap-grid.min.css" />
     <Content Include="Content\MediaInfo\bootstrap-reboot.css" />
@@ -242,9 +245,12 @@
     <Content Include="Content\MediaInfo\font-awesome.css" />
     <Content Include="Content\MediaInfo\select2.min.css" />
     <Content Include="Content\MediaInfo\selectTypes.css" />
+    <Content Include="Content\select2.min.css" />
+    <Content Include="Content\sidebarstyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-select.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -266,11 +272,16 @@
     <Content Include="Content\webfonts\fa-solid-900.woff2" />
     <Content Include="Content\webfonts\fa-v4compatibility.ttf" />
     <Content Include="Content\webfonts\fa-v4compatibility.woff2" />
+    <Content Include="Content\bootstrap-4.5.2.css" />
+    <Content Include="Content\dataTables.bootstrap4" />
+    <Content Include="Scripts\dataTables.bootstrap4" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\dashboard.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <Content Include="Scripts\jquery.dataTables" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -288,6 +299,7 @@
     <Content Include="Scripts\MediaInfo\popper.min-2.11.8.js" />
     <Content Include="Scripts\MediaInfo\tempusdominus-bootstrap-4.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\sidebarscript.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
