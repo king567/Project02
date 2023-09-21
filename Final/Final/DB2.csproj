@@ -203,6 +203,7 @@
     <Compile Include="Models\Entities\MediaInfosGenresRelEntity.cs" />
     <Compile Include="Models\Entities\MediaInfosOttTypesRelEntity.cs" />
     <Compile Include="Models\Entities\OttTypesEntity.cs" />
+    <Compile Include="Models\Enum\CategoryName.cs" />
     <Compile Include="Models\Repositories\CategoryRepository.cs" />
     <Compile Include="Models\Repositories\GenreRepository.cs" />
     <Compile Include="Models\Repositories\MediaInfoRepository.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Models\ViewModels\MemberVm.cs" />
     <Compile Include="Models\ViewModels\OttTypesVm.cs" />
     <Compile Include="Models\ViewModels\PayTypeVm.cs" />
+    <Compile Include="Models\ViewModels\RatingVm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +333,7 @@
     <Content Include="Scripts\MediaInfo\popper.min.js.map" />
     <Content Include="Views\Members\Index.cshtml" />
     <Content Include="Views\Ratings\Index.cshtml" />
+    <Content Include="Views\Ratings\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

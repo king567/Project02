@@ -21,6 +21,8 @@ namespace Final.Models.EFModels
 
         public virtual BlacklistReason BlacklistReason { get; set; }
 
+        public virtual Member Member { get; set; }
+
         public virtual User User { get; set; }
     }
 }

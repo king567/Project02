@@ -20,5 +20,9 @@ namespace Final.Models.EFModels
         public bool Enabled { get; set; }
 
         public int DisplayOrder { get; set; }
+
+        public int? UserId { get; set; }
+
+        public virtual User User { get; set; }
     }
 }

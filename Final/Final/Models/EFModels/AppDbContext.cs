@@ -89,6 +89,10 @@ namespace Final.Models.EFModels
 				.WillCascadeOnDelete(false);
 
 			modelBuilder.Entity<Member>()
+				.HasOptional(e => e.Blacklist)
+				.WithRequired(e => e.Member);
+
+			modelBuilder.Entity<Member>()
 				.HasMany(e => e.FavoriteMedias)
 				.WithRequired(e => e.Member)
 				.WillCascadeOnDelete(false);

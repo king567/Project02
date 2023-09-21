@@ -1,0 +1,100 @@
+﻿@model Final.Models.ViewModels.RatingVm
+
+@{
+    ViewBag.Title = "評分及評論";
+}
+
+<head>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<h2>評分及評論</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CategoryId)
+        </dt>
+        <dd>
+            @((Final.Models.Enum.CategoryName)Model.CategoryId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MediaInfoTitle)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MediaInfoTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MemberAccount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MemberAccount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Rate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreatedTime)
+        </dd>
+    </dl>
+</div>
+
+<p>
+
+    <button type="button" id="confirmButton" class="btn btn-warning" data-toggle="modal" data-target="#blacklistModal">
+        加入黑名單
+    </button>
+    <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Ratings")'">回到清單</button>
+
+
+    <div class="modal fade" id="blacklistModal" tabindex="-1" role="dialog" aria-labelledby="blacklistModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="blacklistModalLabel">加入黑名單</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- 在這裡添加您想顯示的內容，例如確認訊息 -->
+                    黑名單理由:
+                    <p>您確定要將 <u>會員帳號: <strong>@Model.MemberAccount</strong></u> 加入黑名單?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 當確定按鈕被單擊時執行的函數
+        $('#confirmButton').click(function () {
+            // 在這裡添加您希望執行的操作，例如提交表單、向後端發送請求等
+            // 如果您希望在按鈕單擊後關閉模式對話框，您可以使用以下代碼：
+            $('#blacklistModal').modal('hide');
+        });
+    </script>
+</p>

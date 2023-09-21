@@ -53,6 +53,8 @@ namespace Final.Models.EFModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ActivityPermission> ActivityPermissions { get; set; }
 
+        public virtual Blacklist Blacklist { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FavoriteMedia> FavoriteMedias { get; set; }
 
