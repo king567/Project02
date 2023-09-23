@@ -37,32 +37,29 @@ namespace Final.Controllers
 			}
 		}
 
+		[HttpDelete]
+		public IHttpActionResult Delete(int id)
+		{
+			using (var db = new AppDbContext())
+			{
 
+				var connection = db.Database.Connection;
 
+				// 檢查評分是否存在
+				var existingRating = connection.QuerySingleOrDefault<Rating>("SELECT * FROM Ratings WHERE Id = @Id", new { Id = id });
 
+				if (existingRating == null)
+				{
+					return NotFound(); // 如果找不到評分，返回 404 Not Found
+				}
 
-		//[HttpDelete]
-		//public IHttpActionResult Delete(int id)
-		//{
-		//	using (var db = new AppDbContext())
-		//	{
-		//		db.Open();
+				// 執行刪除操作
+				var deleteQuery = "DELETE FROM Ratings WHERE Id = @Id";
+				connection.Execute(deleteQuery, new { Id = id });
 
-		//		// 檢查評分是否存在
-		//		var existingRating = db.QuerySingleOrDefault<Rating>("SELECT * FROM Ratings WHERE Id = @Id", new { Id = id });
-
-		//		if (existingRating == null)
-		//		{
-		//			return NotFound(); // 如果找不到評分，返回 404 Not Found
-		//		}
-
-		//		// 執行刪除操作
-		//		var deleteQuery = "DELETE FROM Ratings WHERE Id = @Id";
-		//		db.Execute(deleteQuery, new { Id = id });
-
-		//		return Ok(); // 成功刪除返回 OK
-		//	}
-		//}
+				return Ok("success"); // 成功刪除返回 OK
+			}
+		}
 	}
 }
 

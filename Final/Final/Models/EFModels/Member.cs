@@ -11,10 +11,7 @@ namespace Final.Models.EFModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Member()
         {
-            ActivityPermissions = new HashSet<ActivityPermission>();
             FavoriteMedias = new HashSet<FavoriteMedia>();
-            Members_SerialNumbers_Rel = new HashSet<Members_SerialNumbers_Rel>();
-            Points = new HashSet<Point>();
             Ratings = new HashSet<Rating>();
             Vipitems = new HashSet<Vipitem>();
         }
@@ -39,6 +36,8 @@ namespace Final.Models.EFModels
         [StringLength(254)]
         public string Email { get; set; }
 
+        public DateTime? VipStartdate { get; set; }
+
         public DateTime? VipEnddate { get; set; }
 
         public DateTime? BlacklistEnddate { get; set; }
@@ -50,19 +49,10 @@ namespace Final.Models.EFModels
 
         public DateTime CreatedTime { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ActivityPermission> ActivityPermissions { get; set; }
-
         public virtual Blacklist Blacklist { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FavoriteMedia> FavoriteMedias { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Members_SerialNumbers_Rel> Members_SerialNumbers_Rel { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Point> Points { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Rating> Ratings { get; set; }

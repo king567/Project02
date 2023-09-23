@@ -13,7 +13,6 @@ namespace Final.Models.EFModels
         {
             Blacklists = new HashSet<Blacklist>();
             FAQs = new HashSet<FAQ>();
-            News = new HashSet<News>();
         }
 
         public int Id { get; set; }
@@ -30,15 +29,15 @@ namespace Final.Models.EFModels
         [StringLength(50)]
         public string Password { get; set; }
 
-        public bool Enabled { get; set; }
+        public bool? IsConfirmed { get; set; }
+
+        [StringLength(50)]
+        public string ConfirmCode { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Blacklist> Blacklists { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FAQ> FAQs { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<News> News { get; set; }
     }
 }

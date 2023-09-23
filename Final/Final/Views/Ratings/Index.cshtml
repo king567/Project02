@@ -3,41 +3,6 @@
     ViewBag.Title = "Index";
     //Layout = null;
 }
-
-
-<!--<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>電影評分/評論數據</title>
-
-
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" />
-    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />-->
-@*css
-     使用Bootstrap CSS
-    <link rel="stylesheet" href="~/Content/bootstrap.css" />
-     使用Select2 CSS
-    <link rel="stylesheet" href="~/Content/select2.min.css" />
-     使用最新版本的 Bootstrap Select CSS
-    <link rel="stylesheet" href="~/Content/bootstrap-select.css" />
-     使用最新版本的 Font Awesome CSS
-    <link rel="stylesheet" href="~/Content/font-awesome.css" />
-
-
-     使用最新版本的 Bootstrap JS
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
-     使用最新版本的 Bootstrap Select JS
-    <script src="~/Scripts/bootstrap-select.js"></script>*@
-
-@*</head>*@
-
-
 <body>
     <div class="container text-center mt-3" id="customSearchInput">
         <div class="row align-items-center">
@@ -90,6 +55,27 @@
             </table>
         </div>
 
+        @*刪除確認的模態對話框*@
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">刪除評論</h5>
+                        @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>*@
+                    </div>
+                    <div class="modal-body">
+                        確定要刪除評論嗎？
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancelDelete" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-danger" id="confirmDelete">確定刪除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script>
             $(document).ready(function () {
                 var table = $("#rating").DataTable({
@@ -101,14 +87,7 @@
                         url: "/api/RatingsApi/GetRatingsWithDetails",
                         method: "POST",
                         dataType: "json",
-                        //success: function (data) {
-                        //    console.log(data); //成功時處理資料
-                        //    // 使用下面的代碼將數據添加到DataTable中
-                        //    table.clear().rows.add(data).draw();
-                        //},
-                        //error: function (error) {
-                        //    console.error("發生錯誤：", error);
-                        //},
+
                         dataSrc: ""
                     },
                     columns: [
@@ -145,7 +124,7 @@
                         {
                             data: null,
                             render: function (data, type, row) {
-                                return '<button type="button" class="btn btn-danger">Delete</button>';
+                                return '<button class="btn btn-danger delete-button" data-id="' + data.Id + '" data-toggle="modal" data-target="#deleteModal">Delete</button>';
                             },
                         },
                         {
@@ -160,6 +139,7 @@
 
                 // 搜尋button event handler
                 $("#searchButton").click(function () {
+
                     var searchTerm = $(".form-control").val(); // 獲取搜索詞
                     var categorySelectValue = $("#categorySelect").val(); //獲取影片類別
                     if (searchTerm) {
@@ -173,24 +153,71 @@
                         table.search("").draw();
                     }
                 });
+
+                //自訂日期時間格式
+                function formatDateTime(dateTimeString) {
+                    const options = {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    };
+
+                    const dateTime = new Date(dateTimeString);
+                    return dateTime.toLocaleDateString('zh-TW', options);
+                }
+
+                // 刪除按鈕點擊事件處理程序
+                $("#rating tbody").on("click", ".delete-button", function () {
+                    var rowData = table.row($(this).parents("tr")).data();
+                    var commentId = rowData.Id;
+                    /* var commentId = parseInt(rowData.RatingId);*/
+
+                    // 在Modal對話框中顯示要刪除的評論信息
+                    $("#deleteModal .modal-body").html("確定要刪除評論：<br><strong>" + rowData.Comment + "</strong>");
+
+                    // 監聽取消刪除按鈕的點擊事件
+                    $("#cancelDelete").click(function () {
+                        
+                        $('#deleteModal').modal('hide'); // 關閉模態對話框
+                    });
+
+                    // 確定刪除按鈕點擊事件處理程序
+                    $("#confirmDelete").off("click").on("click", function () {
+
+                        var commentId = rowData.Id; // 假設RatingId是評論的唯一ID
+                        // 執行刪除操作，這裡你可以發送Ajax請求刪除資料
+                        $.ajax({
+                            url: "/api/RatingsApi/" + commentId, // 假設這是刪除的API端點
+                            method: "DELETE",
+
+                            success: function (data) {
+                                $("#deleteModal").modal("hide");
+                                // 刪除成功後，重新載入DataTable
+                                location.reload();
+                               
+                            },
+                            error: function (error) {
+                                console.error("刪除評論時發生錯誤：", error);
+                            }
+                        });
+
+
+                        // 關閉Modal對話框
+                        $("#deleteModal").modal("hide");
+                    });
+
+                    // 顯示Modal對話框
+                    $("#deleteModal").modal("show");
+
+                });
             });
 
-            //自訂日期時間格式
-            function formatDateTime(dateTimeString) {
-                const options = {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                };
-
-                const dateTime = new Date(dateTimeString);
-                return dateTime.toLocaleDateString('zh-TW', options);
-            }
-
         </script>
+
+
     </main>
 </body>
 @*</html>*@

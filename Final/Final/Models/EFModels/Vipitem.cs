@@ -20,8 +20,6 @@ namespace Final.Models.EFModels
 
         public DateTime ExpiryDate { get; set; }
 
-        public bool Status { get; set; }
-
         public virtual Member Member { get; set; }
 
         public virtual PayType PayType { get; set; }

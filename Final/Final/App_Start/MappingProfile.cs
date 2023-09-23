@@ -83,6 +83,9 @@ namespace Final.App_Start
 				ReleaseDate = o.Release_Date,
 				RemovalDate = o.Removal_Date,
 			}).ToList()));
+
+			//FAQ 轉換成 FAQVm
+			CreateMap<FAQ, FAQVm>().ReverseMap();
 		}
 	}
 }

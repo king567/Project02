@@ -7,8 +7,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
-using System.Web.Http;
+//using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
 
@@ -38,6 +37,10 @@ namespace Final.Controllers
 			{
 				var connection = db.Database.Connection;
 
+				var blacklistReasons = db.BlacklistReasons.ToList();
+				ViewBag.BlacklistReasons = new SelectList(blacklistReasons, "Id", "Reason");
+
+
 				// 執行查詢，獲取詳細數據
 				var query = @"
                 SELECT r.Id,mi.CategoryId,mi.Title AS MediaInfoTitle, m.Account AS MemberAccount,
@@ -57,16 +60,38 @@ namespace Final.Controllers
 			}
 		}
 
-
-
-		// GET: Ratings/Delete/5
-		public ActionResult Delete()
+		//接收Blacklist訊息並存到table中
+		[HttpPost]
+		public ActionResult AddToBlacklist(int memberId, int blacklistReasonId)
 		{
-			return View();
+			using (var db = new AppDbContext())
+			{
+				// 取得會員資訊
+				var member = db.Members.Find(memberId);
+
+				if (member == null)
+				{
+					return HttpNotFound();
+				}
+
+				// 建立黑名單記錄
+				var blacklist = new Blacklist
+				{
+					Id = member.Id,
+					BlacklistReasonId = blacklistReasonId,
+					BlacklistTime = DateTime.Now,
+					NextRestorationTime = DateTime.Now.AddMonths(2)
+				};
+
+				// 將黑名單記錄加入資料庫
+				db.Blacklists.Add(blacklist);
+				db.SaveChanges();
+
+				// 這裡你可以加入其他邏輯，例如發送通知給會員
+
+				// 返回成功的視圖或重新導向到其他頁面
+				return RedirectToAction("Index");
+			}
 		}
-
-
-
-
 	}
 }

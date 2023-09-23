@@ -29,15 +29,10 @@ namespace Final.Models.EFModels
 
         public bool? Adult { get; set; }
 
-        public int? Popularity { get; set; }
-
-        [StringLength(50)]
-        public string OriginalLanguage { get; set; }
+        public int? OriginalLanguageId { get; set; }
 
         [StringLength(255)]
         public string OriginalTitle { get; set; }
-
-        public bool? Video { get; set; }
 
         [StringLength(255)]
         public string BackdropPath { get; set; }
@@ -49,6 +44,8 @@ namespace Final.Models.EFModels
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FavoriteMedia> FavoriteMedias { get; set; }
+
+        public virtual LanguageCode LanguageCode { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Rating> Ratings { get; set; }

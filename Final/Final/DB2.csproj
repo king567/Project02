@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -52,10 +53,10 @@
       <HintPath>..\packages\Dapper.2.0.151\lib\net461\Dapper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -149,6 +150,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BlacklistReasonsController.cs" />
+    <Compile Include="Controllers\FAQsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MediaInfosApiController.cs" />
     <Compile Include="Controllers\MediaInfosController.cs" />
@@ -170,7 +172,6 @@
     <Compile Include="Models\DTOs\MediaInfosRelPageDTO.cs" />
     <Compile Include="Models\DTOs\OttTypesDTO.cs" />
     <Compile Include="Models\DTOs\RatingsRelDTO.cs" />
-    <Compile Include="Models\EFModels\ActivityPermission.cs" />
     <Compile Include="Models\EFModels\AppDbContext.cs" />
     <Compile Include="Models\EFModels\Blacklist.cs" />
     <Compile Include="Models\EFModels\BlacklistReason.cs" />
@@ -180,23 +181,18 @@
     <Compile Include="Models\EFModels\FavoriteMedia.cs" />
     <Compile Include="Models\EFModels\Genre.cs" />
     <Compile Include="Models\EFModels\GuestBook.cs" />
+    <Compile Include="Models\EFModels\LanguageCode.cs" />
     <Compile Include="Models\EFModels\MediaInfo.cs" />
     <Compile Include="Models\EFModels\MediaInfos_Genres_Rel.cs" />
     <Compile Include="Models\EFModels\MediaInfos_OttTypes_Rel.cs" />
     <Compile Include="Models\EFModels\Member.cs" />
-    <Compile Include="Models\EFModels\Members_SerialNumbers_Rel.cs" />
     <Compile Include="Models\EFModels\News.cs" />
     <Compile Include="Models\EFModels\OttType.cs" />
     <Compile Include="Models\EFModels\PayType.cs" />
-    <Compile Include="Models\EFModels\Point.cs" />
-    <Compile Include="Models\EFModels\Product.cs" />
-    <Compile Include="Models\EFModels\ProductCategory.cs" />
     <Compile Include="Models\EFModels\Rating.cs" />
-    <Compile Include="Models\EFModels\SerialNumber.cs" />
     <Compile Include="Models\EFModels\sysdiagram.cs" />
     <Compile Include="Models\EFModels\User.cs" />
     <Compile Include="Models\EFModels\Vipitem.cs" />
-    <Compile Include="Models\EFModels\VipPrize.cs" />
     <Compile Include="Models\Entities\GenresEntity.cs" />
     <Compile Include="Models\Entities\MediaInfoRelEntity.cs" />
     <Compile Include="Models\Entities\MediaInfoResultEntity.cs" />
@@ -210,6 +206,8 @@
     <Compile Include="Models\Repositories\OttRepository.cs" />
     <Compile Include="Models\Services\MediaInfoService.cs" />
     <Compile Include="Models\ViewModels\BlacklistReasonVm.cs" />
+    <Compile Include="Models\ViewModels\BlacklistVm.cs" />
+    <Compile Include="Models\ViewModels\FAQVm.cs" />
     <Compile Include="Models\ViewModels\GenresVm.cs" />
     <Compile Include="Models\ViewModels\MediaInfosRelVm.cs" />
     <Compile Include="Models\ViewModels\MemberVm.cs" />
@@ -334,6 +332,9 @@
     <Content Include="Views\Members\Index.cshtml" />
     <Content Include="Views\Ratings\Index.cshtml" />
     <Content Include="Views\Ratings\Details.cshtml" />
+    <Content Include="Views\FAQs\Create.cshtml" />
+    <Content Include="Views\FAQs\Edit.cshtml" />
+    <Content Include="Views\FAQs\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -399,7 +400,10 @@
       <ErrorText>此專案參考這部電腦上所缺少的 NuGet 套件。請啟用 NuGet 套件還原，以下載該套件。如需詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的檔案是 {0}。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

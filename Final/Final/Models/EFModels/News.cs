@@ -19,9 +19,5 @@ namespace Final.Models.EFModels
 
         [Column(TypeName = "date")]
         public DateTime Publishdate { get; set; }
-
-        public int UsersId { get; set; }
-
-        public virtual User User { get; set; }
     }
 }
