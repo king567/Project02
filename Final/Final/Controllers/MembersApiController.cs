@@ -39,5 +39,21 @@ namespace Final.Controllers
                 return Ok(vm);
             }
         }
+
+        [HttpDelete]
+        public IHttpActionResult DeleteMembers(int id)
+        {
+            var db = new AppDbContext();
+            Member member = db.Members.Find(id);
+            if (member == null)
+            {
+                return NotFound();
+            }
+
+            db.Members.Remove(member);
+            db.SaveChanges();
+
+            return Ok(member);
+        }
     }
 }

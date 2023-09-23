@@ -4,6 +4,9 @@
     //Layout = null;
 }
 <body>
+    <div class="home-content">
+        <span class="text" style="font-size:32px; font-weight:500; margin-left:10px;">評論</span>
+    </div>
     <div class="container text-center mt-3" id="customSearchInput">
         <div class="row align-items-center">
             <div class="col-12">
@@ -62,8 +65,8 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="deleteModalLabel">刪除評論</h5>
                         @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>*@
+                                <span aria-hidden="true">&times;</span>
+                            </button>*@
                     </div>
                     <div class="modal-body">
                         確定要刪除評論嗎？
@@ -180,7 +183,7 @@
 
                     // 監聽取消刪除按鈕的點擊事件
                     $("#cancelDelete").click(function () {
-                        
+
                         $('#deleteModal').modal('hide'); // 關閉模態對話框
                     });
 
@@ -197,7 +200,7 @@
                                 $("#deleteModal").modal("hide");
                                 // 刪除成功後，重新載入DataTable
                                 location.reload();
-                               
+
                             },
                             error: function (error) {
                                 console.error("刪除評論時發生錯誤：", error);
@@ -220,4 +223,3 @@
 
     </main>
 </body>
-@*</html>*@

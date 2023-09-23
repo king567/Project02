@@ -23,10 +23,10 @@ namespace Final.Controllers
             return View(vm);
         }
 
-		private List<FAQVm> GetFAQ()
-		{
-			return MapperObj.Map<List<FAQ>,List<FAQVm>>(db.FAQs.ToList()); 
-		}
+        private List<FAQVm> GetFAQ()
+        {
+            return MapperObj.Map<List<FAQ>, List<FAQVm>>(db.FAQs.ToList());
+        }
 
         // GET: FAQs/Create
         public ActionResult Create()
@@ -34,37 +34,37 @@ namespace Final.Controllers
             return View();
         }
         [HttpPost]
-       public ActionResult Create(FAQVm vm)
+        public ActionResult Create(FAQVm vm)
         {
-			if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-				try
+                try
                 {
-					CreateFAQ(vm);
-				}
-				catch (Exception ex)
+                    CreateFAQ(vm);
+                }
+                catch (Exception ex)
                 {
-					ModelState.AddModelError("", ex.Message);
-				}
-			}
-			if (ModelState.IsValid)
+                    ModelState.AddModelError("", ex.Message);
+                }
+            }
+            if (ModelState.IsValid)
             {
-				return RedirectToAction("Index");
-			}
+                return RedirectToAction("Index");
+            }
 
-			return View(vm);
-		}
+            return View(vm);
+        }
 
-		private void CreateFAQ(FAQVm vm)
-		{
-			var faq = MapperObj.Map<FAQVm, FAQ>(vm);
+        private void CreateFAQ(FAQVm vm)
+        {
+            var faq = MapperObj.Map<FAQVm, FAQ>(vm);
 
             db.FAQs.Add(faq);
             db.SaveChanges();
-		}
+        }
 
-		// GET: FAQs/Edit/5
-		public ActionResult Edit(int? id)
+        // GET: FAQs/Edit/5
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -84,14 +84,14 @@ namespace Final.Controllers
         // 如需詳細資料，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit( FAQVm fAQVm)
-        {   
+        public ActionResult Edit(FAQVm fAQVm)
+        {
             var faqInDb = db.FAQs.Find(fAQVm.Id);
-                        faqInDb.Id = fAQVm.Id;
-                        faqInDb.Question = fAQVm.Question;
-                        faqInDb.Answer = fAQVm.Answer;
-                        faqInDb.Enabled = fAQVm.Enabled;
-                        faqInDb.DisplayOrder = fAQVm.DisplayOrder;
+            faqInDb.Id = fAQVm.Id;
+            faqInDb.Question = fAQVm.Question;
+            faqInDb.Answer = fAQVm.Answer;
+            faqInDb.Enabled = fAQVm.Enabled;
+            faqInDb.DisplayOrder = fAQVm.DisplayOrder;
 
             if (ModelState.IsValid)
             {
@@ -111,7 +111,7 @@ namespace Final.Controllers
             {
                 return HttpNotFound();
             }
-            
+
             db.FAQs.Remove(faq);
             db.SaveChanges();
 

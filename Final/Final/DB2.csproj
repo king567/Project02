@@ -156,11 +156,15 @@
     <Compile Include="Controllers\MediaInfosController.cs" />
     <Compile Include="Controllers\MembersApiController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OttsApiController.cs" />
     <Compile Include="Controllers\PayTypesController.cs" />
     <Compile Include="Controllers\RatingsApiController.cs" />
     <Compile Include="Controllers\RatingsController.cs" />
     <Compile Include="Controllers\TestApiController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\VipItemApiController.cs" />
+    <Compile Include="Controllers\VipItemsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -172,6 +176,7 @@
     <Compile Include="Models\DTOs\MediaInfosRelPageDTO.cs" />
     <Compile Include="Models\DTOs\OttTypesDTO.cs" />
     <Compile Include="Models\DTOs\RatingsRelDTO.cs" />
+    <Compile Include="Models\DTOs\VipItemDto.cs" />
     <Compile Include="Models\EFModels\AppDbContext.cs" />
     <Compile Include="Models\EFModels\Blacklist.cs" />
     <Compile Include="Models\EFModels\BlacklistReason.cs" />
@@ -181,7 +186,6 @@
     <Compile Include="Models\EFModels\FavoriteMedia.cs" />
     <Compile Include="Models\EFModels\Genre.cs" />
     <Compile Include="Models\EFModels\GuestBook.cs" />
-    <Compile Include="Models\EFModels\LanguageCode.cs" />
     <Compile Include="Models\EFModels\MediaInfo.cs" />
     <Compile Include="Models\EFModels\MediaInfos_Genres_Rel.cs" />
     <Compile Include="Models\EFModels\MediaInfos_OttTypes_Rel.cs" />
@@ -200,20 +204,29 @@
     <Compile Include="Models\Entities\MediaInfosOttTypesRelEntity.cs" />
     <Compile Include="Models\Entities\OttTypesEntity.cs" />
     <Compile Include="Models\Enum\CategoryName.cs" />
+    <Compile Include="Models\Infra\HashUtility.cs" />
     <Compile Include="Models\Repositories\CategoryRepository.cs" />
     <Compile Include="Models\Repositories\GenreRepository.cs" />
     <Compile Include="Models\Repositories\MediaInfoRepository.cs" />
+    <Compile Include="Models\Repositories\MemberRepository.cs" />
     <Compile Include="Models\Repositories\OttRepository.cs" />
+    <Compile Include="Models\Repositories\VipItemRepository.cs" />
     <Compile Include="Models\Services\MediaInfoService.cs" />
+    <Compile Include="Models\Services\VipItemService.cs" />
     <Compile Include="Models\ViewModels\BlacklistReasonVm.cs" />
-    <Compile Include="Models\ViewModels\BlacklistVm.cs" />
     <Compile Include="Models\ViewModels\FAQVm.cs" />
     <Compile Include="Models\ViewModels\GenresVm.cs" />
+    <Compile Include="Models\ViewModels\LoginVm.cs" />
     <Compile Include="Models\ViewModels\MediaInfosRelVm.cs" />
     <Compile Include="Models\ViewModels\MemberVm.cs" />
+    <Compile Include="Models\ViewModels\NewsVm.cs" />
     <Compile Include="Models\ViewModels\OttTypesVm.cs" />
     <Compile Include="Models\ViewModels\PayTypeVm.cs" />
     <Compile Include="Models\ViewModels\RatingVm.cs" />
+    <Compile Include="Models\ViewModels\RegisterExts.cs" />
+    <Compile Include="Models\ViewModels\RegisterVm.cs" />
+    <Compile Include="Models\ViewModels\VipItemSearchVm.cs" />
+    <Compile Include="Models\ViewModels\VipItemVm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -312,8 +325,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\PayTypes\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -332,13 +343,19 @@
     <Content Include="Views\Members\Index.cshtml" />
     <Content Include="Views\Ratings\Index.cshtml" />
     <Content Include="Views\Ratings\Details.cshtml" />
+    <Content Include="Views\VipItems\Index.cshtml" />
+    <Content Include="Views\Users\Login.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\News\Create.cshtml" />
+    <Content Include="Views\News\Edit.cshtml" />
+    <Content Include="Views\FAQs\Index.cshtml" />
     <Content Include="Views\FAQs\Create.cshtml" />
     <Content Include="Views\FAQs\Edit.cshtml" />
-    <Content Include="Views\FAQs\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\Utilities\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

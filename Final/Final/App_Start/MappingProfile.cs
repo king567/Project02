@@ -2,6 +2,7 @@
 using Final.Models.DTOs;
 using Final.Models.EFModels;
 using Final.Models.Entities;
+using Final.Models.Repositories;
 using Final.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -14,17 +15,38 @@ namespace Final.App_Start
 	{
 		public MappingProfile()
 		{
-			// 可以二個方向都寫, 但也可以直接用 ReverseMap() 來反轉,表示二個方向都要做
-			CreateMap<BlacklistReason, BlacklistReasonVm>().ReverseMap();
-			CreateMap<PayType, PayTypeVm>().ReverseMap();
+            // 可以二個方向都寫, 但也可以直接用 ReverseMap() 來反轉,表示二個方向都要做
+
+            //BlacklistReason 轉換成 BlacklistReasonVm
+            CreateMap<BlacklistReason, BlacklistReasonVm>().ReverseMap();
+
+            //PayType 轉換成 PayTypeVm
+            CreateMap<PayType, PayTypeVm>().ReverseMap();
+
+			//Member 轉換成 MemberVm
             CreateMap<Member, MemberVm>();
 
+			//News 轉換成 NewsVm
+			CreateMap<News, NewsVm>();
 
+            //Vipitem 轉換成 VipItemDto
+            CreateMap<Vipitem, VipItemDto>()
+				.ForMember(dest => dest.MemberId, opt => opt.MapFrom(src => src.Member.Id))
+				.ForMember(dest => dest.MemberAccount, opt => opt.MapFrom(src => src.Member.Account))
+				.ForMember(dest => dest.PayTypeId, opt => opt.MapFrom(src => src.PayType.Id))
+				.ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.PayType.Type))
+				.ForMember(dest => dest.Fee, opt => opt.MapFrom(src => src.PayType.Fee));
 
-			// 這裡的寫法是為了讓 AutoMapper 知道要如何將 MediaInfo 轉換成 MediaInfosRelDTO
-			// MediaInfosRelDTO 轉換成 MediaInfosRelVm
+            //VipItemDto 轉換成 VipItemVm
+            CreateMap<VipItemDto, VipItemVm>()
+                .ForMember(dest => dest.MemberAccount, opt => opt.MapFrom(src => src.MemberAccount))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
+                .ForMember(dest => dest.Fee, opt => opt.MapFrom(src => src.Fee));
 
-			CreateMap<MediaInfosRelDTO, MediaInfosRelVm>()
+            // 這裡的寫法是為了讓 AutoMapper 知道要如何將 MediaInfo 轉換成 MediaInfosRelDTO
+            // MediaInfosRelDTO 轉換成 MediaInfosRelVm
+
+            CreateMap<MediaInfosRelDTO, MediaInfosRelVm>()
 				.ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
 				.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.CategoryName))
 				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => new GenresDTO
@@ -84,8 +106,8 @@ namespace Final.App_Start
 				RemovalDate = o.Removal_Date,
 			}).ToList()));
 
-			//FAQ 轉換成 FAQVm
-			CreateMap<FAQ, FAQVm>().ReverseMap();
-		}
+            //FAQ 轉換成 FAQVm
+            CreateMap<FAQ, FAQVm>().ReverseMap();
+        }
 	}
 }

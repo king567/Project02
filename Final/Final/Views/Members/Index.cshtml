@@ -1,22 +1,44 @@
-﻿
-@{
-    ViewBag.Title = "會員維護";
+﻿@{
+    ViewBag.Title = "會員";
 }
-
 @*Title*@
-<div class="home-content">
-    <span class="text">會員維護</span>
+<div class="home-content" >
+    <span class="text" style="font-size:35px; font-weight:500; margin-left:10px;">會員</span>
 </div>
 
 @*搜尋欄位和複選框*@
 <div class="scrollable-container">
-    <div class="content m-3">
-        <input type="text" id="memberNameInput" placeholder="搜尋姓名">
+    <div class="content m-3 ">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" id="memberNameInput" placeholder="搜尋姓名" class="form-control" >
+                </div>
+                <div class="col-md-2" style="margin-left: 20px">
+                    <div class="form-check">
+                        <input type="checkbox" id="vipCheckbox" class="form-check-input">
+                        <label for="vipCheckbox" class="form-check-label" style="font-size: 20px; ">VIP會員</label>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-check">
+                        <input type="checkbox" id="blacklistCheckbox" class="form-check-input">
+                        <label for="blacklistCheckbox" class="form-check-label" style="font-size: 20px">黑名單</label>
+                    </div>
+                </div>
+
+                <div class="col-md-2 text-right">
+                    <button id="searchButton" class="btn btn-outline-secondary type="button" style="width:100px; height:40px; font-size:20px">搜尋</button>
+                </div>
+            </div>
+        </div>
+        @*<input type="text" id="memberNameInput" placeholder="搜尋姓名" style="width:300px;height:35px;">
         <input type="checkbox" id="vipCheckbox">
         <label for="vipCheckbox">VIP會員</label>
         <input type="checkbox" id="blacklistCheckbox">
         <label for="blacklistCheckbox">黑名單</label>
-        <button id="searchButton" class="btn btn-outline-secondary" type="button">搜尋</button>
+        <button id="searchButton" class="btn btn-outline-secondary" type="button">搜尋</button>*@
     </div>
 </div>
 <div class="table-container">
@@ -35,6 +57,24 @@
             </tr>
         </thead>
     </table>
+</div>
+
+ @*刪除確認的模態對話框*@ 
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">刪除確認</h5>
+            </div>
+            <div class="modal-body">
+                確定要刪除嗎？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancleDelete" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">確定刪除</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -108,8 +148,7 @@
                 {
                     data: null,
                     render: function (data, type, row) {
-                        return '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> 刪除 </button > ';
-
+                        return '<button type="button" class="btn btn-danger delete-button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="' + data.Id + '"> 刪除 </button>';
                     },
                 },
             ]
@@ -135,8 +174,42 @@
                 updateTable();
             }
         });
-    });
 
+
+        var tempDeleteId ;
+        //console.log("tempDeleteId", tempDeleteId);
+        /* 捕獲刪除按鈕點擊事件，並將要刪除的會員的 ID 存儲在變數中*/
+        $("#memberTable").on("click", ".delete-button", function () {
+            tempDeleteId = $(this).data("id");
+            console.log("tempDeleteId", tempDeleteId);
+        });
+
+        $("#cancleDelete").on("click", function () {
+            $('#deleteModal').modal('hide'); // 關閉模態對話框
+        });
+
+
+        $("#confirmDelete").on("click", function () {
+            // 使用存儲的會員 ID 進行刪除操作
+            if (tempDeleteId) {
+                $.ajax({
+                    url: "/api/MembersApi/" + tempDeleteId, // 假設這是刪除的API端點
+                    method: "DELETE",
+                    success: function (data) {
+                        // 刪除成功後，重新載入表格數據
+                        tempDeleteId = null; // 清除存儲的會員 ID
+                        $('#deleteModal').modal('hide'); // 關閉模態對話框
+                        table.ajax.reload(); // 重新載入表格數據
+                    },
+                    error: function (error) {
+                        console.error("刪除會員時發生錯誤：", error);
+                    }
+                });
+            }
+        });
+
+
+    });
 
 
     //自訂日期時間格式
