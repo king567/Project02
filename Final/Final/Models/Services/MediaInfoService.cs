@@ -19,11 +19,12 @@ namespace Final.Models.Services
 			return dto;
 		}
 
-		public List<MediaInfosRelDTO> GetMediaInfo(int id)
+		public MediaInfosRelDTO GetMediaInfo(int id)
 		{
 			List<MediaInfo> Entities = new MediaInfoRepository().GetMediaInfo(id);
 			List<MediaInfosRelDTO> dto = AutoMapperHelper.MapperObj.Map<List<MediaInfosRelDTO>>(Entities);
-			return dto;
+
+			return dto.FirstOrDefault();
 		}
 
 		public List<MediaInfosRelDTO> GetMediaInfosPage(int page, int pageSize)

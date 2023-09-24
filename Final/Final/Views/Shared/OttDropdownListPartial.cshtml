@@ -1,0 +1,12 @@
+﻿@model Final.Models.ViewModels.MediaInfosInitVm
+
+<label for="platformSelect">OTT平台：</label>
+<select class="selectpicker form-control"
+        multiple
+        data-live-search="true"
+        id="platformSelect">
+    @foreach (var ott in Model.OttTypes)
+    {
+        <option data-id="@ott.Id" data-name="@ott.Name">@ott.Name</option>
+    }
+</select>

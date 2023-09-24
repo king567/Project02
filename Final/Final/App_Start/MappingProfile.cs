@@ -43,12 +43,14 @@ namespace Final.App_Start
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
                 .ForMember(dest => dest.Fee, opt => opt.MapFrom(src => src.Fee));
 
-            // 這裡的寫法是為了讓 AutoMapper 知道要如何將 MediaInfo 轉換成 MediaInfosRelDTO
-            // MediaInfosRelDTO 轉換成 MediaInfosRelVm
+			// 這裡的寫法是為了讓 AutoMapper 知道要如何將 MediaInfo 轉換成 MediaInfosRelDTO
+			// MediaInfosRelDTO 轉換成 MediaInfosRelVm
 
-            CreateMap<MediaInfosRelDTO, MediaInfosRelVm>()
+			CreateMap<MediaInfosRelDTO, MediaInfosRelVm>()
 				.ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
 				.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.CategoryName))
+				.ForMember(dest => dest.LanguageCodeId, opt => opt.MapFrom(src => src.LanguageCodeId))
+				.ForMember(dest => dest.OriginalLanguage, opt => opt.MapFrom(src => src.OriginalLanguage))
 				.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => new GenresDTO
 				{
 					Id = g.Id,
@@ -93,6 +95,8 @@ namespace Final.App_Start
 			CreateMap<MediaInfo, MediaInfosRelDTO>()
 			.ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Category.Id))
 			.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+			.ForMember(dest => dest.OriginalLanguage, opt => opt.MapFrom(src => src.LanguageCode.LanguageName))
+			.ForMember(dest => dest.LanguageCodeId, opt => opt.MapFrom(src => src.LanguageCode.Id))
 			.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.MediaInfos_Genres_Rel.Select(g => new GenresDTO
 			{
 				Id = g.GenreId,
@@ -106,8 +110,28 @@ namespace Final.App_Start
 				RemovalDate = o.Removal_Date,
 			}).ToList()));
 
-            //FAQ 轉換成 FAQVm
-            CreateMap<FAQ, FAQVm>().ReverseMap();
+			// FormDataModelVm 轉換成 MediaInfo
+
+			CreateMap<FormDataModelVm, MediaInfo>()
+				.ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
+				.ForMember(dest => dest.OriginalLanguageId, opt => opt.MapFrom(src => src.LanguageCodeId))
+				.ForMember(dest => dest.OriginalTitle, opt => opt.MapFrom(src => src.OriginalTitle))
+				.ForMember(dest => dest.Adult, opt => opt.MapFrom(src => src.Adult))
+				.ForMember(dest => dest.PosterPath, opt => opt.MapFrom(src => src.PosterPath))
+				.ForMember(dest => dest.BackdropPath, opt => opt.MapFrom(src => src.BackdropPath))
+				.ForMember(dest => dest.MediaInfos_Genres_Rel, opt => opt.MapFrom(src => src.Genres.Select(g => new MediaInfos_Genres_Rel
+				{
+					GenreId = g,
+				}).ToList()))
+				.ForMember(dest => dest.MediaInfos_OttTypes_Rel, opt => opt.MapFrom(src => src.OttItems.Select(o => new MediaInfos_OttTypes_Rel
+				{
+					OttTypeId = o.ottPlatform,
+					Release_Date = o.releaseDate,
+					Removal_Date = o.removeDate,
+				}).ToList()));
+
+			//FAQ 轉換成 FAQVm
+			CreateMap<FAQ, FAQVm>().ReverseMap();
         }
 	}
 }

@@ -1,20 +1,22 @@
-﻿
+﻿@model Final.Models.ViewModels.MediaInfosInitVm
+
 @{
     ViewBag.Title = "影片資訊維護";
 }
 <style>
-    table th{
-        white-space:nowrap;
+    table th {
+        white-space: nowrap;
     }
-    td{
-        height:45px;
+
+    td {
+        height: 45px;
     }
 </style>
 <div class="container text-center mt-5" id="customSearchInput">
     <div class="row align-items-center">
         <div class="col-12 d-flex justify-content-between">
             <div class="col-9 input-group">
-                <input type="text"
+                <input id="titleId" type="text"
                        class="form-control"
                        placeholder="請輸入欲查詢內容" />
                 <button class="btn btn-outline-secondary"
@@ -48,9 +50,10 @@
                             <label for="categorySelect">影片類別：</label>
                             <select class="form-control" id="categorySelect">
                                 <option>請選擇</option>
-                                <option>電影</option>
-                                <option>電視劇</option>
-                                <option>動漫</option>
+                                @foreach (var category in Model.categories)
+                                {
+                                    <option data-id="@category.Id" data-name="@category.Name">@category.Name</option>
+                                }
                             </select>
                         </div>
                         <div class="col-lg-4 mb-3">
@@ -59,10 +62,10 @@
                                     multiple
                                     data-live-search="true"
                                     id="platformSelect">
-                                <option>Netflix</option>
-                                <option>Youtube</option>
-                                <option>TVBS</option>
-                                <option>Disney+</option>
+                                @foreach (var ott in Model.OttTypes)
+                                {
+                                    <option data-id="@ott.Id" data-name="@ott.Name">@ott.Name</option>
+                                }
                             </select>
                         </div>
                         <div class="col-lg-4 mb-3">
@@ -71,12 +74,10 @@
                                     multiple
                                     data-live-search="true"
                                     id="typeSelect">
-                                <option>愛情片</option>
-                                <option>動作片</option>
-                                <option>恐怖片</option>
-                                <option>戰爭片</option>
-                                <option>家庭片</option>
-                                <option>科幻片</option>
+                                @foreach (var genre in Model.Genres)
+                                {
+                                    <option data-id="@genre.Id" data-name="@genre.Name">@genre.Name</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -93,8 +94,7 @@
                                        data-target="#startDatePicker" />
                                 <div class="input-group-append"
                                      data-target="#startDatePicker"
-                                     data-toggle="datetime
-                                     picker">
+                                     data-toggle="datetimepicker">
                                     <div class="input-group-text">
                                         <i class="fas fa-calendar"></i>
                                     </div>
@@ -145,226 +145,239 @@
         <tbody></tbody>
     </table>
 </div>
-    <!-- 列出影片表 end -->
+<!-- 列出影片表 end -->
 
 
-    <script>
+<script>
 
-        var jsonData = [];
+    var jsonData = [];
 
-        var tempData = [];
+    var tempData = [];
 
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            //自訂日期時間格式
-            function formatDateTime(dateTimeString) {
-                const options = {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                };
+        //自訂日期時間格式
+        function formatDateTime(dateTimeString) {
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            };
 
-                const dateTime = new Date(dateTimeString);
-                return dateTime.toLocaleDateString('zh-TW', options);
-            }
+            const dateTime = new Date(dateTimeString);
+            return dateTime.toLocaleDateString('zh-TW', options);
+        }
 
-            // 取得api資料
+        // 取得api資料
 
-            // 初始化 Bootstrap Select
-            $(".selectpicker").selectpicker();
+        // 初始化 Bootstrap Select
+        $(".selectpicker").selectpicker();
 
-            // Initialize DateTimePickers
-            $(function () {
-                $("#startDatePicker").datetimepicker({
-                    format: "YYYY-MM-DD",
-                    locale: "zh-tw", // 使用中文本地化
-                });
-
-                $("#endDatePicker").datetimepicker({
-                    format: "YYYY-MM-DD",
-                    locale: "zh-tw", // 使用中文本地化
-                });
+        // 初始化 DateTimePickers
+        $(function () {
+            $("#startDatePicker").datetimepicker({
+                format: "YYYY-MM-DD",
+                locale: "zh-tw", // 使用中文本地化
             });
 
-            // 初始化Datatables
-            var table = $("#example").DataTable({
-                dom: "lrtp",
-                responsive: true,
-                pagelength: 10,
-                pagingType: "full_numbers",
-                searching: false,
-                ajax: {
-                    url: "/api/MediaInfosApi",
-                    type: "GET",
-                    dataType: "json",
-                    "dataSrc": "",
-                    //success: function (data) {
-                    //    //jsonData = data;
-                    //},
-                },
-                columns: [
-                    { data: "Id" },
-                    { data: "Title" },
-                    {
-                        data: "OverView",
-                            render: function (data, type, row) {
-                            // 在這裡自定義列的內容，只顯示前50個字
-                            return data.substring(0, 50) + "...";
-                        },
-                    },
-                    { data: "CategoryName" },
-                    {
-                        data: "Genres",
-                        render: function (data, type, row) {
-                            // 在这里自定义列的内容，添加徽章
-                            var badgeHtml = "";
-                            for (var i = 0; i < data.length; i++) {
-                                badgeHtml +=
-                                    '<span class="badge rounded-pill bg-info text-white">' +
-                                    data[i].Name +
-                                    "</span> ";
-                            }
-                            return badgeHtml;
-                        },
-                    },
-                    {
-                        data: "OttTypes",
-                        render: function (data, type, row) {
-                            // 在这里自定义列的内容，添加徽章
-                            var badgeHtml = "";
-                            for (var i = 0; i < data.length; i++) {
-                                badgeHtml +=
-                                    '<span class="badge rounded-pill bg-info text-white">' +
-                                data[i].Name + ' 上映日期:' + formatDateTime(data[i].ReleaseDate) +
-                                    "</span><br> ";
-                            }
-                            return badgeHtml;
-                        },
-                    },
-                    {
-                        data: "PosterPath", render: function (data, type, row) {
-                            return '<a href="#" class="link-underline-dark">' + data + '</a>';
-                        }
-                    },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return '<button type="button" class="btn btn-success">Edit</button>';
-                        },
-                    },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return '<button type="button" class="btn btn-danger">Delete</button>';
-                        },
-                    },
-                ],
-            });
-
-            function filterByKey(data, inputValue, filterKey) {
-                // 檢查傳入的參數是否為陣列
-                if (!Array.isArray(inputValue) || inputValue.length === 0) {
-                    console.error("無效的篩選條件");
-                    return [];
-                }
-
-                // 使用 filter 函数筛选匹配的电影数据
-                var filteredData = data.filter(function (movie) {
-
-                    return inputValue.every(function (inputValue) {
-                        return movie[filterKey].includes(inputValue);
-                    });
-                    // return inputValue.some(function (inputValue) {
-                    //   return movie[filterKey].includes(inputValue);
-                    // });
-                });
-
-                tempData = filteredData;
-
-                return filteredData;
-            }
-
-            function initDatatable(data) {
-                tempData = jsonData;
-                table.clear();
-                table.rows.add(data);
-                table.rows().invalidate().draw();
-            }
-
-            $("#btnSearch").click(function () {
-                // 清除表格的筛选条件
-                table.search("").columns().search("").draw();
-
-                // 重新載入json資料
-                initDatatable(jsonData);
-
-                var searchText = $(".input-group input").val();
-                var categorySelectValue = $("#categorySelect").val();
-                var platformSelectValue = $("#platformSelect").val();
-                var typeSelectValue = $("#typeSelect").val();
-                var startDateValue = $("#startDatePicker").find("input").val();
-                var endDateValue = $("#endDatePicker").find("input").val();
-
-                if (searchText.length > 0) {
-                    table.search(searchText);
-                }
-
-                if (categorySelectValue != "請選擇") {
-                    table.column(3).search(categorySelectValue);
-                }
-
-                if (typeSelectValue.length > 0) {
-                    // 測試搜尋
-                    // table.column(4).search(typeSelectValue);
-
-                    // // 清除表格数据
-                    table.clear();
-                    // console.log(filterByKey(jsonData, typeSelectValue, "影片類型"));
-                    // 添加匹配的数据到表格
-                    table.rows.add(filterByKey(tempData, typeSelectValue, "影片類型"));
-                    // 重新加载匹配的数据
-                    table.rows().invalidate().draw();
-                }
-
-                if (platformSelectValue.length > 0) {
-                    // table.column(5).search(platformSelectValue);
-                    // 清除表格数据
-                    table.clear();
-
-                    // 添加匹配的数据到表格
-                    table.rows.add(
-                        filterByKey(tempData, platformSelectValue, "上映平台")
-                    );
-
-                    // 重新加载匹配的数据
-                    table.rows().invalidate().draw();
-                }
-
-                $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-                    var startDate = moment(startDateValue, "YYYY-MM-DD");
-                    var endDate = moment(endDateValue, "YYYY-MM-DD");
-
-                    var date = moment(data[6], "YYYY-MM-DD");
-
-                    if (startDate._isValid === false && endDate._isValid === false) {
-                        return true;
-                    }
-                    if (startDate._isValid === false && endDate.isSameOrAfter(date)) {
-                        return true;
-                    }
-                    if (startDate.isSameOrBefore(date) && endDate._isValid === false) {
-                        return true;
-                    }
-                    if (startDate.isSameOrBefore(date) && endDate.isSameOrAfter(date)) {
-                        return true;
-                    }
-                    return false;
-                });
-
-                table.draw(); // 重繪查詢結果
-
-                $.fn.dataTable.ext.search.pop();
+            $("#endDatePicker").datetimepicker({
+                format: "YYYY-MM-DD",
+                locale: "zh-tw", // 使用中文本地化
             });
         });
-    </script>
+
+        // 初始化Datatables
+        var table = $("#example").DataTable({
+            dom: "lrtp",
+            responsive: true,
+            pagelength: 10,
+            pagingType: "full_numbers",
+            searching: false,
+            ajax: {
+                url: "/api/Search",
+                type: "Post",
+                dataType: "json",
+                "dataSrc": "",
+                data: function (d) {
+                    d.Title = $("#titleId").val();
+                    d.CateggoryId = $("#categorySelect").val();
+                    d.Genres = $("#platformSelect").val();
+                    d.Otts = $("#typeSelect").val();
+                    d.BeginTime = $("#startDatePicker").find("input").val();
+                    d.EndTine = $("#endDatePicker").find("input").val();
+                    console.log(d);
+                }
+                //success: function (data) {
+                //    //jsonData = data;
+                //},
+            },
+            columns: [
+                { data: "Id" },
+                { data: "Title" },
+                {
+                    data: "OverView",
+                    render: function (data, type, row) {
+                        // 在這裡自定義列的內容，只顯示前50個字
+                        return data.substring(0, 50) + "...";
+                    },
+                },
+                { data: "CategoryName" },
+                {
+                    data: "Genres",
+                    render: function (data, type, row) {
+                        // 在这里自定义列的内容，添加徽章
+                        var badgeHtml = "";
+                        for (var i = 0; i < data.length; i++) {
+                            badgeHtml +=
+                                '<span class="badge rounded-pill bg-info text-white">' +
+                                data[i].Name +
+                                "</span> ";
+                        }
+                        return badgeHtml;
+                    },
+                },
+                {
+                    data: "OttTypes",
+                    render: function (data, type, row) {
+                        // 在这里自定义列的内容，添加徽章
+                        var badgeHtml = "";
+                        for (var i = 0; i < data.length; i++) {
+                            badgeHtml +=
+                                '<span class="badge rounded-pill bg-info text-white">' +
+                                data[i].Name + ' 上映日期:' + formatDateTime(data[i].ReleaseDate) +
+                                "</span><br> ";
+                        }
+                        return badgeHtml;
+                    },
+                },
+                {
+                    data: "PosterPath", render: function (data, type, row) {
+                        return '<a href="#" class="link-underline-dark">' + data + '</a>';
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        // <a href="/ControllerName/Edit/data.Id" class="btn btn-success">Edit</a>
+                        //return '<button type="button" class="btn btn-success" data-id="' + data.Id + '">Edit</button>';
+                        return '<a class="btn btn-success" href="/MediaInfos/Edit/' + data.Id +'" data-id="' + data.Id + '">Edit</a>';
+                    },
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                           
+
+                        return '<button type="button" class="btn deleteBtn btn-danger" data-id="' + data.Id + '">Delete</button>';
+                    },
+                },
+            ],
+        });
+
+        function filterByKey(data, inputValue, filterKey) {
+            // 檢查傳入的參數是否為陣列
+            if (!Array.isArray(inputValue) || inputValue.length === 0) {
+                console.error("無效的篩選條件");
+                return [];
+            }
+
+            // 使用 filter 函数筛选匹配的电影数据
+            var filteredData = data.filter(function (movie) {
+
+                return inputValue.every(function (inputValue) {
+                    return movie[filterKey].includes(inputValue);
+                });
+                // return inputValue.some(function (inputValue) {
+                //   return movie[filterKey].includes(inputValue);
+                // });
+            });
+
+            tempData = filteredData;
+
+            return filteredData;
+        }
+
+        function mapJsonData() {
+
+            var title = $("#titleId").val();
+
+            var categorySelect = $("#categorySelect").find('option:selected').data('id');
+
+            var selectedOtts = $("#platformSelect").find('option:selected').map(function () {
+                return $(this).data('id');
+            }).get();
+
+            var selectedGenres = $("#typeSelect").find('option:selected').map(function () {
+                return $(this).data('id');
+            }).get();
+
+            var jsonData = {
+                Title: title,
+                CategoryId: categorySelect,
+                Otts: selectedOtts,
+                Genres: selectedGenres,
+                BeginTime: $("#startDatePicker").find("input").val(),
+                EndTine: $("#endDatePicker").find("input").val()
+            };
+
+            return jsonData;
+        }
+
+        // 更新表格數據的函数
+        function updateTable() {
+
+            var selectedOtts = $("#platformSelect").find('option:selected').map(function () {
+                return $(this).data('id');
+            }).get();
+
+            var selectedGenres = $("#typeSelect").find('option:selected').map(function () {
+                return $(this).data('id');
+            }).get();
+
+            var jsonData = mapJsonData();
+
+            console.log(jsonData);
+
+            $.ajax({
+                url: "/api/Search",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    // 清空Datatable数据
+                    $('#example').DataTable().clear().draw();
+
+                    // 在Datatable中添加新数据
+                    $('#example').DataTable().rows.add(response).draw();
+                },
+                error: function (error) {
+
+                }
+            });
+        }
+
+        $("#btnSearch").click(function () {
+            updateTable();
+        });
+
+        // Delete button click event
+        $("#example tbody").on("click", "button.deleteBtn", function () {
+            var id = $(this).data("id");
+            console.log(id);
+            $.ajax({
+                url: "/api/MediaInfosApi/" + id,
+                type: "DELETE",
+                success: function (response) {
+                    // 更新表格數據
+                    alert("刪除成功");
+                    updateTable();
+                },
+                error: function (error) {
+                    console.log(error);
+                },
+            });
+        });
+    });
+</script>
 

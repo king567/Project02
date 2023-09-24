@@ -69,17 +69,35 @@ namespace Final.Models.Repositories
 			}
 		}
 
-		// 根據 MediaInfo Id 刪除對應 MediaInfos_Genres_Rel 資料
-		public void DeleteMediaInfosGenresRelByMediaInfoId(int id)
+		public bool DeleteMediaInfosGenresRelByMediaInfoId(int id)
 		{
 			using (var db = new AppDbContext())
 			{
 				var mediaInfosGenresRelToDelete = db.MediaInfos_Genres_Rel.Where(e => e.MediaInfoId == id).ToList();
 
-				db.MediaInfos_Genres_Rel.RemoveRange(mediaInfosGenresRelToDelete);
+				if (mediaInfosGenresRelToDelete.Count > 0)
+				{
+					db.MediaInfos_Genres_Rel.RemoveRange(mediaInfosGenresRelToDelete);
+					int rowsAffected = db.SaveChanges();
 
-				db.SaveChanges();
+					if (rowsAffected == mediaInfosGenresRelToDelete.Count)
+					{
+						// 成功删除所有相关数据
+						return true;
+					}
+					else
+					{
+						// 删除部分或全部相关数据失败
+						return false;
+					}
+				}
+				else
+				{
+					// 没有找到相关数据，无需删除
+					return true;
+				}
 			}
 		}
+
 	}
 }

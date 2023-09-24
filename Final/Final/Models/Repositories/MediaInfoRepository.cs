@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Data.Odbc;
 using System.Diagnostics;
+using System.Web.Http;
 
 namespace Final.Models.Repositories
 {
@@ -59,6 +60,7 @@ namespace Final.Models.Repositories
 				var mediaInfos = db.MediaInfos
 					.AsNoTracking()
 					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
 					.Include(m => m.MediaInfos_Genres_Rel)
 					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
 					.Include(m => m.MediaInfos_OttTypes_Rel)
@@ -84,6 +86,7 @@ namespace Final.Models.Repositories
 					.AsNoTracking()
 					.Where(m => m.Id == id)
 					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
 					.Include(m => m.MediaInfos_Genres_Rel)
 					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
 					.Include(m => m.MediaInfos_OttTypes_Rel)
@@ -102,6 +105,7 @@ namespace Final.Models.Repositories
 				var mediaInfos = db.MediaInfos
 					.AsNoTracking()
 					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
 					.Include(m => m.MediaInfos_Genres_Rel)
 					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
 					.Include(m => m.MediaInfos_OttTypes_Rel)
@@ -123,11 +127,11 @@ namespace Final.Models.Repositories
 				var query = db.MediaInfos
 					.AsNoTracking()
 					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
 					.Include(m => m.MediaInfos_Genres_Rel)
 					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
 					.Include(m => m.MediaInfos_OttTypes_Rel)
 					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType));
-
 
 				// 如果為 Null 的話，就不查詢
 				if (criteria.Title != string.Empty && criteria.Title != null)
@@ -139,16 +143,38 @@ namespace Final.Models.Repositories
 				{
 					query = query.Where(c => c.Category.Id == criteria.CategoryId);
 				}
+                // 如果為 Null 的話，就不查詢
+                if (criteria.Genres != null)
+                {
+					if (criteria.Genres.Count != 0)
+					{
+						query = query.Where(m => m.MediaInfos_Genres_Rel.Any(rel => criteria.Genres.Contains(rel.Genre.Id)));
+					}
+                }
 				// 如果為 Null 的話，就不查詢
-				if (criteria.Genres.Count != 0)
+				if(criteria.Otts != null)
 				{
-					query = query.Where(m => m.MediaInfos_Genres_Rel.Any(rel => criteria.Genres.Contains(rel.Genre.Id)));
+					if (criteria.Otts.Count != 0)
+					{
+						query = query.Where(o => o.MediaInfos_OttTypes_Rel.Any(rel => criteria.Otts.Contains(rel.OttType.Id)));
+					}
 				}
-				// 如果為 Null 的話，就不查詢
-				if (criteria.Otts.Count != 0)
+				// 查詢上映時間 範圍內的時間
+				if (criteria.BeginTime.HasValue && criteria.EndTine.HasValue)
 				{
-					query = query.Where(o => o.MediaInfos_OttTypes_Rel.Any(rel => criteria.Otts.Contains(rel.OttType.Id)));
+					query = query.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Release_Date >= criteria.BeginTime && x.Release_Date <= criteria.EndTine));
 				}
+				// 查詢起始時間 範圍的資料
+				else if (criteria.BeginTime.HasValue)
+				{
+					query = query.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Release_Date >= criteria.BeginTime));
+				}
+				// 查詢結束時間 範圍的資料
+				else if (criteria.EndTine.HasValue)
+				{
+					query = query.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Release_Date <= criteria.EndTine));
+				}
+
 
 				var mediaInfos = query.ToList();
 
@@ -324,8 +350,16 @@ namespace Final.Models.Repositories
 
 					db.MediaInfos_Genres_Rel.RemoveRange(mediaInfosGenresRelToDelete);
 
+					// 檢查 genres 是否為空，如果為空的話，就不新增 直接回傳
+					if (genres.Count == 0)
+					{
+						db.SaveChanges();
+						return;
+					}
+
 					// 再新增 MediaInfos_Genres_Rel 資料
 					mediaInfo.MediaInfos_Genres_Rel = new List<MediaInfos_Genres_Rel>();
+
 					foreach (var genre in genres)
 					{
 						mediaInfo.MediaInfos_Genres_Rel.Add(new MediaInfos_Genres_Rel()
@@ -334,6 +368,7 @@ namespace Final.Models.Repositories
 							GenreId = genre
 						});
 					}
+
 					db.SaveChanges();
 				}
 			}
@@ -355,8 +390,16 @@ namespace Final.Models.Repositories
 
 					db.MediaInfos_OttTypes_Rel.RemoveRange(mediaInfosOttTypesRelToDelete);
 
+					// 檢查 otts 是否為空，如果為空的話，就不新增 直接回傳
+					if (otts.Count == 0)
+					{
+						db.SaveChanges();
+						return;
+					}
+
 					// 再新增 MediaInfos_OttTypes_Rel 資料
 					mediaInfo.MediaInfos_OttTypes_Rel = new List<MediaInfos_OttTypes_Rel>();
+
 					foreach (var ott in otts)
 					{
 						mediaInfo.MediaInfos_OttTypes_Rel.Add(new MediaInfos_OttTypes_Rel()
@@ -365,6 +408,7 @@ namespace Final.Models.Repositories
 							OttTypeId = ott
 						});
 					}
+
 					db.SaveChanges();
 				}
 			}
@@ -380,7 +424,50 @@ namespace Final.Models.Repositories
 				db.SaveChanges();
 			}
 		}
+		// 刪除指定 MediaInfo 的 Id
+		public bool DeleteMediaInfoById(int id)
+		{
+			var GenreRepository = new GenreRepository();
 
+			bool GenresisDeleted = GenreRepository.DeleteMediaInfosGenresRelByMediaInfoId(id);
+
+			using (var db = new AppDbContext())
+			{
+				var mediaInfo = db.MediaInfos.Find(id);
+				if (mediaInfo != null)
+				{
+					db.MediaInfos.Remove(mediaInfo);
+					int rowsAffected = db.SaveChanges();
+
+					if (rowsAffected == 1)
+					{
+						// 删除成功
+						return true;
+					}
+					else
+					{
+						// 删除失败
+						return false;
+					}
+				}
+				else
+				{
+					// 没有找到指定的 MediaInfo，不需要删除
+					return false;
+				}
+			}
+		}
+
+		public List<MediaInfo> Test()
+		{
+			using(var db = new AppDbContext())
+			{
+				var mediaInfos = db.MediaInfos
+					.ToList();
+
+				return mediaInfos;
+			}
+		}
 
 		// 以下為測試
 		// 測試

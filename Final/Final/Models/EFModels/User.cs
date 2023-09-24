@@ -26,7 +26,7 @@ namespace Final.Models.EFModels
         public string Account { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(70)]
         public string Password { get; set; }
 
         public bool? IsConfirmed { get; set; }

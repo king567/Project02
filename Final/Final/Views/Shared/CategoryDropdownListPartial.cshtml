@@ -1,0 +1,17 @@
+﻿@model Final.Models.ViewModels.MediaInfosInitVm
+
+<label for="categorySelect">影片類別：</label>
+<select class="form-control" id="categorySelect">
+    <option>請選擇</option>
+    @foreach (var category in Model.categories)
+    {
+        if (ViewBag.CategoryId == category.Id && ViewBag.CategoryId != 0)
+        {
+            <option data-id="@category.Id" data-name="@category.Name" selected="selected">@category.Name</option>
+        }
+        else
+        {
+            <option data-id="@category.Id" data-name="@category.Name">@category.Name</option>
+        }
+    }
+</select>

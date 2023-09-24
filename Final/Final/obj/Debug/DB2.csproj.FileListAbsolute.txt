@@ -84,8 +84,6 @@ C:\Users\king0\Documents\GitHub\Project02\Final\Final\bin\System.Net.Http.Format
 C:\Users\king0\Documents\GitHub\Project02\Final\Final\bin\System.Web.Http.xml
 C:\Users\king0\Documents\GitHub\Project02\Final\Final\bin\System.Web.Http.WebHost.xml
 C:\Users\king0\Documents\GitHub\Project02\Final\Final\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\king0\Documents\GitHub\Project02\Final\Final\bin\zh-Hant\EntityFramework.resources.dll
-C:\Users\king0\Documents\GitHub\Project02\Final\Final\bin\zh-Hant\EntityFramework.SqlServer.resources.dll
 C:\Users\king0\Documents\GitHub\Project02\Final\Final\bin\zh-Hant\System.Web.Helpers.resources.dll
 C:\Users\king0\Documents\GitHub\Project02\Final\Final\bin\zh-Hant\System.Web.Mvc.resources.dll
 C:\Users\king0\Documents\GitHub\Project02\Final\Final\bin\zh-Hant\System.Web.Optimization.resources.dll

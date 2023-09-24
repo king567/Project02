@@ -67,6 +67,38 @@ namespace Final.Models.Repositories
 			}
 		}
 
+		// 刪除 MediaInfos_OttTypes_Rel 資料
+		public bool DeleteMediaInfos_OttTypes_Rel(int id)
+		{
+			using (var db = new AppDbContext())
+			{
+				var relToDelete = db.MediaInfos_OttTypes_Rel.Where(x => x.MediaInfoId == id).ToList();
+
+				if (relToDelete.Count > 0)
+				{
+					db.MediaInfos_OttTypes_Rel.RemoveRange(relToDelete);
+					int rowsAffected = db.SaveChanges();
+
+					if (rowsAffected == relToDelete.Count)
+					{
+						// 成功删除所有相关数据
+						return true;
+					}
+					else
+					{
+						// 删除部分或全部相关数据失败
+						return false;
+					}
+				}
+				else
+				{
+					// 没有找到相关数据，无需删除
+					return true;
+				}
+
+			}
+		}
+
 		// 根據ottType Id取得MediaInfo資料
 		public List<MediaInfo> GetMediaInfoByOttTypeId(int id)
 		{

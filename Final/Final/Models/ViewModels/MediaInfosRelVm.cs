@@ -15,6 +15,7 @@ namespace Final.Models.ViewModels
 		public string OverView { get; set; }
 		public bool Adult { get; set; }
 		public double Popularity { get; set; }
+		public int LanguageCodeId { get; set; }
 		public string OriginalLanguage { get; set; }
 		public string OriginalTitle { get; set; }
 		public bool Video { get; set; }
@@ -30,6 +31,12 @@ namespace Final.Models.ViewModels
 		{
 			List<MediaInfosRelVm> vm = AutoMapperHelper.MapperObj.Map<List<MediaInfosRelVm>>(mediaInfos);
 
+			return vm;
+		}
+
+		public static MediaInfosRelVm Convert2VM(this MediaInfosRelDTO mediaInfos)
+		{
+			MediaInfosRelVm vm = AutoMapperHelper.MapperObj.Map<MediaInfosRelVm>(mediaInfos);
 			return vm;
 		}
 	}
