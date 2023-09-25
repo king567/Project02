@@ -56,6 +56,7 @@ namespace Final.Controllers
                 {
                     return HttpNotFound();
                 }
+
                 return View(rating);
             }
         }
@@ -93,5 +94,16 @@ namespace Final.Controllers
                 return RedirectToAction("Index");
             }
         }
-    }
+		[HttpGet]
+		public ActionResult GetMemberIdByAccount(string memberAccount)
+		{
+			using (var db = new AppDbContext())
+			{
+				// 根據會員帳號取得會員Id
+				var memberId = db.Members.Where(m => m.Account == memberAccount).Select(m => m.Id).FirstOrDefault();
+				return Json(memberId, JsonRequestBehavior.AllowGet);
+			}
+		}
+
+	}
 }

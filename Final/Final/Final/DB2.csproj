@@ -149,6 +149,7 @@
     <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BlacklistController.cs" />
     <Compile Include="Controllers\BlacklistReasonsController.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Models\Infra\HashUtility.cs" />
     <Compile Include="Models\Infra\UploadFileHelper.cs" />
     <Compile Include="Models\Repositories\CategoryRepository.cs" />
+    <Compile Include="Models\ViewModels\BlacklistVm.cs" />
     <Compile Include="Models\ViewModels\FormDataModelVm.cs" />
     <Compile Include="Models\Repositories\GenreRepository.cs" />
     <Compile Include="Models\Repositories\LanguageCodeRepository.cs" />
@@ -405,6 +407,8 @@
     <Content Include="Views\Shared\CategoryDropdownListPartial.cshtml" />
     <Content Include="Views\Shared\GenreDropdownListPartial.cshtml" />
     <Content Include="Views\Shared\OttDropdownListPartial.cshtml" />
+    <Content Include="Views\Blacklist\Edit.cshtml" />
+    <Content Include="Views\Blacklist\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

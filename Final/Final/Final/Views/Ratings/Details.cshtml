@@ -101,17 +101,34 @@
     </script>
 
     <script>
-     function addToBlacklist() {
-         var memberId = @Model.Id; // 傳遞會員的Id
+      function addToBlacklist() {
+         var memberAccount = "@Model.MemberAccount"; // 取得會員帳戶
          var blacklistReasonId = $("#BlacklistReasonId").val(); // 取得所選的黑名單原因的值
 
+         // 執行 AJAX 請求以取得會員的 Id
+         $.ajax({
+             url: "@Url.Action("GetMemberIdByAccount", "Ratings")", // 建立一個新的後端操作以取得 Id
+             type: "GET",
+             data: { memberAccount: memberAccount },
+             success: function (data) {
+                 var memberId = data; // 從後端取得的會員 Id
+                 // 現在您可以將 memberId 和 blacklistReasonId 傳送到新增黑名單的後端操作
+                 sendToBlacklist(memberId, blacklistReasonId);
+             },
+             error: function (error) {
+                 alert("取得會員 Id 時發生錯誤：" + error);
+             }
+         });
+    }
+
+    function sendToBlacklist(memberId, blacklistReasonId) {
+         // 執行 AJAX 請求，將 memberId 和 blacklistReasonId 傳送到後端新增黑名單的操作
          $.ajax({
              url: "@Url.Action("AddToBlacklist", "Ratings")",
-            /* url: "/api/RatingsApi/AddToBlacklist",*/
              type: "POST",
              data: { memberId: memberId, blacklistReasonId: blacklistReasonId },
              success: function (data) {
-                 // 在這裡新增成功後的處理邏輯，例如顯示成功訊息
+                 // 在這裡處理成功後的邏輯，例如顯示成功訊息
                  alert("成功加入黑名單！");
                  // 關閉模態框
                  $('#blacklistModal').modal('hide');
@@ -121,6 +138,6 @@
                  alert("加入黑名單時發生錯誤：" + error);
              }
          });
-     }
+    }
     </script>
 </p>

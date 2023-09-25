@@ -31,5 +31,10 @@ namespace Final.Models.ViewModels
 
 		[Display(Name = "評分時間")]
 		public DateTime CreatedTime { get; set; }
+
+		[Display(Name = "黑名單")]
+		public bool IsBlacklisted { get; internal set; }
+
+		public int MemberId { get; set; }
 	}
 }

@@ -92,5 +92,7 @@ namespace Final.Models.EFModels
                 .WithOptional(e => e.User)
                 .WillCascadeOnDelete();
         }
+
+        public System.Data.Entity.DbSet<Final.Models.ViewModels.BlacklistVm> BlacklistVms { get; set; }
     }
 }

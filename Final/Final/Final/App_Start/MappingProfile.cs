@@ -132,6 +132,9 @@ namespace Final.App_Start
 
 			//FAQ 轉換成 FAQVm
 			CreateMap<FAQ, FAQVm>().ReverseMap();
+
+			//Blacklist 轉換成 BlacklistVm
+			CreateMap<Blacklist, BlacklistVm>().ReverseMap();
         }
 	}
 }
