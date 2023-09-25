@@ -73,7 +73,7 @@ namespace Final.Controllers
         }
         private (string ReturnUrl, HttpCookie Cookie) ProcessLogin(LoginVm vm)
         {
-            var rememberme = false; 
+            var rememberme = true; 
             var account = vm.Account;
             var roles = string.Empty; 
 
@@ -82,20 +82,20 @@ namespace Final.Controllers
                             1, 
                             account,
                             DateTime.Now, 
-                            DateTime.Now.AddDays(2), 
+                            DateTime.Now.AddDays(30), 
                             rememberme,  
                             roles,       
                             "/"        
                             );
 
-            //將它加密
+            
             var value = FormsAuthentication.Encrypt(ticket);
 
-            //存入cookie
+            
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, value);
 
-            //取得return url
-            var url = FormsAuthentication.GetRedirectUrl(account, true); //第二個引數沒有用處
+            
+            var url = FormsAuthentication.GetRedirectUrl(account, true); 
 
             return (url, cookie);
         }
