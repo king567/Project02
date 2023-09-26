@@ -17,6 +17,7 @@ using System.Collections.Specialized;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Final.Models.Infra;
+using System.Net.Http.Formatting;
 
 namespace Final.Controllers
 {
@@ -96,6 +97,9 @@ namespace Final.Controllers
 
 			var mediaInfo = db.MediaInfos.Find(id);
 
+			string posterWebPath = mediaInfo.PosterPath;
+			string backdropWebdPath = mediaInfo.BackdropPath;
+
 			if (mediaInfo == null)
 			{
 				return NotFound();
@@ -103,30 +107,25 @@ namespace Final.Controllers
 
 			db.MediaInfos.Remove(mediaInfo);
 
-			// 刪除該MediaInfo Id 的封面及背景圖片
-			string posterWebPath = "~/Images/Poster";
-			string backdropWebdPath = "~/Images/Backdrop";
-			string posterPath = string.Empty;
-			string backdropPath = string.Empty;
+			string rootPath = HttpContext.Current.Server.MapPath("~");
+			string parentDirectory = Path.GetDirectoryName(Path.GetDirectoryName(rootPath));
 
-			// 如果圖片為 null 就不刪除圖片
+			string posterFilePath = parentDirectory + @"\\Images\\Poster\\" + posterWebPath;
+			string backdropFilePath = parentDirectory + @"\\Images\\Backdrop\\" + backdropWebdPath;
+
 			if (mediaInfo.PosterPath != null)
 			{
-				posterPath = Path.Combine(HttpContext.Current.Server.MapPath(posterWebPath), mediaInfo.PosterPath);
+				if (File.Exists(posterFilePath))
+				{
+					File.Delete(posterFilePath);
+				}
 			}
-			if(mediaInfo.BackdropPath != null)
+			if (mediaInfo.BackdropPath != null)
 			{
-				backdropPath = Path.Combine(HttpContext.Current.Server.MapPath(backdropWebdPath), mediaInfo.BackdropPath);
-			}
-
-			// 檢查檔案是否存在
-			if (File.Exists(posterPath))
-			{
-				File.Delete(posterPath);
-			}
-			if (File.Exists(backdropPath))
-			{
-				File.Delete(backdropPath);
+				if (File.Exists(backdropFilePath))
+				{
+					File.Delete(backdropFilePath);
+				}
 			}
 
 			db.SaveChanges();
@@ -138,109 +137,162 @@ namespace Final.Controllers
 		[Route("api/MediaInfosApi/Edit")]
 		public IHttpActionResult Edit(int id)
 		{
-			//var db = new AppDbContext();
-
-			//var mediaInfo = db.MediaInfos.Find(id);
-
-			//if (mediaInfo == null)
+			//var form = formData;
+			//try
 			//{
-			//	return NotFound();
-			//}
+			//	// 从 formData 中提取表单字段值
+			//	//var test = HttpContext.Current.Request.Form["OttItems"];
 
-			//if (SaveRequest()) return Ok("更新成功");
-			//return BadRequest("更新失敗");
+			//	// 执行编辑操作，这里是示例代码
+			//	// 这里可以调用服务层或数据访问层来执行实际的编辑逻辑
+			//	// EditMediaInfo(name, description);
+
+			//	return Ok("更新成功");
+			//}
+			//catch (Exception ex)
+			//{
+			//	// 处理异常
+			//	return BadRequest($"更新失败: {ex.Message}");
+			//}
 			if (EditRequest(id)) return Ok("更新成功");
 			return BadRequest("更新失敗:應影片不存在");
 		}
 
+
 		private bool SaveRequest()
 		{
-			string posterWebPath = "~/Images/Poster";
-			string backdropWebdPath = "~/Images/Backdrop";
-
-			//// 使用 uploadHelper 來處理上傳檔案
-			//IRenameProvider renameProvider = new GuidRenameProvider();
-			//IUploadValidator[] validators = new IUploadValidator[]
-			//{
-			//	new RequiredValidator(),
-			//	new ImageValidator(),
-			//	new FileSizeValidator(2048 * 2048) // 最大 1MB
-			//};
-
-			//// 檢查 HttpContext.Current.Request.Files["Poster"] 是否有檔案上傳
-
-			//if(HttpContext.Current.Request.Files["Poster"].ContentLength > 0)
-			//{
-			//	HttpPostedFileBase postedFileBase = new HttpPostedFileWrapper(HttpContext.Current.Request.Files["Poster"]);
-			//	UploadFileHelper fileHelper = new UploadFileHelper(renameProvider, validators);
-
-			//	// 假設你有一個名為 file 的 HttpPostedFileBase 實例，以及指定的儲存路徑 path
-			//	string uploadedFileName = fileHelper.SaveFile(postedFileBase, posterWebPath);
-			//	if (uploadedFileName != null)
-			//	{
-			//		// 檔案上傳成功，uploadedFileName 包含新的檔案名稱
-			//		Console.WriteLine("檔案上傳成功，新檔案名稱：" + uploadedFileName);
-			//	}
-			//	else
-			//	{
-			//		// 檔案上傳失敗或不符合驗證規則
-			//		Console.WriteLine("檔案上傳失敗或不符合驗證規則");
-			//	}
-			//}
-
-
-			// 检查是否有上傳檔案
-			if (HttpContext.Current.Request.Files.Count > 0)
+			try
 			{
-				HttpPostedFile file = HttpContext.Current.Request.Files[0];
-				// 检查文件是否有效
-				if (file != null && file.ContentLength > 0)
+				string posterWebPath = "/Images/Poster";
+				string backdropWebPath = "/Images/Backdrop";
+
+				string posterRootPath = HttpContext.Current.Server.MapPath(posterWebPath);
+				string backdropRootPath = HttpContext.Current.Server.MapPath(backdropWebPath);
+
+				string frontposterPath = "C:\\Users\\user\\Documents\\GitHub\\Project02\\Final\\Final\\Front\\Images\\Poster\\";
+				string frontbackdrop = "C:\\Users\\user\\Documents\\GitHub\\Project02\\Final\\Final\\Front\\Images\\Backdrop\\";
+
+				//if (!Directory.Exists(imagesFolderPathPoster))
+				//{
+				//	Directory.CreateDirectory(imagesFolderPathPoster);
+				//}
+				//if (!Directory.Exists(imagesFolderPathBackdrop))
+				//{
+				//	Directory.CreateDirectory(imagesFolderPathBackdrop);
+				//}
+
+				if (HttpContext.Current.Request.Files.Count > 0)
 				{
-
 					HttpPostedFile Poster = HttpContext.Current.Request.Files["Poster"];
-
-					var posterfileName = Path.GetRandomFileName() + Path.GetExtension(Poster.FileName);
-					var posterPath = Path.Combine(HttpContext.Current.Server.MapPath(posterWebPath), posterfileName);
-
-					// 保存poster
-					Poster.SaveAs(posterPath);
-
 					HttpPostedFile Backdrop = HttpContext.Current.Request.Files["Backdrop"];
 
-					var backdropfileName = Path.GetRandomFileName() + Path.GetExtension(Backdrop.FileName);
-					var backdropPath = Path.Combine(HttpContext.Current.Server.MapPath(backdropWebdPath), backdropfileName);
+					string posterFileName = null;
+					string backdropFileName = null;
+					string imagesFolderPathPoster = null;
+					string imagesFolderPathBackdrop = null;
 
-					// 保存backdrop
-					Backdrop.SaveAs(backdropPath);
+					if (Poster != null && Poster.ContentLength > 0)
+					{
+						if (IsValidImageFile(Poster))
+						{
+							posterFileName = Path.GetRandomFileName() + Path.GetExtension(Poster.FileName);
+							imagesFolderPathPoster = Path.Combine(posterRootPath, posterFileName);
+							Poster.SaveAs(imagesFolderPathPoster);
+							Poster.SaveAs(frontposterPath + posterFileName);
+						}
+						else
+						{
+							// 处理无效的文件类型
+							return false;
+						}
+					}
+
+					if (Backdrop != null && Backdrop.ContentLength > 0)
+					{
+						if (IsValidImageFile(Backdrop))
+						{
+							backdropFileName = Path.GetRandomFileName() + Path.GetExtension(Backdrop.FileName);
+							imagesFolderPathBackdrop = Path.Combine(backdropRootPath, backdropFileName);
+							Backdrop.SaveAs(imagesFolderPathBackdrop);
+							Backdrop.SaveAs(frontbackdrop + backdropFileName);
+						}
+						else
+						{
+							// 处理无效的文件类型
+							return false;
+						}
+					}
 
 					var db = new AppDbContext();
 
 					string json = HttpContext.Current.Request.Form["MediaInfo"];
+					JsonSerializerSettings settings = new JsonSerializerSettings
+					{
+						NullValueHandling = NullValueHandling.Ignore
+					};
 
-					FormDataModelVm vm = JsonConvert.DeserializeObject<FormDataModelVm>(json);
+					FormDataModelVm vm = JsonConvert.DeserializeObject<FormDataModelVm>(json, settings);
 
-					vm.PosterPath = @"/Images/Poster/" + posterfileName;
-					vm.BackdropPath = @"/Images/Backdrop/" + backdropfileName;
 
-					// FormDataModelVm 轉成 MediaInfo autoMapper 待測試
+					// 取得 imagesFolderPathPoster 的網站位置
+					imagesFolderPathPoster = posterWebPath + "/" + posterFileName;
+					imagesFolderPathBackdrop = backdropWebPath + "/" + backdropFileName;
+
+					vm.PosterPath = imagesFolderPathPoster;
+					vm.BackdropPath = imagesFolderPathBackdrop;
+
 					MediaInfo entity = AutoMapperHelper.MapperObj.Map<MediaInfo>(vm);
-
 					db.MediaInfos.Add(entity);
-
 					db.SaveChanges();
 
 					return true;
 				}
-			}
 
-			return false;
+				return false;
+			}
+			catch
+			{
+				// 处理异常
+				// 可以记录错误日志或向用户提供适当的错误消息
+				return false;
+			}
+		}
+
+		private bool IsValidImageFile(HttpPostedFile file)
+		{
+			// 在此处实现文件类型检查逻辑
+			// 例如，你可以检查文件扩展名或内容类型
+			// 如果文件有效，返回 true，否则返回 false
+			// 请根据你的需求实现这个方法
+			return true;
 		}
 
 		private bool EditRequest(int mediaInfoId)
 		{
 			string json = HttpContext.Current.Request.Form["MediaInfo"];
 
-			FormDataModelVm vm = JsonConvert.DeserializeObject<FormDataModelVm>(json);
+			// 自動繫結
+
+			FormDataModelVm vm = new FormDataModelVm();
+
+			JsonSerializerSettings settings = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			// 轉換成 FormDataModelVm
+			vm = JsonConvert.DeserializeObject<FormDataModelVm>(json, settings);
+
+			// 檢查是否有上傳檔案 (有上傳檔案才更新圖片)
+
+			if (HttpContext.Current.Request.Form["PosterPath"] != null)
+			{
+				vm.PosterPath = HttpContext.Current.Request.Form["PosterPath"];
+			}
+			if(HttpContext.Current.Request.Form["BackdropPath"] != null)
+			{
+				vm.BackdropPath = HttpContext.Current.Request.Form["BackdropPath"];
+			}
 
 			var db = new AppDbContext();
 
@@ -267,18 +319,23 @@ namespace Final.Controllers
 						HttpPostedFile Poster = HttpContext.Current.Request.Files["Poster"];
 						HttpPostedFile Backdrop = HttpContext.Current.Request.Files["Backdrop"];
 
-						var posterfileName = Path.GetRandomFileName() + Path.GetExtension(Poster.FileName);
-						var posterPath = Path.Combine(HttpContext.Current.Server.MapPath(posterWebPath), posterfileName);
-						var backdropfileName = Path.GetRandomFileName() + Path.GetExtension(Backdrop.FileName);
-						var backdropPath = Path.Combine(HttpContext.Current.Server.MapPath(backdropWebdPath), backdropfileName);
+						if(Poster != null)
+						{
+							var posterfileName = Path.GetRandomFileName() + Path.GetExtension(Poster.FileName);
+							var posterPath = Path.Combine(HttpContext.Current.Server.MapPath(posterWebPath), posterfileName);
+							entity.PosterPath = posterfileName;
+							// 保存poster
+							Poster.SaveAs(posterPath);
+						}
+						if (Backdrop != null)
+						{
+							var backdropfileName = Path.GetRandomFileName() + Path.GetExtension(Backdrop.FileName);
+							var backdropPath = Path.Combine(HttpContext.Current.Server.MapPath(backdropWebdPath), backdropfileName);
 
-						// 保存poster
-						Poster.SaveAs(posterPath);
-						// 保存backdrop
-						Backdrop.SaveAs(backdropPath);
-
-						entity.PosterPath = @"/Images/Poster/" + posterfileName;
-						entity.BackdropPath = @"/Images/Backdrop/" + backdropfileName;
+							entity.BackdropPath = backdropfileName;
+							// 保存backdrop
+							Backdrop.SaveAs(backdropPath);
+						}
 					}
 				}
 				else
@@ -288,14 +345,38 @@ namespace Final.Controllers
 					entity.BackdropPath = mediaInfo.BackdropPath;
 				}
 
+				mediaInfo.Title = entity.Title;
+				mediaInfo.CategoryId = entity.CategoryId;
+				mediaInfo.Adult = entity.Adult;
+				mediaInfo.OriginalLanguageId = entity.OriginalLanguageId;
+				mediaInfo.OriginalTitle = entity.OriginalTitle;
+				mediaInfo.OverView = entity.OverView;
+				mediaInfo.PosterPath = entity.PosterPath;
+				mediaInfo.BackdropPath = entity.BackdropPath;
+
+				// 設定 entity.MediaInfos_OttTypes_Rel 的 MediaInfoId 為 mediaInfo.Id
+				foreach (var item in entity.MediaInfos_OttTypes_Rel)
+				{
+					item.MediaInfoId = mediaInfo.Id;
+				}
+
+				// 設定 entity.MediaInfos_Genres_Rel 的 MediaInfoId 為 mediaInfo.Id
+				foreach (var item in entity.MediaInfos_Genres_Rel)
+				{
+					item.MediaInfoId = mediaInfo.Id;
+				}
+
 				// 更新 MediaInfo 資料
+				// 移除 MediaInfos_Genres_Rel MediaIndo id資料
+				// 移除 MediaInfos_OttTypes_Rel MediaIndo id資料
+
 				db.MediaInfos_Genres_Rel.RemoveRange(mediaInfo.MediaInfos_Genres_Rel);
 				db.MediaInfos_OttTypes_Rel.RemoveRange(mediaInfo.MediaInfos_OttTypes_Rel);
-				db.SaveChanges();
 
-				db.MediaInfos.Add(entity);
+				db.MediaInfos_Genres_Rel.AddRange(entity.MediaInfos_Genres_Rel);
+				db.MediaInfos_OttTypes_Rel.AddRange(entity.MediaInfos_OttTypes_Rel);
 
-				// 儲存變更
+
 				db.SaveChanges();
 
 				return true;

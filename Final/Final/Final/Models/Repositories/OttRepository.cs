@@ -1,4 +1,5 @@
-﻿using Final.Models.EFModels;
+﻿using Final.Models.DTOs;
+using Final.Models.EFModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,40 +31,88 @@ namespace Final.Models.Repositories
 			}
 		}
 
+		// 模糊搜尋 OttType Name
+		public List<OttType> Search(CriteriaOttsDTO criteria)
+		{
+			using (var db = new AppDbContext())
+			{
+				var ottTypes = db.OttTypes
+					.AsNoTracking();
+
+				if (criteria == null)
+				{
+					return ottTypes.ToList();
+				}
+
+				if (!string.IsNullOrEmpty(criteria.Name))
+				{
+					var filteredOttTypes = ottTypes.Where(x => x.Name.Contains(criteria.Name)).ToList();
+					return filteredOttTypes;
+				}
+
+				return ottTypes.ToList();
+			}
+		}
+
 		// 修改指定的OttType Id資料
-		public void UpdateOttType(OttType ottType)
+		public bool UpdateOttType(OttType ottType)
 		{
 			using (var db = new AppDbContext())
 			{
 				var ottTypeToUpdate = db.OttTypes.Find(ottType.Id);
-
-				ottTypeToUpdate.Name = ottType.Name;
-
-				db.SaveChanges();
+				if (ottTypeToUpdate == null)
+				{
+					return false;
+				}
+				else
+				{
+					ottTypeToUpdate.Name = ottType.Name;
+					db.SaveChanges();
+					return true;
+				}
 			}
 		}
 
 		// 新增OttType資料
-		public void InsertOttType(OttType ottType)
+		public bool CreateOttType(OttType ottType)
 		{
 			using (var db = new AppDbContext())
 			{
 				db.OttTypes.Add(ottType);
 
-				db.SaveChanges();
+				int rowsAffected = db.SaveChanges();
+
+				if (rowsAffected == 1)
+				{
+					// 成功新增一筆OttType資料
+					return true;
+				}
+				else
+				{
+					// 新增OttType資料失敗
+					return false;
+				}
 			}
 		}
 
 		// 刪除OttType資料
-		public void DeleteOttType(int id)
+		public bool DeleteOttType(int id)
 		{
 			using (var db = new AppDbContext())
 			{
 				var ottTypeToDelete = db.OttTypes.Find(id);
 
+				if (ottTypeToDelete == null)
+				{
+					// 沒有找到OttType資料
+					return false;
+				}
+
 				db.OttTypes.Remove(ottTypeToDelete);
 
 				db.SaveChanges();
+
+				return true;
 			}
 		}
 

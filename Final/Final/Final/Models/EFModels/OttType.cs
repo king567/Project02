@@ -20,8 +20,6 @@ namespace Final.Models.EFModels
         [StringLength(150)]
         public string Name { get; set; }
 
-        public int DisplayOrder { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MediaInfos_OttTypes_Rel> MediaInfos_OttTypes_Rel { get; set; }
     }

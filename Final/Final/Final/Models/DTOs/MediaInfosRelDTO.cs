@@ -21,6 +21,6 @@ namespace Final.Models.DTOs
 		public string BackdropPath { get; set; }
 		public string PosterPath { get; set; }
 		public List<GenresDTO> Genres { get; set; }
-		public List<OttTypesDTO> OttTypes { get; set; }
+		public List<OttTypesRelDTO> OttTypes { get; set; }
 	}
 }

@@ -11,15 +11,17 @@ namespace Final.Models.ViewModels
 		public string OverView { get; set; }
 		public string OriginalLanguage { get; set; }
 		public string OriginalTitle { get; set; }
-		public bool? Adult { get; set; }
-		public bool? Video { get; set; }
+		public bool Adult { get; set; }
+		public bool Video { get; set; }
 		public List<OttItem> OttItems { get; set; }
 		public List<int> Genres { get; set; }
 		public int CategoryId { get; set; }
         public string PosterPath { get; set; }
 		public string BackdropPath { get; set; }
         public int LanguageCodeId { get; set; }
-    }
+		public HttpPostedFileBase Poster { get; set; }
+		public HttpPostedFileBase Backdrop { get; set; }
+	}
 
 	public class OttItem
 	{

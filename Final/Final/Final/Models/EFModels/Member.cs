@@ -11,6 +11,7 @@ namespace Final.Models.EFModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Member()
         {
+            Creditcards = new HashSet<Creditcard>();
             FavoriteMedias = new HashSet<FavoriteMedia>();
             Ratings = new HashSet<Rating>();
             Vipitems = new HashSet<Vipitem>();
@@ -50,6 +51,9 @@ namespace Final.Models.EFModels
         public DateTime CreatedTime { get; set; }
 
         public virtual Blacklist Blacklist { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Creditcard> Creditcards { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FavoriteMedia> FavoriteMedias { get; set; }

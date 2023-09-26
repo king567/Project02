@@ -1,8 +1,18 @@
-﻿using Final.Models.EFModels;
+﻿using Dapper;
+using Final.Models.EFModels;
+using Final.Models.Entities;
+using System.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Final.Models.DTOs;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Data;
+using System.Data.Odbc;
+using System.Diagnostics;
+using System.Web.Http;
 
 namespace Final.Models.Repositories
 {
@@ -22,12 +32,36 @@ namespace Final.Models.Repositories
 			}
 		}
 
+		// 模糊搜尋 Genre Name
+
+		public List<Genre> Search(CriteriaGenresDTO criteria)
+		{
+			using (var db = new AppDbContext())
+			{
+				var genres = db.Genres
+					.AsNoTracking();
+
+				if (criteria == null)
+				{
+					return genres.ToList();
+				}
+
+				if (!string.IsNullOrEmpty(criteria.Name))
+				{
+					var filteredGenres = genres.Where(x => x.Name.Contains(criteria.Name)).ToList();
+					return filteredGenres;
+				}
+
+				return genres.ToList();
+			}
+		}
+
 		/// <summary>
 		/// 取得指定的Genre Id資料
 		/// </summary>
 		/// <param name="id">Genre Id</param>
 		/// <returns></returns>
-		public Genre GetGenre(int id)
+		public Genre GetGenreById(int id)
 		{
 			using (var db = new AppDbContext())
 			{
@@ -57,15 +91,22 @@ namespace Final.Models.Repositories
 		/// 刪除指定的Genre Id資料
 		/// </summary>
 		/// <param name="id">Genre Id</param>
-		public void DeleteGenre(int id)
+		public bool DeleteGenre(int id)
 		{
 			using (var db = new AppDbContext())
 			{
 				var genreToDelete = db.Genres.Find(id);
 
+				if (genreToDelete == null)
+				{
+					return false;
+				}
+
 				db.Genres.Remove(genreToDelete);
 
 				db.SaveChanges();
+
+				return true;
 			}
 		}
 
@@ -95,6 +136,24 @@ namespace Final.Models.Repositories
 				{
 					// 没有找到相关数据，无需删除
 					return true;
+				}
+			}
+		}
+
+		// 新增 Genre
+		public bool Create(Genre genre)
+		{
+			using (var db = new AppDbContext())
+			{
+				try
+				{
+					db.Genres.Add(genre);
+					db.SaveChanges();
+					return true;
+				}
+				catch
+				{
+					return false;
 				}
 			}
 		}

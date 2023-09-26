@@ -22,7 +22,7 @@ namespace Final.Models.ViewModels
 		public string BackdropPath { get; set; }
 		public string PosterPath { get; set; }
 		public List<GenresDTO> Genres { get; set; }
-		public List<OttTypesDTO> OttTypes { get; set; }
+		public List<OttTypesRelDTO> OttTypes { get; set; }
 	}
 
 	public static class MediaInfosRelVmExts

@@ -36,13 +36,38 @@
                 </div>
 
                 <div class="mb-3 col-12">
+                    @if(Model.EditVm.OttTypes.Count == 0)
+                    {
+                        <div class="ottContainer">
+                            <div id="ottItems" class="row">
+                                <div class="col-5 mb-3 ottTypes" data-ottIndex="0">
+                                    <label for="OttsSelect">上映OTT平台：</label>
+                                    @Html.DropDownListFor(model => model.EditVm.OttTypes[0].Id, new SelectList(Model.MediaInfosInitVm.OttTypes, "Id", "Name"), "請選擇", new { @class = "form-control", id = "optionOttId" })
+                                </div>
+                                <div class="col-3 mb-3 releaseDate" data-releaseDateIndex="0">
+                                    <label for="startDate">上映日期:</label>
+                                    <input class="form-control text-box single-line" data-val="true" data-val-date="欄位 ReleaseDate 必須是日期。" data-val-required="ReleaseDate 欄位是必要項。" id="startDate" name="ottitem.ReleaseDate" type="date" value="">
+                                </div>
+                                <div class="col-3 mb-3 removeDate" data-removeDate="0">
+                                    <label for="endDate">下架日期:</label>
+                                    <input class="form-control text-box single-line" data-val="true" data-val-date="欄位 RemovalDate 必須是日期。" id="endDate" name="ottitem.RemovalDate" type="date" value="">
+                                </div>
+                                <div class="col-1 mb-3 text-end deleteBtn" data-deleteBtn="0">
+                                    <button type="button" class="btn btn-danger" style="margin-top:32px; margin-right:2px;">X</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
                     @foreach (var ottitem in Model.EditVm.OttTypes)
                     {
                         <div class="ottContainer">
                             <div id="ottItems" class="row">
                                 <div class="col-5 mb-3 ottTypes" data-ottIndex="@ottitem.Id">
                                     <label for="OttsSelect">上映OTT平台：</label>
-                                    @Html.DropDownListFor(model => ottitem.Id, new SelectList(Model.MediaInfosInitVm.OttTypes, "Id", "Name", ottitem.Id), "請選擇", new { @class = "form-control",id="optionOttId"})
+                                    @*@Html.DropDownListFor(model => ottitem.Id, new SelectList(Model.MediaInfosInitVm.OttTypes, "Id", "Name", ottitem.Id), "請選擇", new { @class = "form-control",id="optionOttId", data_id = "your_value_here" })*@
+                                    @Html.DropDownListFor(model => ottitem.Id, new SelectList(Model.MediaInfosInitVm.OttTypes, "Id", "Name", ottitem.Id), "請選擇", new { @class = "form-control", id = "optionOttId" })
+
                                 </div>
                                 <div class="col-3 mb-3 releaseDate" data-releaseDateIndex="@ottitem.Id">
                                     <label for="startDate">上映日期:</label>
@@ -189,6 +214,7 @@
         // 获取表单数据
 
         // 使用Ajax发送表单数据
+        // url: "/api/MediaInfosApi/Edit?Id=" + @*@Model.EditVm.Id*@, // 替换为您的API端点URL
         $.ajax({
             type: "POST",
             url: "/api/MediaInfosApi/Edit?Id=" + @Model.EditVm.Id, // 替换为您的API端点URL
@@ -292,65 +318,6 @@
         });
     }
 
-    function GetFormData() {
-        // 获取类别
-        var categorySelect = $("#categorySelect").find('option:selected').data('id');
-        var languageCodeSelect = $("#languageCodeSelect").val();
-
-        // 获取类型
-        var selectedGenres = $("#typeSelect").find('option:selected').map(function () {
-            return $(this).data('id');
-        }).get();
-
-        // 获取OTT项目
-        var ottItems = [];
-
-        $(".ottTypes").each(function () {
-            var ottPlatform = $(this).find('select').val();
-            var releaseDate = $(this).next().find('input#startDate').val();
-            var removeDate = $(this).next().next().find('input#endDate').val();
-
-            ottItems.push({
-                ottPlatform: ottPlatform,
-                releaseDate: releaseDate,
-                removeDate: removeDate
-            });
-        });
-
-        // 获取formFileBack文件
-        var formFileBack = $("#formFileBack")[0].files[0];
-        // 获取formFileFront文件
-        var formFileFront = $("#formFileFront")[0].files[0];
-
-        // 创建包含表单数据的JSON对象
-        var jsonData = {
-            Title: $("#Title").val(),
-            OverView: $("#OverView").val(),
-            OriginalTitle: $("#OriginalTitle").val(),
-            Adult: $("#Adult").val(),
-            OttItems: ottItems,
-            Genres: selectedGenres,
-            CategoryId: categorySelect,
-            LanguageCodeId: languageCodeSelect
-        };
-
-        console.log(jsonData);
-
-        // object convet to json
-        var json = JSON.stringify(jsonData);
-
-        // 创建一个FormData对象来包含文件数据
-        var formData = new FormData();
-        formData.append('Backdrop', formFileBack);
-        formData.append('Poster', formFileFront);
-        formData.append('MediaInfo', json);
-
-        return formData;
-    }
-
-
-    // 取得表單資料，並轉換為 FormData 格式
-
     //function GetFormData() {
     //    // 获取类别
     //    var categorySelect = $("#categorySelect").find('option:selected').data('id');
@@ -362,29 +329,25 @@
     //    }).get();
 
     //    // 获取OTT项目
-    //    var ottTypesElements = document.querySelectorAll('.ottTypes');
+    //    var ottItems = [];
 
-    //    var ottsData = [];
+    //    $(".ottTypes").each(function () {
+    //        var ottPlatform = $(this).find('select').val();
+    //        var releaseDate = $(this).next().find('input#startDate').val();
+    //        var removeDate = $(this).next().next().find('input#endDate').val();
 
-    //    ottTypesElements.forEach(function (element) {
-
-    //        var selectElement = element.querySelector('select');
-    //        var selectedOption = selectElement.options[selectElement.selectedIndex];
-    //        var ottPlatform = selectedOption.getAttribute("data-id");
-    //        var releaseDate = element.nextElementSibling.querySelector('input#startDate').value;
-    //        var removeDate = element.nextElementSibling.nextElementSibling.querySelector('input#endDate').value;
-
-    //        ottsData.push({
+    //        ottItems.push({
     //            ottPlatform: ottPlatform,
     //            releaseDate: releaseDate,
     //            removeDate: removeDate
     //        });
     //    });
 
+
     //    // 获取formFileBack文件
-    //    var formFileBack = document.getElementById('formFileBack').files[0];
+    //    var formFileBack = $("#formFileBack")[0].files[0];
     //    // 获取formFileFront文件
-    //    var formFileFront = document.getElementById('formFileFront').files[0];
+    //    var formFileFront = $("#formFileFront")[0].files[0];
 
     //    // 创建包含表单数据的JSON对象
     //    var jsonData = {
@@ -392,24 +355,100 @@
     //        OverView: $("#OverView").val(),
     //        OriginalTitle: $("#OriginalTitle").val(),
     //        Adult: $("#Adult").val(),
-    //        OttItems: ottsData,
+    //        OttItems: ottItems,
     //        Genres: selectedGenres,
     //        CategoryId: categorySelect,
     //        LanguageCodeId: languageCodeSelect
     //    };
 
-    //    console.log(jsonData);
-    //    // object convet to json
-    //    var json = JSON.stringify(jsonData);
-
     //    // 创建一个FormData对象来包含文件数据
     //    var formData = new FormData();
     //    formData.append('Backdrop', formFileBack);
     //    formData.append('Poster', formFileFront);
-    //    formData.append('MediaInfo', json);
+    //    formData.append('Title', jsonData.Title);
+    //    formData.append('OverView', jsonData.OverView);
+    //    formData.append('OriginalTitle',jsonData.OriginalTitle);
+    //    formData.append('Adult', jsonData.Adult);
+    //    formData.append('OttItems', jsonData.OttItems);
+
+    //    ottItems.forEach((item, index) => {
+    //        formData.append(`OttItems[${index}].ottPlatform`, item.ottPlatform);
+    //        formData.append(`OttItems[${index}].releaseDate`, item.releaseDate);
+    //        formData.append(`OttItems[${index}].removeDate`, item.removeDate);
+    //    });
+
+
+
+    //    formData.append('Genres', jsonData.Genres);
+    //    formData.append('CategoryId', jsonData.CategoryId);
+    //    formData.append('LanguageCodeId', jsonData.LanguageCodeId);
 
     //    return formData;
     //}
+
+
+    // 取得表單資料，並轉換為 FormData 格式
+
+    function GetFormData() {
+        // 获取类别
+        var categorySelect = $("#categorySelect").find('option:selected').data('id');
+        var languageCodeSelect = $("#languageCodeSelect").val();
+
+        // 获取类型
+        var selectedGenres = $("#typeSelect").find('option:selected').map(function () {
+            return $(this).data('id');
+        }).get();
+
+        // 获取OTT项目
+        var ottTypesElements = document.querySelectorAll('.ottTypes');
+
+        var ottsData = [];
+
+        ottTypesElements.forEach(function (element) {
+
+            var selectElement = element.querySelector('select');
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            /*var ottPlatform = selectedOption.getAttribute("data-id");*/
+            var ottPlatform = selectedOption.value;
+            var releaseDate = element.nextElementSibling.querySelector('input#startDate').value;
+            var removeDate = element.nextElementSibling.nextElementSibling.querySelector('input#endDate').value;
+
+            ottsData.push({
+                ottPlatform: ottPlatform,
+                releaseDate: releaseDate,
+                removeDate: removeDate
+            });
+        });
+
+        // 获取formFileBack文件
+        var formFileBack = document.getElementById('formFileBack').files[0];
+        // 获取formFileFront文件
+        var formFileFront = document.getElementById('formFileFront').files[0];
+
+        // 创建包含表单数据的JSON对象
+        var jsonData = {
+            Title: $("#Title").val(),
+            OverView: $("#OverView").val(),
+            OriginalTitle: $("#OriginalTitle").val(),
+            Adult: $("#Adult").val(),
+            OttItems: ottsData,
+            Genres: selectedGenres,
+            CategoryId: categorySelect,
+            LanguageCodeId: languageCodeSelect
+        };
+
+        console.log(jsonData);
+        // object convet to json
+        var json = JSON.stringify(jsonData);
+
+        // 创建一个FormData对象来包含文件数据
+        var formData = new FormData();
+        formData.append('Backdrop', formFileBack);
+        formData.append('Poster', formFileFront);
+        formData.append('MediaInfo', json);
+
+        return formData;
+    }
 
     function isImageFile(file) {
         var acceptedImageTypes = ["image/jpeg", "image/png", "image/gif", "image/svg+xml"]; // 可接受的图片文件类型

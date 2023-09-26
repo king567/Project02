@@ -23,6 +23,6 @@ namespace Final.Models.DTOs
 		public string BackdropPath { get; set; }
 		public string PosterPath { get; set; }
         public List<GenresDTO> Genre { get; set; }
-		public List<OttTypesDTO> OttType { get; set; }
+		public List<OttTypesRelDTO> OttType { get; set; }
 	}
 }

@@ -56,7 +56,7 @@ namespace Final.App_Start
 					Id = g.Id,
 					Name = g.Name
 				}).ToList()))
-				.ForMember(dest => dest.OttTypes, opt => opt.MapFrom(src => src.OttTypes.Select(o => new OttTypesDTO
+				.ForMember(dest => dest.OttTypes, opt => opt.MapFrom(src => src.OttTypes.Select(o => new OttTypesRelDTO
 				{
 					Id = o.Id,
 					Name = o.Name,
@@ -82,7 +82,7 @@ namespace Final.App_Start
 				Id = g.GenreId,
 				Name = g.Genre.Name
 			}).ToList()))
-			.ForMember(dest => dest.OttType, opt => opt.MapFrom(src => src.MediaInfos_OttTypes_Rel.Select(o => new OttTypesDTO
+			.ForMember(dest => dest.OttType, opt => opt.MapFrom(src => src.MediaInfos_OttTypes_Rel.Select(o => new OttTypesRelDTO
 			{
 				Id = o.OttTypeId,
 				Name = o.OttType.Name,
@@ -102,7 +102,7 @@ namespace Final.App_Start
 				Id = g.GenreId,
 				Name = g.Genre.Name
 			}).ToList()))
-			.ForMember(dest => dest.OttTypes, opt => opt.MapFrom(src => src.MediaInfos_OttTypes_Rel.Select(o => new OttTypesDTO
+			.ForMember(dest => dest.OttTypes, opt => opt.MapFrom(src => src.MediaInfos_OttTypes_Rel.Select(o => new OttTypesRelDTO
 			{
 				Id = o.OttTypeId,
 				Name = o.OttType.Name,
@@ -129,6 +129,36 @@ namespace Final.App_Start
 					Release_Date = o.releaseDate,
 					Removal_Date = o.removeDate,
 				}).ToList()));
+
+			// Genre 轉換成 GenresDTO
+			CreateMap<Genre, GenresDTO>()
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+			// GenreDTO 轉換成 GenresVm
+			CreateMap<GenresDTO, GenresVm>()
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+			// OttType 轉換成 OttTypesDTO
+			CreateMap<OttType, OttTypesDTO>()
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name)).ReverseMap();
+
+			// OttTypesDTO 轉換成 OttTypesVm
+			CreateMap<OttTypesDTO, OttTypesVm>()
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name)).ReverseMap();
+
+			// Category 轉換成 CategoryDTO
+			CreateMap<Category, CategoryDTO>()
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name)).ReverseMap();
+
+			// CategoryDTO 轉換成 CategoryVm
+			CreateMap<CategoryDTO, CategoryVm>()
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name)).ReverseMap();
 
 			//FAQ 轉換成 FAQVm
 			CreateMap<FAQ, FAQVm>().ReverseMap();

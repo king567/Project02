@@ -1,4 +1,5 @@
-﻿using Final.Models.EFModels;
+﻿using Final.Models.DTOs;
+using Final.Models.EFModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,29 @@ namespace Final.Models.Repositories
 			}
 		}
 
+		// 搜尋 Category Name
+		public List<Category> Search(CriteriaCategoriesDTO criteria)
+		{
+			using (var db = new AppDbContext())
+			{
+				var categories = db.Categories
+					.AsNoTracking();
+
+				if (criteria == null)
+				{
+					return categories.ToList();
+				}
+
+				if (!string.IsNullOrEmpty(criteria.Name))
+				{
+					var filteredGenres = categories.Where(x => x.Name.Contains(criteria.Name)).ToList();
+					return filteredGenres;
+				}
+
+				return categories.ToList();
+			}
+		}
+
 		/// <summary>
 		/// 取得指定的 Category Id 資料
 		/// </summary>
@@ -41,7 +65,7 @@ namespace Final.Models.Repositories
 		/// 修改指定的 Category Id 資料
 		/// </summary>
 		/// <param name="category">Category Entity</param>
-		public void UpdateCategory(Category category)
+		public void Update(Category category)
 		{
 			using (var db = new AppDbContext())
 			{
@@ -57,28 +81,46 @@ namespace Final.Models.Repositories
 		/// 新增Category資料
 		/// </summary>
 		/// <param name="category">Category Entity</param>
-		public void InsertCategory(Category category)
+		public bool Create(Category category)
 		{
 			using (var db = new AppDbContext())
 			{
-				db.Categories.Add(category);
+				try
+				{
+					db.Categories.Add(category);
 
-				db.SaveChanges();
+					db.SaveChanges();
+
+					return true;
+				}
+				catch
+				{
+					return false;
+				}
 			}
 		}
 		/// <summary>
 		/// 刪除指定Category資料
 		/// </summary>
 		/// <param name="id"></param>
-		public void DeleteCategory(int id)
+		public bool DeleteCategory(int id)
 		{
 			using (var db = new AppDbContext())
 			{
 				var categoryToDelete = db.Categories.Find(id);
 
-				db.Categories.Remove(categoryToDelete);
+				if (categoryToDelete == null)
+				{
+					return false;
+				}
+				else
+				{
+					db.Categories.Remove(categoryToDelete);
 
-				db.SaveChanges();
+					db.SaveChanges();
+
+					return true;
+				}
 			}
 		}
 	}

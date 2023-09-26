@@ -10,7 +10,7 @@ namespace Final.Models.EFModels
     {
         public int Id { get; set; }
 
-        public int? MemberId { get; set; }
+        public int MemberId { get; set; }
 
         [Required]
         [StringLength(16)]
@@ -20,6 +20,9 @@ namespace Final.Models.EFModels
         [StringLength(3)]
         public string ThreeNumber { get; set; }
 
+        [StringLength(50)]
+        public string ExpireDate { get; set; }
+
         [Required]
         [StringLength(20)]
         public string FirstName { get; set; }
@@ -27,5 +30,7 @@ namespace Final.Models.EFModels
         [Required]
         [StringLength(20)]
         public string LastName { get; set; }
+
+        public virtual Member Member { get; set; }
     }
 }
