@@ -283,8 +283,6 @@ C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\System.Net.Http.F
 C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\System.Web.Http.xml
 C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\System.Web.Http.WebHost.xml
 C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\zh-Hant\EntityFramework.resources.dll
-C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\zh-Hant\EntityFramework.SqlServer.resources.dll
 C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\zh-Hant\System.Web.Helpers.resources.dll
 C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\zh-Hant\System.Web.Mvc.resources.dll
 C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\zh-Hant\System.Web.Optimization.resources.dll
@@ -300,3 +298,7 @@ C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\obj\Debug\Project2 fr
 C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\obj\Debug\Project2 front.csproj.CopyComplete
 C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\obj\Debug\Project2.dll
 C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\obj\Debug\Project2.pdb
+C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\Dapper.dll
+C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\Dapper.xml
+C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\AutoMapper.dll
+C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\AutoMapper.xml
