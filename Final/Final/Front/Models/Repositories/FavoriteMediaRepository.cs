@@ -14,17 +14,28 @@ namespace Project2.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				var favoriteMedia = new FavoriteMedia()
+				// 檢查是否已經有收藏
+				var favoriteMediaCheck = db.FavoriteMedias
+					.Where(x => x.MemberId == dto.MemberId && x.MediaInformId == dto.MediaInfoId)
+					.FirstOrDefault();
+
+				if (favoriteMediaCheck != null)
 				{
-					MemberId = dto.MemberId,
-					MediaInformId = dto.MediaInfoId
-				};
+					return false;
+				}
+				else
+				{
+					var favoriteMedia = new FavoriteMedia()
+					{
+						MemberId = dto.MemberId,
+						MediaInformId = dto.MediaInfoId
+					};
 
-				db.FavoriteMedias.Add(favoriteMedia);
-				db.SaveChanges();
+					db.FavoriteMedias.Add(favoriteMedia);
+					db.SaveChanges();
+				}
+				return true;
 			}
-
-			return true;
 		}
 
 		// 刪除一筆 FavoriteMedia 資料
