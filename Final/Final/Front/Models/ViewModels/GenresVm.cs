@@ -21,9 +21,9 @@ namespace Final.Models.ViewModels
 	{
 		public static List<GenresVm> Convert2VM(this List<GenresDTO> genres)
 		{
-			List<GenresVm> vm = AutoMapperHelper.MapperObj.Map<List<GenresVm>>(genres);
+			List<GenresVm> vms = AutoMapperHelper.MapperObj.Map<List<GenresVm>>(genres);
 
-			return vm;
+			return vms;
 		}
 
 		public static GenresVm Convert2VM(this GenresDTO genres)

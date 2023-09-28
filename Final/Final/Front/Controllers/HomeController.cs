@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Final.Models.DTOs;
+using Final.Models.Services;
+using Final.Models.ViewModels;
+using Project2.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +14,22 @@ namespace Project2.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+			//int page = 1;
+			//int pageSize = 10;
+
+			//List<MediaInfosRelDTO> dtos = new MediaInfoService().GetMediaInfosPage(page, pageSize);
+
+			//// DTO 轉成 VM
+			//List<MediaInfosRelVm> vm = dtos.Convert2VM();
+
+            HomesVm vm = new HomesVm()
+            {
+				GetNextOneMonthRelease = new MediaInfoService().GetNextOneMonthRelease().Convert2VM(),
+                GetLastOneMonthMediaInfo = new MediaInfoService().GetLastOneMonthMediaInfo().Convert2VM(),
+                GetNextOneMonthORemoval = new MediaInfoService().GetNextOneMonthORemoval().Convert2VM()
+			};
+
+			return View(vm);
         }
 
         public ActionResult About()

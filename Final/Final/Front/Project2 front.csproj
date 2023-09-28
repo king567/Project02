@@ -57,6 +57,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=4242.42.42.42, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.2022.3.1\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -124,6 +127,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="X.PagedList, Version=8.4.7.0, Culture=neutral, PublicKeyToken=525ccaa9023f010c, processorArchitecture=MSIL">
+      <HintPath>..\packages\X.PagedList.8.4.7\lib\netstandard2.0\X.PagedList.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -149,6 +155,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MediaInfosController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -198,6 +205,7 @@
     <Compile Include="Models\ViewModels\FormDataModelVm.cs" />
     <Compile Include="Models\ViewModels\GenresAndOttTypesVm.cs" />
     <Compile Include="Models\ViewModels\GenresVm.cs" />
+    <Compile Include="Models\ViewModels\HomesVm.cs" />
     <Compile Include="Models\ViewModels\LoginVm.cs" />
     <Compile Include="Models\ViewModels\MediaInfosInitVm.cs" />
     <Compile Include="Models\ViewModels\MediaInfosRelVm.cs" />
@@ -230,6 +238,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\selectTypes.css" />
     <Content Include="Images\adventure1.jpg" />
     <Content Include="Images\adventure2.jpg" />
     <Content Include="Images\adventure3.jpg" />
@@ -271,6 +280,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\WAPagination.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -291,6 +301,16 @@
     <Content Include="Views\Members\ActiveRegister.cshtml" />
     <Content Include="Views\Members\Login.cshtml" />
     <Content Include="Views\Members\Index.cshtml" />
+    <Content Include="Views\MediaInfos\Index.cshtml" />
+    <Content Include="Views\MediaInfos\Category.cshtml" />
+    <Content Include="Views\MediaInfos\CategoryWithGenre.cshtml" />
+    <Content Include="Views\Shared\ShowGenresByCategory.cshtml" />
+    <Content Include="Views\MediaInfos\Details.cshtml" />
+    <Content Include="Views\MediaInfos\RecentReleaseWithCategory.cshtml" />
+    <Content Include="Views\MediaInfos\UpcomingReleaseWithCategory.cshtml" />
+    <Content Include="Views\MediaInfos\RecentRemovalWithCategory.cshtml" />
+    <Content Include="Views\MediaInfos\CategoryWithOttType.cshtml" />
+    <Content Include="Views\MediaInfos\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

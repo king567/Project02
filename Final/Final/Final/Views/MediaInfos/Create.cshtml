@@ -304,6 +304,8 @@
             });
         });
 
+        
+
         // 获取formFileBack文件
         var formFileBack = document.getElementById('formFileBack').files[0];
         // 获取formFileFront文件
@@ -322,7 +324,7 @@
             CategoryId: categorySelect,
             LanguageCodeId: languageCodeSelect
         };
-
+        console.log(jsonData);
         // object convet to json
         var json = JSON.stringify(jsonData);
 

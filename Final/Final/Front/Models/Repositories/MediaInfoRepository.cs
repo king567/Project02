@@ -12,6 +12,8 @@ using System.Data.Odbc;
 using System.Diagnostics;
 using System.Web.Http;
 using Project2.Models.EFModels;
+using System.Drawing.Printing;
+using System.Web.UI;
 
 namespace Final.Models.Repositories
 {
@@ -115,6 +117,88 @@ namespace Final.Models.Repositories
 					.ToList();
 
 				return mediaInfos;
+			}
+		}
+
+		// 取得分頁的 MediaInfo 資料 並篩選 Category
+		public List<MediaInfo> GetMediaInfoPageByCategory(int page, int pageSize, int categoryId)
+		{
+			using (var db = new AppDbContext())
+			{
+				var totalRecords = db.MediaInfos.Count(m => m.CategoryId == categoryId);
+
+				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
+					.OrderBy(m => m.Id)
+					.Skip(page * pageSize) // 計算跳過的筆數
+					.Take(pageSize)
+					.ToList();
+
+				// 如果該頁面的資料超出了總記錄數，僅返回剩餘的資料
+				if (page * pageSize >= totalRecords)
+				{
+					mediaInfos = new List<MediaInfo>();
+				}
+
+				return mediaInfos;
+			}
+		}
+
+		// 取得分頁的 MediaInfo 資料 並篩選 Category 並計算總筆數
+		public int GetMediaInfoPageByCategoryCount(int categoryId)
+		{
+			using (var db = new AppDbContext())
+			{
+				var count = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Count();
+
+				return count;
+			}
+		}
+
+		// 搜尋 title 關鍵字的 MediaInfo 資料 並包含Category、Genres、OttTypes、LanguageCode 並取得分頁資料
+		public List<MediaInfo> GetMediaInfosByTitlePage(string title, int page, int pageSize)
+		{
+			using (var db = new AppDbContext())
+			{
+				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.Title.Contains(title))
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
+					.OrderBy(m => m.Id)
+					.Skip(page * pageSize)
+					.Take(pageSize)
+					.ToList();
+
+				return mediaInfos;
+			}
+		}
+
+		// 搜尋 title 關鍵字的 MediaInfo 資料 並包含Category、Genres、OttTypes、LanguageCode 並計算總筆數
+		public int GetMediaInfosByTitleCount(string title)
+		{
+			using (var db = new AppDbContext())
+			{
+				var count = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.Title.Contains(title))
+					.Count();
+
+				return count;
 			}
 		}
 
@@ -284,6 +368,7 @@ namespace Final.Models.Repositories
 					.AsNoTracking()
 					.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Release_Date >= startDate && x.Release_Date <= endDate))
 					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
 					.Include(m => m.MediaInfos_Genres_Rel)
 					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
 					.Include(m => m.MediaInfos_OttTypes_Rel)
@@ -293,6 +378,147 @@ namespace Final.Models.Repositories
 				return mediaInfos;
 			}
 		}
+
+		// 取得上映時間範圍取得MediaInfo的分頁資料
+		public List<MediaInfo> GetMediaInfosByDateRangePage(DateTime startDate, DateTime endDate,int page,int pageSize,int categoryId)
+		{
+			using (var db = new AppDbContext())
+			{
+				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Release_Date >= startDate && x.Release_Date <= endDate))
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
+					.OrderBy(m => m.Id)
+					.Skip(page * pageSize)
+					.Take(pageSize)
+					.ToList();
+
+				return mediaInfos;
+			}
+		}
+
+		// 取得下架時間範圍取得MediaInfo的分頁資料
+		public List<MediaInfo> GetMediaInfosByRemovalDateRangePage(DateTime startDate, DateTime endDate, int page, int pageSize,int categoryId)
+		{
+			using (var db = new AppDbContext())
+			{
+				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Removal_Date >= startDate && x.Removal_Date <= endDate))
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
+					.OrderBy(m => m.Id)
+					.Skip(page * pageSize)
+					.Take(pageSize)
+					.ToList();
+
+				return mediaInfos;
+			}
+		}
+
+		// 取得近期一個月上映的分頁資料
+		public List<MediaInfo> GetMediaInfosWithinLastOneMonthPage(int page, int pageSize,int categoryId)
+		{
+			var startDate = DateTime.Now.AddMonths(-1);
+			var endDate = DateTime.Now;
+
+			return GetMediaInfosByDateRangePage(startDate, endDate, page, pageSize, categoryId);
+		}
+
+		// 計算上映時間範圍的資料總數
+		public int GetMediaInfosByDateRangeCount(DateTime startDate, DateTime endDate,int categoryId)
+		{
+			using (var db = new AppDbContext())
+			{
+				var count = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Release_Date >= startDate && x.Release_Date <= endDate))
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType)).Count();
+
+				return count;
+			}
+		}
+		// 計算下架時間範圍的資料總數
+		public int GetMediaInfosByRemovalDateRangeCount(DateTime startDate, DateTime endDate)
+		{
+			using (var db = new AppDbContext())
+			{
+				var count = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Removal_Date >= startDate && x.Removal_Date <= endDate))
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType)).Count();
+
+				return count;
+			}
+		}
+
+		// 計算近期一個月上映的總筆數
+		public int GetMediaInfosWithinLastOneMonthCount(int categoryId)
+		{
+			var startDate = DateTime.Now.AddMonths(-1);
+			var endDate = DateTime.Now;
+
+			return GetMediaInfosByDateRangeCount(startDate, endDate,categoryId);
+		}
+
+		// 計算未來一個月上映的總筆數
+		public int GetMediaInfosWithinNextOneMonthCount(int categoryId)
+		{
+			var startDate = DateTime.Now;
+			var endDate = DateTime.Now.AddMonths(1);
+
+			return GetMediaInfosByDateRangeCount(startDate, endDate, categoryId);
+		}
+
+		// 計算即將下架的總筆數
+		public int GetRemovalMediaInfosCount(int categoryId)
+		{
+			var startDate = DateTime.Now;
+			var endDate = DateTime.Now.AddMonths(1);
+
+			return GetMediaInfosByRemovalDateRangeCount(startDate, endDate);
+		}
+
+		// 取得未來一個月上映的分頁資料
+		public List<MediaInfo> GetMediaInfosWithinNextOneMonthPage(int page, int pageSize, int categoryId)
+		{
+			var startDate = DateTime.Now;
+			var endDate = DateTime.Now.AddMonths(1);
+
+			return GetMediaInfosByDateRangePage(startDate, endDate, page, pageSize, categoryId);
+		}
+
+		// 取得即將下架 一個月內 的分頁資料
+		public List<MediaInfo> GetRemovalMediaInfosWithinLastOneMonthPage(int page, int pageSize,int categoryId)
+		{
+			var startDate = DateTime.Now;
+			var endDate = DateTime.Now.AddMonths(1);
+
+			return GetMediaInfosByRemovalDateRangePage(startDate, endDate, page, pageSize, categoryId);
+		}
+
 
 		// 搜尋時間範圍近五天內的MediaInfo資料 (近期上映)
 		public List<MediaInfo> GetMediaInfosWithinLastFiveDays()
@@ -319,6 +545,80 @@ namespace Final.Models.Repositories
 			var endDate = DateTime.Now.AddMonths(1);
 
 			return GetMediaInfosByDateRange(startDate, endDate);
+		}
+
+		// 搜尋即將下架的MediaInfo資料 (一個月內)
+		public List<MediaInfo> GetRemovalMediaInfos()
+		{
+			var startDate = DateTime.Now;
+			var endDate = DateTime.Now.AddMonths(1);
+
+			using (var db = new AppDbContext())
+			{
+				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Removal_Date >= startDate && x.Removal_Date <= endDate))
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
+					.ToList();
+
+				return mediaInfos;
+			}
+		}
+
+		// 搜尋在Category下的 otttype MediaInfo 分頁資料
+		public List<MediaInfo> GetMediaInfosByCategoryAndOttTypePage(int page, int pageSize, int categoryId, int ottTypeId)
+		{
+			using (var db = new AppDbContext())
+			{
+				var totalRecords = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Where(m => m.MediaInfos_OttTypes_Rel.Any(rel => rel.OttTypeId == ottTypeId))
+					.Count();
+
+				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Where(m => m.MediaInfos_OttTypes_Rel.Any(rel => rel.OttTypeId == ottTypeId))
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
+					.OrderBy(m => m.Id)
+					.Skip(page * pageSize) // 計算跳過的筆數
+					.Take(pageSize)
+					.ToList();
+
+				// 如果該頁面的資料超出了總記錄數，僅返回剩餘的資料
+				if (page * pageSize >= totalRecords)
+				{
+					mediaInfos = new List<MediaInfo>();
+				}
+
+				return mediaInfos;
+			}
+		}
+
+		// 搜尋在Category下的 otttype MediaInfo 總筆數
+		public int GetMediaInfosByCategoryAndOttTypeCount(int categoryId, int ottTypeId)
+		{
+			using (var db = new AppDbContext())
+			{
+				var count = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Where(m => m.MediaInfos_OttTypes_Rel.Any(rel => rel.OttTypeId == ottTypeId))
+					.Count();
+
+				return count;
+			}
 		}
 
 		// 修改 MediaInfo 的 Release_Date 和 Removal_Date
@@ -457,16 +757,57 @@ namespace Final.Models.Repositories
 			}
 		}
 
-		public List<MediaInfo> Test()
+		public List<MediaInfo> GetMediaInfoPageByCategoryWithGenre(int page, int pageSize, int categoryId, int genreId)
 		{
-			using(var db = new AppDbContext())
+			using (var db = new AppDbContext())
 			{
+				int totalRecords = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Where(m => m.MediaInfos_Genres_Rel.Any(rel => rel.GenreId == genreId))
+					.Count();
+
 				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Where(m => m.MediaInfos_Genres_Rel.Any(rel => rel.GenreId == genreId))
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
+					.OrderBy(m => m.Id)
+					.Skip(page * pageSize)
+					.Take(pageSize)
 					.ToList();
+
+				// 如果該頁面的資料超出了總記錄數，僅返回剩餘的資料
+				if (page * pageSize >= totalRecords)
+				{
+					mediaInfos = new List<MediaInfo>();
+				}
 
 				return mediaInfos;
 			}
 		}
+
+		// 取得分頁的 MediaInfo 資料 並篩選 Category 底下的 Genre 並計算總筆數
+		public int GetMediaInfoPageByCategoryWithGenreCount(int categoryId, int genreId)
+		{
+			using (var db = new AppDbContext())
+			{
+				var count = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
+					.Where(m => m.MediaInfos_Genres_Rel.Any(rel => rel.GenreId == genreId))
+					.Count();
+
+				return count;
+			}
+		}
+
+
 
 		// 以下為測試
 		// 測試

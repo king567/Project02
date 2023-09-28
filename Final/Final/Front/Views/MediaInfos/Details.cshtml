@@ -1,0 +1,48 @@
+﻿@model Final.Models.ViewModels.MediaInfosRelVm
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div>
+            <h2>@Model.Title 詳細資料</h2>
+        </div>
+
+        <div class="card" style="width: 100%;">
+            <img src="https://picsum.photos/1200/800" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h4 class="card-title text-center">標題：@Model.Title</h4>
+                <p class="card-text">簡介：@Model.OverView</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">原始標題：@Model.OriginalTitle</li>
+                <li class="list-group-item">原始語言：@Model.OriginalLanguage</li>
+                <li class="list-group-item">
+                    @foreach (var ott in Model.OttTypes)
+                    {
+
+                        <span class="badge rounded-pill bg-info text-white">上映平台：@ott.Name 上架日期：@ott.ReleaseDate  下架日期：@(ott.RemovalDate == null ? "無" : ott.RemovalDate.ToString())</span><br>
+
+                    }
+                </li>
+                <li class="list-group-item">影片種類：<span class="badge rounded-pill bg-info text-white">@Model.CategoryName</span></li>
+                <li class="list-group-item">
+                    影片類型：
+                    @{
+                        foreach (var genre in Model.Genres)
+                        {
+                            <span class="badge rounded-pill bg-info text-white">@genre.Name</span>
+                        }
+
+                    }
+                </li>
+                <li class="list-group-item">成人片：@(Model.Adult == false ? "不是" : "是")</li>
+                <li class="list-group-item">評分：5分</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+

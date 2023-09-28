@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model Project2.Models.ViewModels.HomesVm
+@{
+    ViewBag.Title = "首頁";
 }
 
 <head>
@@ -15,6 +16,7 @@
         }
 
         .card img {
+            object-fit: cover;
             height: 300px;
             border-radius: 5%
         }
@@ -26,280 +28,142 @@
             /* 添加过渡效果 */
         }
 
-            /*.card-details {
-            display: none;
-            position: absolute;
-            top: 100%;*/
-            /* 設定詳細資訊顯示在卡片底部 */
-            /*left: 0;
-            width: 100%;*/
-            /* 擴展到整個卡片寬度 */
-            /*background-color: rgba(255, 255, 255, 0.9);*/
-            /* 半透明背景色 */
-            /*padding: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);*/
-            /* 添加陰影效果 */
-            /*z-index: 1;*/
-            /* 確保在卡片上方顯示 */
-            /*}*/
+            /*.background-container {*/
+            /* 設置元素的寬度和高度以容納背景圖片 */
+            /*width: 500px;
+            height: 300px;*/
+            /* 設置背景圖片的 URL */
+            /*background-image: url('~/Images/loginbackground.jpg');*/
+            /* 設置背景圖片的大小和位置 */
+            /*background-size: cover;*/ /* 可以根據需要使用不同的值，如 'contain' */
+            /*background-position: center center;*/
+            /* 如果需要，可以設置其他背景屬性，如背景顏色、重複方式等 */
+            /*background-color: transparent;
+            background-repeat: no-repeat;
+            opacity: 0.8;
+        }*/
 
-            .card:hover .card-details {
-                display: block;
-                /* 悬停時顯示 */
-                opacity: 1;
-            }
+
+        .card:hover .card-details {
+            display: block;
+            /* 悬停時顯示 */
+            opacity: 1;
+        }
+
+        a {
+            text-decoration: none;
+        }
     </style>
 </head>
-@*輪播 BEGIN*@
-<div id="carouselExampleDark" class="carousel carousel-dark slide" style="object-fit:cover;">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active" data-bs-interval="10000">
-            <img src="/Images/adventure1.jpg" class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>First slide label</h5>
-                <p>Some representative placeholder content for the first slide.</p>
+@*<div class="background-container">
+        <img style="" src="/Images/loginbackground.jpg" />
+    </div>*@
+<div class="container">
+    <div class="row">
+        @*輪播 BEGIN*@
+        <div id="carouselExampleDark" class="carousel carousel-dark slide" style="object-fit:cover;">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
             </div>
-        </div>
-        <div class="carousel-item" data-bs-interval="2000">
-            <img src="/Images/batman.jpg" class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Second slide label</h5>
-                <p>Some representative placeholder content for the second slide.</p>
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="10000">
+                    <img src="/Images/adventure1.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>First slide label</h5>
+                        <p>Some representative placeholder content for the first slide.</p>
+                    </div>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <img src="/Images/batman.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Second slide label</h5>
+                        <p>Some representative placeholder content for the second slide.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="/Images/scary1.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Third slide label</h5>
+                        <p>Some representative placeholder content for the third slide.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="carousel-item">
-            <img src="/Images/scary1.jpg" class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Third slide label</h5>
-                <p>Some representative placeholder content for the third slide.</p>
-            </div>
-        </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
-@*輪播 END*@
-<!-- 最新上映清單begin -->
-@*<div class="container">*@
-<div class="row">
-    <h3 class="d-md-flex col-6" style="margin-top: 30px; font-weight: 600;color:rgb(100, 200, 237);">最新上映</h3>
-    <a class="d-md-flex justify-content-md-end col-6" style="margin-top: 30px;text-decoration: none;"
-       href="#">看更多</a>
-</div>
-<div class="row ">
-    <div class="col" style=" width:250px; ">
-        <div class="card">
-            <img src="/Images/friend2.jpg" class="card-img-top" alt="...">
-            <h6 class="card-title">真愛找麻煩</h6>
-            @*<div class="card-details">
-                    <p>這是電影的詳細資訊...Eligendi beatae tempore libero eaque ad delectus accusamus temporibus nihil, recusandae eius totam tenetur neque ipsam dolor reiciendis?</p>
-                </div>*@
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
     </div>
-    <div class="col">
-        <div class="card">
-            <img src="/Images/adventure1.jpg" class="card-img-top" alt="...">
-            <h6 class="card-title">Card title</h6>
-            <div class="card-details">
-                <p>這是電影的詳細資訊...</p>
-            </div>
+        @*輪播 END*@
+        <!-- 最新上映清單begin -->
+        @*<h3 class="d-md-flex col-6" style="margin-top: 30px; font-weight: 600;color:rgb(100, 200, 237);">最新上映</h3>
+        <a class="d-md-flex justify-content-md-end col-6" style="margin-top: 30px;text-decoration: none;"
+           href="#">看更多</a>*@
+    </div>
+    <div class="container">
+        <div class="row">
+            <h3 class="d-md-flex col-6" style="margin-top: 30px; font-weight: 600;color:rgb(100, 200, 237);">最新上映</h3>
+            <a class="d-md-flex justify-content-md-end col-6" style="margin-top: 30px;text-decoration: none;"
+               href="#">看更多</a>
+        </div>
+        <div class="row row-cols-1 row-cols-md-6 g-4">
+            @foreach (var mediaInfo in Model.GetLastOneMonthMediaInfo)
+            {
+                <div class="col">
+                    <div class="card">
+                        <a href="/MediaInfos/Details/@mediaInfo.Id">
+                            <img src="https://picsum.photos/1200/800" class="card-img-top" alt="...">
+                            <h6 class="card-title">@mediaInfo.Title</h6>
+                        </a>
+                    </div>
+                </div>
+            }
         </div>
     </div>
-    <div class="col">
-        <div class="card">
-            <img src="/Images/couple1.jpg" class="card-img-top" alt="...">
-            <h6 class="card-title">Card title</h6>
-            <div class="card-details">
-                <p>這是電影的詳細資訊...</p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <img src="/Images/family1.jpg" class="card-img-top" alt="...">
-            <h6 class="card-title">Card title</h6>
-            <div class="card-details">
-                <p>這是電影的詳細資訊...</p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <img src="/Images/scary2.jpg" class="card-img-top" alt="...">
-            <h6 class="card-title">Card title</h6>
-            <div class="card-details">
-                <p>這是電影的詳細資訊...</p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <img src="/Images/music1.jpg" class="card-img-top" alt="...">
-            <h6 class="card-title">Card title</h6>
-            <div class="card-details">
-                <p>這是電影的詳細資訊...</p>
-            </div>
-        </div>
-    </div>
-
-</div>
-@*</div>*@
 <!-- 最新上映清單end -->
 <!-- 即將上映清單begin -->
 <div class="container">
     <div class="row">
-        <h3 class="d-md-flex col-6" style="margin-top: 30px; font-weight: 600;color:rgb(100, 200, 237);">最新上映</h3>
+        <h3 class="d-md-flex col-6" style="margin-top: 30px; font-weight: 600;color:rgb(100, 200, 237);">即將上映</h3>
         <a class="d-md-flex justify-content-md-end col-6" style="margin-top: 30px;text-decoration: none;"
            href="#">看更多</a>
     </div>
     <div class="row row-cols-1 row-cols-md-6 g-4">
-        <div class="col">
-            <div class="card">
-                <img src="/Images/friend2.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">真愛找麻煩</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
+        @foreach (var mediaInfo in Model.GetNextOneMonthRelease)
+        {
+            <div class="col">
+                <div class="card">
+                    <img src="https://picsum.photos/1200/800" class="card-img-top" alt="...">
+                    <h6 class="card-title">@mediaInfo.Title</h6>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/adventure1.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/couple1.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/family1.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/scary2.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/music1.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </div>
 <!-- 即將上映清單end -->
 <!-- 即將下架清單begin -->
 <div class="container">
     <div class="row">
-        <h3 class="d-md-flex col-6" style="margin-top: 30px; font-weight: 600;color:rgb(100, 200, 237);">最新上映</h3>
+        <h3 class="d-md-flex col-6" style="margin-top: 30px; font-weight: 600;color:rgb(100, 200, 237);">即將下架</h3>
         <a class="d-md-flex justify-content-md-end col-6" style="margin-top: 30px;text-decoration: none;"
            href="#">看更多</a>
     </div>
     <div class="row row-cols-1 row-cols-md-6 g-4">
-        <div class="col">
-            <div class="card">
-                <img src="/Images/friend2.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">真愛找麻煩</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
+        @foreach (var mediaInfo in Model.GetNextOneMonthORemoval)
+        {
+            <div class="col">
+                <div class="card">
+                    <img src="https://picsum.photos/1200/800" class="card-img-top" alt="...">
+                    <h6 class="card-title">@mediaInfo.Title</h6>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/adventure1.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/couple1.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/family1.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/scary2.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="/Images/music1.jpg" class="card-img-top" alt="...">
-                <h6 class="card-title">Card title</h6>
-                <div class="card-details">
-                    <p>這是電影的詳細資訊...</p>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </div>
 <!-- 即將下架清單end -->
-<script>
-    //const cards = document.querySelectorAll('.card');
-
-    //cards.forEach(card => {
-    //    const cardDetails = card.querySelector('.card-details');
-
-    //    card.addEventListener('mouseenter', () => {
-    //        cardDetails.style.display = 'block'; // 顯示詳細資訊
-    //        card.style.transform = 'scale(1.05)'; // 放大卡片
-    //    });
-
-    //    card.addEventListener('mouseleave', () => {
-    //        cardDetails.style.display = 'none'; // 隱藏詳細資訊
-    //        card.style.transform = 'scale(1.0)'; // 還原卡片大小
-    //    });
-    //});
-</script>
