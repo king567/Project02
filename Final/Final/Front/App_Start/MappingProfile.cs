@@ -17,6 +17,16 @@ namespace Project2.App_Start
 	{
 		public MappingProfile()
 		{
+			// FavoriteMedia 轉換成 FavoriteMediaDTO
+			CreateMap<FavoriteMedia, FavoriteMediaDTO>()
+				.ForMember(dest => dest.MediaInfoId, opt => opt.MapFrom(src => src.MediaInformId))
+				.ForMember(dest => dest.MemberId, opt => opt.MapFrom(src => src.MemberId));
+
+			// FavoriteMediaDTO 轉換成 FavoriteMediaVm
+			CreateMap<FavoriteMediaDTO, FavoriteMediaVm>()
+				.ForMember(dest => dest.MediaInfoId, opt => opt.MapFrom(src => src.MediaInfoId))
+				.ForMember(dest => dest.MemberId, opt => opt.MapFrom(src => src.MemberId));
+
 			// 這裡的寫法是為了讓 AutoMapper 知道要如何將 MediaInfo 轉換成 MediaInfosRelDTO
 			// MediaInfosRelDTO 轉換成 MediaInfosRelVm
 

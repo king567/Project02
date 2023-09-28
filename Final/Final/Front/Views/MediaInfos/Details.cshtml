@@ -39,10 +39,46 @@
                     }
                 </li>
                 <li class="list-group-item">成人片：@(Model.Adult == false ? "不是" : "是")</li>
-                <li class="list-group-item">評分：5分</li>
+                <li class="list-group-item"><button class="btn btn-primary addFav" data-id="@Model.Id">點我收藏</button></li>
             </ul>
         </div>
 
     </div>
 </div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            // 使用 jQuery 的點擊事件處理程序來處理按鈕的點擊事件
+            $('.addFav').click(function () {
+                // 獲取按鈕上的 data-id 屬性的值
+                var id = $(this).data('id');
+
+                // 創建包含要傳遞的數據的 JavaScript 對象
+                var data = {
+                    MemberId: 34,
+                    MediaInfoId: id
+                };
+
+                // 發送 AJAX POST 請求
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/FavoriteMediaApi', // 替換成你的 Web API 端點 URL
+                    data: JSON.stringify(data), // 如果需要將數據作為 JSON 發送，需要將其轉換為 JSON 字符串
+                    contentType: 'application/json', // 設置請求的內容類型為 JSON
+                    success: function (response) {
+                        // 在這裡處理成功的回應
+                        alert(response);
+                    },
+                    error: function (error) {
+                        // 在這裡處理錯誤
+                        alert('加入失敗');
+                    }
+                });
+            });
+        });
+    </script>
+
+}
 

@@ -154,6 +154,7 @@
     <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\FavoriteMediaApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MediaInfosController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Models\DTOs\CriteriaDTO.cs" />
     <Compile Include="Models\DTOs\CriteriaGenresDTO.cs" />
     <Compile Include="Models\DTOs\CriteriaOttsDTO.cs" />
+    <Compile Include="Models\DTOs\FavoriteMediaDTO.cs" />
     <Compile Include="Models\DTOs\GenresDTO.cs" />
     <Compile Include="Models\DTOs\MediaInfosOttTypesRelDTO.cs" />
     <Compile Include="Models\DTOs\MediaInfosRelDTO.cs" />
@@ -196,12 +198,15 @@
     <Compile Include="Models\EFModels\Vipitem.cs" />
     <Compile Include="Models\Infra\DAHelper.cs" />
     <Compile Include="Models\Infra\HashUtility.cs" />
+    <Compile Include="Models\Repositories\FavoriteMediaRepository.cs" />
     <Compile Include="Models\Services\CategoryService.cs" />
+    <Compile Include="Models\Services\FavoriteMediaService.cs" />
     <Compile Include="Models\Services\GenreService.cs" />
     <Compile Include="Models\Services\MediaInfoService.cs" />
     <Compile Include="Models\Services\OttsService.cs" />
     <Compile Include="Models\ViewModels\CategoryVm.cs" />
     <Compile Include="Models\ViewModels\EditInitVm.cs" />
+    <Compile Include="Models\ViewModels\FavoriteMediaVm.cs" />
     <Compile Include="Models\ViewModels\FormDataModelVm.cs" />
     <Compile Include="Models\ViewModels\GenresAndOttTypesVm.cs" />
     <Compile Include="Models\ViewModels\GenresVm.cs" />
