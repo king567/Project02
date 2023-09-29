@@ -107,25 +107,37 @@ namespace Final.Controllers
 
 			db.MediaInfos.Remove(mediaInfo);
 
-			string rootPath = HttpContext.Current.Server.MapPath("~");
-			string parentDirectory = Path.GetDirectoryName(Path.GetDirectoryName(rootPath));
+			
+			// 取得 posterWebPath 的絕對路徑
+			string posterFiletPath = HttpContext.Current.Server.MapPath(posterWebPath);
+			//posterFiletPath = posterFiletPath.Replace("Final\\Images", "Images");
+			// 前台圖片的Poster絕對路徑
+			string posterFileFrontPath = posterFiletPath.Replace("Final\\Images", "Front\\Images");
+			// 取得 backdropWebdPath 的絕對路徑
+			string backdropFilePath = HttpContext.Current.Server.MapPath(backdropWebdPath);
+			//backdropFilePath = backdropFilePath.Replace("Final\\Images", "Images");
+			// 前台圖片的Backdrop絕對路徑
+			string backdropFileFrontPath = backdropFilePath.Replace("Final\\Images", "Front\\Images");
 
-			string posterFilePath = parentDirectory + @"\\Images\\Poster\\" + posterWebPath;
-			string backdropFilePath = parentDirectory + @"\\Images\\Backdrop\\" + backdropWebdPath;
-
-			if (mediaInfo.PosterPath != null)
+			// 刪除 posterWebPath 的圖片
+			if (File.Exists(posterFiletPath))
 			{
-				if (File.Exists(posterFilePath))
-				{
-					File.Delete(posterFilePath);
-				}
+				File.Delete(posterFiletPath);
 			}
-			if (mediaInfo.BackdropPath != null)
+			// 刪除 backdropWebdPath 的圖片
+			if (File.Exists(backdropFilePath))
 			{
-				if (File.Exists(backdropFilePath))
-				{
-					File.Delete(backdropFilePath);
-				}
+				File.Delete(backdropFilePath);
+			}
+			
+			// 刪除前台圖片
+			if (File.Exists(posterFileFrontPath))
+			{
+				File.Delete(posterFileFrontPath);
+			}
+			if (File.Exists(backdropFileFrontPath))
+			{
+				File.Delete(backdropFileFrontPath);
 			}
 
 			db.SaveChanges();
@@ -137,23 +149,6 @@ namespace Final.Controllers
 		[Route("api/MediaInfosApi/Edit")]
 		public IHttpActionResult Edit(int id)
 		{
-			//var form = formData;
-			//try
-			//{
-			//	// 从 formData 中提取表单字段值
-			//	//var test = HttpContext.Current.Request.Form["OttItems"];
-
-			//	// 执行编辑操作，这里是示例代码
-			//	// 这里可以调用服务层或数据访问层来执行实际的编辑逻辑
-			//	// EditMediaInfo(name, description);
-
-			//	return Ok("更新成功");
-			//}
-			//catch (Exception ex)
-			//{
-			//	// 处理异常
-			//	return BadRequest($"更新失败: {ex.Message}");
-			//}
 			if (EditRequest(id)) return Ok("更新成功");
 			return BadRequest("更新失敗:應影片不存在");
 		}
@@ -169,17 +164,10 @@ namespace Final.Controllers
 				string posterRootPath = HttpContext.Current.Server.MapPath(posterWebPath);
 				string backdropRootPath = HttpContext.Current.Server.MapPath(backdropWebPath);
 
-				string frontposterPath = "C:\\Users\\user\\Documents\\GitHub\\Project02\\Final\\Final\\Front\\Images\\Poster\\";
-				string frontbackdrop = "C:\\Users\\user\\Documents\\GitHub\\Project02\\Final\\Final\\Front\\Images\\Backdrop\\";
-
-				//if (!Directory.Exists(imagesFolderPathPoster))
-				//{
-				//	Directory.CreateDirectory(imagesFolderPathPoster);
-				//}
-				//if (!Directory.Exists(imagesFolderPathBackdrop))
-				//{
-				//	Directory.CreateDirectory(imagesFolderPathBackdrop);
-				//}
+				// 前台圖片的Poster絕對路徑
+				string frontposterPath = posterRootPath.Replace("Final\\Images", "Front\\Images");
+				// 前台圖片的Backdrop絕對路徑
+				string frontbackdrop = backdropRootPath.Replace("Final\\Images", "Front\\Images");
 
 				if (HttpContext.Current.Request.Files.Count > 0)
 				{
@@ -197,8 +185,15 @@ namespace Final.Controllers
 						{
 							posterFileName = Path.GetRandomFileName() + Path.GetExtension(Poster.FileName);
 							imagesFolderPathPoster = Path.Combine(posterRootPath, posterFileName);
+
+							// 前台圖片的絕對路徑
+							string imagesFolderFrontPathPoster = Path.Combine(frontposterPath, posterFileName);
+
+							// 保存poster到後台
 							Poster.SaveAs(imagesFolderPathPoster);
-							Poster.SaveAs(frontposterPath + posterFileName);
+
+							// 從後台複製一份到 Front/Images/Poster
+							File.Copy(imagesFolderPathPoster, imagesFolderFrontPathPoster, true);
 						}
 						else
 						{
@@ -213,8 +208,14 @@ namespace Final.Controllers
 						{
 							backdropFileName = Path.GetRandomFileName() + Path.GetExtension(Backdrop.FileName);
 							imagesFolderPathBackdrop = Path.Combine(backdropRootPath, backdropFileName);
+
+							// 前台圖片的絕對路徑
+							string imagesFolderFrontPathBackdrop = Path.Combine(frontbackdrop, backdropFileName);
+
 							Backdrop.SaveAs(imagesFolderPathBackdrop);
-							Backdrop.SaveAs(frontbackdrop + backdropFileName);
+
+							// 從後台複製一份到 Front/Images/Backdrop
+							File.Copy(imagesFolderPathBackdrop, imagesFolderFrontPathBackdrop, true);
 						}
 						else
 						{
@@ -282,6 +283,12 @@ namespace Final.Controllers
 
 			// 轉換成 FormDataModelVm
 			vm = JsonConvert.DeserializeObject<FormDataModelVm>(json, settings);
+
+			// 驗證 ModelState 是否有錯誤
+			if (!ModelState.IsValid)
+			{
+				return false;
+			}
 
 			// 檢查是否有上傳檔案 (有上傳檔案才更新圖片)
 
