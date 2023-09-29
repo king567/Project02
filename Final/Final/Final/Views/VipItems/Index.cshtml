@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "會員繳費明細";
+}
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+</head>
+@*Title*@
+<div class="home-content">
+    <span class="text" style="font-size:32px; font-weight:500; margin-left:10px;">會員繳費明細</span>
+</div>
+
+@*搜尋欄位和複選框*@
+<div class="scrollable-container">
+    <div class="row content m-3">
+        <div class="col-3 text-center mt-4">
+            <input type="text" class="form-control" id="memberAccount" placeholder="搜尋帳號" style="height:40px; width:200px;">
+        </div>
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="startDatePicker">起始時間：</label>
+                    <div class="input-group date"
+                         id="startDatePicker"
+                         data-target-input="nearest">
+                        <input type="text"
+                               class="form-control datetimepicker-input"
+                               data-target="#startDatePicker" />
+                        <div class="input-group-append"
+                             data-target="#startDatePicker"
+                             data-toggle="datetimepicker">
+                            <div class="input-group-text">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="endDatePicker">最終時間：</label>
+                    <div class="input-group date"
+                         id="endDatePicker"
+                         data-target-input="nearest">
+                        <input type="text"
+                               class="form-control datetimepicker-input"
+                               data-target="#endDatePicker" />
+                        <div class="input-group-append"
+                             data-target="#endDatePicker"
+                             data-toggle="datetimepicker">
+                            <div class="input-group-text">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-1 mt-4 ">
+            <button id="searchButton" class="btn btn-outline-secondary" type="button" style="width:100px; height:40px; font-size:20px">搜尋</button>
+        </div>
+    </div>
+</div>
+<div class="table-container">
+    <table id="vipTable" class="table table-striped table-hover table-bordered table-sm" style="width:100%;">
+        <thead>
+            <tr>
+                <th>帳號</th>
+                <th>姓名</th>
+                <th>方案</th>
+                <th>金額</th>
+                <th>付款日期</th>
+                <th>開始日期</th>
+                <th>到期日期</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        // 获取表格数据并填充表格
+        function populateTable() {
+            // 在这里执行您的 AJAX 请求或使用其他方法获取表格数据
+            // 例如，使用 $.ajax() 请求获取数据
+            $.ajax({
+                url: "/api/VipItemApi/",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    MemberAccount: $("#memberAccount").val(),
+                    StartDate: $("#startDatePicker input").val(),
+                    EndDate: $("#endDatePicker input").val()
+                },
+                success: function (data) {
+                    // 清空表格内容
+                    $("#vipTable tbody").empty();
+
+                    // 填充表格数据
+                    data.forEach(function (item) {
+                        var row = $("<tr>");
+                        row.append($("<td>").text(item.MemberAccount));
+                        row.append($("<td>").text(item.MemberName));
+                        row.append($("<td>").text(item.Type));
+                        row.append($("<td>").text(item.Fee));
+
+                        // 使用 moment.js 格式化日期
+                        var formattedPaymentDate = moment(item.PaymentDate).format("YYYY-MM-DD HH:MM:SS");
+                        var formattedStartDate = moment(item.StartDate).format("YYYY-MM-DD HH:MM:SS");
+                        var formattedExpiryDate = moment(item.ExpiryDate).format("YYYY-MM-DD HH:MM:SS");
+
+                        row.append($("<td>").text(formattedPaymentDate));
+                        row.append($("<td>").text(formattedStartDate));
+                        row.append($("<td>").text(formattedExpiryDate));
+
+                        $("#vipTable tbody").append(row);
+                    });
+                }
+            });
+        }
+
+        // 初始化 DateTimePickers
+        $("#startDatePicker").datetimepicker({
+            format: "YYYY-MM-DD HH:MM:SS",
+            locale: "zh-tw"
+        });
+
+        $("#endDatePicker").datetimepicker({
+            format: "YYYY-MM-DD HH:MM:SS",
+            locale: "zh-tw"
+        });
+
+        // 页面加载时执行一次 populateTable() 来显示初始数据
+        populateTable();
+
+        // 搜索按钮点击事件
+        $("#searchButton").click(function () {
+            populateTable(); // 搜索后重新填充表格数据
+        });
+    });
+
+
+</script>

@@ -1,0 +1,181 @@
+﻿@model Project2.Models.ViewModels.MemberCenterVm
+@{
+    ViewBag.Title = "會員中心";
+}
+
+
+<h2>會員中心</h2>
+
+<div class="container">
+    <div class="row">
+        <h3>帳戶資訊</h3>
+        <div class="row">
+            <div class="card col-7" style="width: 70rem;">
+                <div class="card-body">
+                    <h5 class="card-title col-12">個人資訊</h5>
+                </div>
+                <div class="card-subtitle mb-2 row text-body-secondary">
+                    <label for="staticName" class="col-sm-2 col-form-label ">姓名</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="staticName" value="@Model.Member.Name">
+                    </div>
+                </div>
+
+                <div class="card-subtitle mb-2 row text-body-secondary">
+                    <label for="staticAccount" class="col-sm-2 col-form-label ">帳號</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="staticAccount" value="@Model.Member.Account">
+                    </div>
+                </div>
+                <div class="card-subtitle mb-2 row text-body-secondary align-items-center">
+                    <label for="staticPassword" class="col-sm-2 col-form-label">密碼</label>
+                    <div class="col-sm-8">
+                        <input type="text" readonly class="form-control-plaintext" id="staticPassword" value="*********">
+                    </div>
+                    <div class="col-sm-2 d-flex justify-content-end">
+                        <a class="btn btn-light btn-sm m-2" href="/Members/EditPassword">變更密碼</a>
+                    </div>
+                </div>
+                <div class="card-subtitle mb-2 row text-body-secondary">
+                    <label for="staticEmail" class="col-sm-2 col-form-label ">電子信箱</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@Model.Member.Email">
+                    </div>
+                </div>
+                <div class="card-subtitle mb-2 row text-body-secondary">
+                    <label for="staticBrithday" class="col-sm-2 col-form-label ">生日</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="staticBrithday" value="@Model.Member.BirthOfDate.ToString("yyyy-MM-dd")">
+                    </div>
+                </div>
+                @if (Model.Blacklist != null)
+                {
+                    if (Model.Blacklist.NextRestorationTime >= DateTime.Now)
+                    {
+                        <div class="card-subtitle mb-2 row text-body-secondary">
+                            <label for="staticBrlacklistday" class="col-sm-2 col-form-label ">停權</label>
+                            <div class="col-sm-10" style:"border:solid;width:30px;">
+                                <p readonly class="form-control-plaintext" id="staticBrlacklistday">因為留言包含' @Model.Blacklist.BlacklistReason ',於 @Model.Blacklist.BlacklistTime ~ @Model.Blacklist.NextRestorationTime,評論功能被停權2個月。</p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <h3 class="mt-3 ">方案資訊</h3>
+        <div class="card" style="width: 70rem;">
+            <div class="card-body">
+                <h5 class="card-title col-12">我的方案</h5>
+                @if (Model.Vipitem != null && Model.Vipitem.Count > 0)
+                {
+                    var isVip = Model.Vipitem.Any(vipitem =>
+                        vipitem.StartDate <= DateTime.Now && vipitem.ExpiryDate >= DateTime.Now);
+
+                    if (isVip)
+                    {
+                        // 显示 VIP 内容
+                        foreach (var vipitems in Model.Vipitem)
+                        {
+                            if (vipitems.StartDate <= DateTime.Now && vipitems.ExpiryDate >= DateTime.Now)
+                            {
+                                <div class="card-subtitle mb-2 row text-body-secondary align-items-center">
+                                    <label for="staticVip" class="col-sm-6 col-form-label">付費會員</label>
+                                    <div class="col-sm-6 d-flex justify-content-end">
+                                        <a class="btn btn-outline-secondary btn-lg" href="#">取消付費會員資格</a>
+                                    </div>
+                                    <ul style="margin-left:20px;">
+                                        <li class="m-2 ">得知最新上架,即將上架,下架影片</li>
+                                        <li class="m-2 ">可使用搜尋功能</li>
+                                        <li class="m-2 ">可收藏影片,待上映時通知</li>
+                                        <li class="m-2 ">可對有興趣的影片進行討論</li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-2 d-flex justify-content-end">
+                                    <h5 class="card-title col-6 mt-4">付款資訊</h5>
+                                    <a class="btn btn-secondary btn-sm col-6" href="/CreditCard/Index">管理付款資訊</a>
+                                </div>
+                                <div class="card-subtitle mb-2 row text-body-secondary">
+                                    <label for="staticRecord" class="col-sm-2 col-form-label ">交易紀錄</label>
+                                </div>
+                                <div class="card" style="width: 60rem; margin-left: 20px;">
+                                    <div class="card-body">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col"></th>
+                                                    <th scope="col">方案</th>
+                                                    <th scope="col">繳費日期</th>
+                                                    <th scope="col">服務週期</th>
+                                                    <th scope="col">付款方式</th>
+                                                    <th scope="col">金額</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var vipitem in Model.Vipitem)
+                                                {
+                                                    <tr>
+                                                        <th scope="row"></th>
+                                                        <td>@vipitem.Type</td>
+                                                        <td>@vipitem.PaymentDate</td>
+                                                        <td>@vipitem.StartDate.ToString("yyyy-MM-dd")~@vipitem.ExpiryDate.ToString("yyyy-MM-dd")</td>
+                                                        <td>@vipitem.CardNumber</td>
+                                                        <td>@vipitem.Fee</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // 顯示一般會員內容
+                        <div class="row">
+                            <label for="staticregular" class="col-form-label col-6">一般會員</label>
+                            <p class="card-subtitle mb-2 col-6" style="font-weight:500;">成為付費會員即可享有</p>
+                            <div class="col-sm-6 " style="margin-left:20px;">
+                                <p class="m-2 ">得知最新上架,即將上架,下架影片</p>
+                                <p class="m-2 ">可使用搜尋功能</p>
+                                <p class="m-2 ">可對有興趣的影片進行討論</p>
+                            </div>
+                            <div class="col-3">
+
+                                <p>✔️ 收藏影片,待上映時通知</p>
+                                <a href="#" class="btn btn-outline-info" style="margin-left:130px;margin-top:20px;">立即升級</a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    // 如果 Model.Vipitem 為 null 或空，顯示一般會員內容
+                    <div class="row">
+                        <label for="staticregular" class="col-form-label col-6">一般會員</label>
+                        <p class="card-subtitle mb-2 col-6" style="font-weight:500;">成為付費會員即可享有</p>
+                        <div class="col-sm-6 " style="margin-left:20px;">
+                            <p class="m-2 ">得知最新上架,即將上架,下架影片</p>
+                            <p class="m-2 ">可使用搜尋功能</p>
+                            <p class="m-2 ">可對有興趣的影片進行討論</p>
+                        </div>
+                        <div class="col-3">
+
+                            <p>✔️ 收藏影片,待上映時通知</p>
+                            <a href="#" class="btn btn-outline-info" style="margin-left:130px;margin-top:20px;">立即升級</a>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

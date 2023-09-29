@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "首頁";
+}
+
+<main>
+    <style>
+        #title {
+            margin-top: 30px;
+            font-size: 40px;
+        }
+
+        .no-underline {
+            text-decoration: none;
+            color: saddlebrown;
+            font-size: 45px;
+            margin-top: 80px;
+            margin-left: 80px;
+        }
+
+        .row content {
+            font-size: 50px;
+        }
+    </style>
+    <div class="m-3" id="title">您好,@User.Identity.Name !<br /> 您已登入,目前時間為 @DateTime.Now</div>
+    @*<div class="container ">*@
+    <div class="row justify-content-center mt-3">
+        <div class="col-4">
+            <a class="no-underline bx bx-user" href="/Members/Index">會員</a>
+        </div>
+        <div class="col-4">
+            <a class="no-underline bx bx-user-check" href="/VipItems/Index">VIP明細</a>
+        </div>
+        <div class="col-4">
+            <a class="no-underline bx bx-user-check" href="/PayTypes/Index">VIP方案</a>
+        </div>
+        <div class="col-4">
+            <a class="no-underline bx bx-user-x" href="/Blacklist/Index">黑名單</a>
+        </div>
+        <div class="col-4">
+            <a class="no-underline bx bx-user-x" href="/BlacklistReasons/Index">黑名單理由</a>
+        </div>
+        <div class="col-4">
+            <a class="no-underline bx bx-comment-detail" href="/Ratings/Index">評論</a>
+        </div>
+        <div class="col-4">
+            <a class="no-underline bx bx-film" href="/MediaInfos/Index">影片資訊管理</a>
+        </div>
+        <div class="col-4">
+            <a class="no-underline bx bx-news" href="/News/Index">最新消息</a>
+        </div>
+        <div class="col-4">
+            <a class="no-underline bx bx-question-mark" href="/FAQs/Index">FAQ</a>
+        </div>
+    </div>
+    @*</div>*@
+
+
+</main>
