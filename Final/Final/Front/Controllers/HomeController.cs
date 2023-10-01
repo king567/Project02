@@ -1,6 +1,7 @@
 ﻿using Final.Models.DTOs;
 using Final.Models.Services;
 using Final.Models.ViewModels;
+using Project2.Models.Services;
 using Project2.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,9 @@ namespace Project2.Controllers
 			//// DTO 轉成 VM
 			//List<MediaInfosRelVm> vm = dtos.Convert2VM();
 
-            HomesVm vm = new HomesVm()
+			ViewBag.TopFive = new RatingService().GetTopFive().Convert2VM();
+
+			HomesVm vm = new HomesVm()
             {
 				GetNextOneMonthRelease = new MediaInfoService().GetNextOneMonthRelease().Convert2VM(),
                 GetLastOneMonthMediaInfo = new MediaInfoService().GetLastOneMonthMediaInfo().Convert2VM(),

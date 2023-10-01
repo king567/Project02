@@ -1,0 +1,15 @@
+﻿@model List<Final.Models.ViewModels.MediaInfosRelVm>
+
+@foreach (var mediaInfo in Model)
+{
+    <div class="col">
+        <div class="card">
+            <img src="@mediaInfo.PosterPath" class="card-img-top" alt="...">
+            <div class="card-body">
+                <a href="/MediaInfos/Details/@mediaInfo.Id">
+                    <h6 class="card-title">@mediaInfo.Title</h6>
+                </a>
+            </div>
+        </div>
+    </div>
+}

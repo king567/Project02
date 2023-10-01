@@ -98,6 +98,26 @@ namespace Final.Models.Repositories
 			}
 		}
 
+		// 取得指定多筆 MediaInfos Id 的資料
+		public List<MediaInfo> GetMediaInfosInRange(List<int> mediaInfosIds)
+		{
+			using (var db = new AppDbContext())
+			{
+				var mediaInfos = db.MediaInfos
+					.AsNoTracking()
+					.Where(m => mediaInfosIds.Contains(m.Id))
+					.Include(m => m.Category)
+					.Include(m => m.LanguageCode)
+					.Include(m => m.MediaInfos_Genres_Rel)
+					.Include(m => m.MediaInfos_Genres_Rel.Select(x => x.Genre))
+					.Include(m => m.MediaInfos_OttTypes_Rel)
+					.Include(m => m.MediaInfos_OttTypes_Rel.Select(x => x.OttType))
+					.ToList();
+
+				return mediaInfos;
+			}
+		}
+
 		// 取得分頁的 MediaInfo 資料 並包含Category、Genres、OttTypes
 		public List<MediaInfo> GetMediaInfoPage(int page, int pageSize)
 		{

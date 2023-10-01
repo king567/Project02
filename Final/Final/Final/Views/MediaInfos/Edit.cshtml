@@ -141,11 +141,11 @@
                             @{ 
                                 if (string.IsNullOrEmpty(Model.EditVm.BackdropPath))
                                 {
-                                     <img src="~/Images/Backdrop/backdrop_not_upload.png" style="width:100px;height:100px;" alt="背景圖" />
+                                     <img src="~/Images/Backdrop/backdrop_not_upload.png" class="img-thumbnail" style="width:100px;height:100px;" alt="背景圖" />
                                 }
                                 else 
                                 {
-                                     <img src="@Url.Content(Model.EditVm.BackdropPath)" style="width:100px;height:100px;" alt="背景圖" />
+                                     <img src="@Model.EditVm.BackdropPath" class="img-thumbnail" style="width:100px;height:100px;" alt="背景圖" />
                                 }
                             }
                         </div>
@@ -158,11 +158,11 @@
                             @{
                                 if (string.IsNullOrEmpty(Model.EditVm.BackdropPath))
                                 {
-                                    <img src="~/Images/Poster/post_not_upload.png" style="width:100px;height:100px;" alt="封面圖" />
+                                    <img src="~/Images/Poster/post_not_upload.png" class="img-thumbnail" style="width:100px;height:100px;" alt="封面圖" />
                                 }
                                 else
                                 {
-                                    <img src="@Url.Content(Model.EditVm.PosterPath)" style="width:100px;height:100px;" alt="封面圖" />
+                                    <img src="@Model.EditVm.PosterPath" class="img-thumbnail" style="width:100px;height:100px;" alt="封面圖" />
                                 }
                             }
                         </div>

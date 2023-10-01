@@ -1,5 +1,8 @@
-﻿using Project2.Models.DTOs;
+﻿using Final.Models.DTOs;
+using Final.Models.Repositories;
+using Project2.Models.DTOs;
 using Project2.Models.EFModels;
+using Project2.Models.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +57,20 @@ namespace Project2.Models.Services
 			// 平均分數只保留一位小數
 			return Math.Round(averageRating, 1);
 
+		}
+
+		// 取得平均評分 最高的前五部影片
+		public List<MediaInfosRelDTO> GetTopFive()
+		{
+			var topFive = new RateingRepository().GetTopFive();
+
+			// 取得 MediaInfo 的資料
+			var Entities = new MediaInfoRepository().GetMediaInfosInRange(topFive.Select(x => x.MediaInfoId).ToList());
+
+			// MediaInfo 轉成 DTO
+			List<MediaInfosRelDTO> dtos = AutoMapperHelper.MapperObj.Map<List<MediaInfosRelDTO>>(Entities);
+
+			return dtos;
 		}
 	}
 }

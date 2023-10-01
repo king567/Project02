@@ -110,14 +110,20 @@
                         <span class="field-validation-valid text-danger" data-valmsg-for="OriginalTitle" data-valmsg-replace="true"></span>
                     </div>
 
-                    <div class="mb-3 col-12">
+                    <div class="mb-3 col-10">
                         <label for="formFile" class="form-label">背景圖:</label>
                         <input class="form-control" type="file" id="formFileBack">
                     </div>
+                    <div class="mb-3 col-2 text-end">
+                        <img src="~/Images/背景預覽.svg" id="previewBackdropImage" class="img-thumbnail" style="width: 100%; height: 100%; " alt="預覽背景圖" />
+                    </div>
 
-                    <div class="mb-3 col-12">
+                    <div class="mb-3 col-10">
                         <label for="formFile" class="form-label">封面圖:</label>
                         <input class="form-control" type="file" id="formFileFront">
+                    </div>
+                    <div class="mb-3 col-2 text-end">
+                        <img src="~/Images/封面預覽.svg" id="previewPosterImage" class="img-thumbnail" style="width: 100%; height: 100%;" alt="預覽封面圖" />
                     </div>
                     <div class="mb-3">
                         <div class="text-end">
@@ -156,6 +162,46 @@
 <script>
     $(document).ready(function () {
         init();
+
+        // 預覽封面圖
+        $("#formFileFront").change(function () {
+            var file = this.files[0];
+            if (isImageFile(file)) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#previewPosterImage").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+            else {
+                alert("請選擇圖片檔案");
+                // 清空檔案選擇
+                $(this).val(null);
+
+                // 清空檔案名稱
+                $(this).next(".custom-file-label").html("選擇圖片檔案");
+            }
+        });
+
+        // 預覽背景圖
+        $("#formFileBack").change(function () {
+            var file = this.files[0];
+            if (isImageFile(file)) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#previewBackdropImage").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+            else {
+                alert("請選擇圖片檔案");
+                // 清空檔案選擇
+                $(this).val(null);
+
+                // 清空檔案名稱
+                $(this).next(".custom-file-label").html("選擇圖片檔案");
+            }
+        });
 
         // send 取得表單資料
         $("#send").click(function () {

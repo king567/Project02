@@ -270,11 +270,17 @@ namespace Final.Controllers
 
 		private bool EditRequest(int mediaInfoId)
 		{
+
+			// 檢查上傳的資料是否為空
+			if (HttpContext.Current.Request.Form.Count == 0)
+			{
+				return false;
+			}
+			// 取得 MediaInfo 的資料
+
 			string json = HttpContext.Current.Request.Form["MediaInfo"];
 
 			// 自動繫結
-
-			FormDataModelVm vm = new FormDataModelVm();
 
 			JsonSerializerSettings settings = new JsonSerializerSettings
 			{
@@ -282,7 +288,7 @@ namespace Final.Controllers
 			};
 
 			// 轉換成 FormDataModelVm
-			vm = JsonConvert.DeserializeObject<FormDataModelVm>(json, settings);
+			FormDataModelVm vm = JsonConvert.DeserializeObject<FormDataModelVm>(json, settings);
 
 			// 驗證 ModelState 是否有錯誤
 			if (!ModelState.IsValid)
@@ -320,28 +326,49 @@ namespace Final.Controllers
 					// 检查文件是否有效
 					if (file != null && file.ContentLength > 0)
 					{
-						string posterWebPath = "~/Images/Poster";
-						string backdropWebdPath = "~/Images/Backdrop/";
+						//string posterWebPath = "~/Images/Poster";
+						//string backdropWebdPath = "~/Images/Backdrop/";
 
 						HttpPostedFile Poster = HttpContext.Current.Request.Files["Poster"];
 						HttpPostedFile Backdrop = HttpContext.Current.Request.Files["Backdrop"];
 
 						if(Poster != null)
 						{
-							var posterfileName = Path.GetRandomFileName() + Path.GetExtension(Poster.FileName);
-							var posterPath = Path.Combine(HttpContext.Current.Server.MapPath(posterWebPath), posterfileName);
-							entity.PosterPath = posterfileName;
-							// 保存poster
+							// 取得檔案名稱
+							string posterfileName = Path.GetRandomFileName() + Path.GetExtension(Poster.FileName);
+							// 取得檔案絕對路徑
+							string posterPath = Path.Combine(FileHelper.posterFullPath, posterfileName);
+							// 刪除前台跟後台 原本的圖片
+							string origPosterFiletPath = HttpContext.Current.Server.MapPath(mediaInfo.PosterPath);
+							// 刪除後台圖片
+							FileHelper.DeleteFile(origPosterFiletPath);
+							// 刪除前台圖片
+							FileHelper.DeleteFile(FileHelper.ReplaceFinalToFront(origPosterFiletPath));
+							// 儲存 PosterPath 路徑到資料庫
+							entity.PosterPath = FileHelper.GetFileWebPath(FileHelper.posterPath, posterfileName);
+							// 後台保存 poster
 							Poster.SaveAs(posterPath);
+							// 前台從後台 複製一份 poster
+							File.Copy(posterPath, FileHelper.ReplaceFinalToFront(posterPath), true);
 						}
 						if (Backdrop != null)
 						{
-							var backdropfileName = Path.GetRandomFileName() + Path.GetExtension(Backdrop.FileName);
-							var backdropPath = Path.Combine(HttpContext.Current.Server.MapPath(backdropWebdPath), backdropfileName);
-
-							entity.BackdropPath = backdropfileName;
-							// 保存backdrop
+							// 取得檔案名稱
+							string backdropfileName = Path.GetRandomFileName() + Path.GetExtension(Backdrop.FileName);
+							// 取得檔案絕對路徑
+							string backdropPath = Path.Combine(FileHelper.backdropFullPath, backdropfileName);
+							// 刪除前台跟後台 原本的圖片
+							string origBackdropFiletPath = HttpContext.Current.Server.MapPath(mediaInfo.BackdropPath);
+							// 刪除後台圖片
+							FileHelper.DeleteFile(origBackdropFiletPath);
+							// 刪除前台圖片
+							FileHelper.DeleteFile(FileHelper.ReplaceFinalToFront(origBackdropFiletPath));
+							// 儲存 BackdropPath 路徑到資料庫
+							entity.BackdropPath = FileHelper.GetFileWebPath(FileHelper.backdropPath,backdropfileName);
+							// 後台保存backdrop
 							Backdrop.SaveAs(backdropPath);
+							// 前台從後台 複製一份 backdrop
+							File.Copy(backdropPath, FileHelper.ReplaceFinalToFront(backdropPath), true);
 						}
 					}
 				}
@@ -378,11 +405,12 @@ namespace Final.Controllers
 				// 移除 MediaInfos_OttTypes_Rel MediaIndo id資料
 
 				db.MediaInfos_Genres_Rel.RemoveRange(mediaInfo.MediaInfos_Genres_Rel);
+
 				db.MediaInfos_OttTypes_Rel.RemoveRange(mediaInfo.MediaInfos_OttTypes_Rel);
 
 				db.MediaInfos_Genres_Rel.AddRange(entity.MediaInfos_Genres_Rel);
-				db.MediaInfos_OttTypes_Rel.AddRange(entity.MediaInfos_OttTypes_Rel);
 
+				db.MediaInfos_OttTypes_Rel.AddRange(entity.MediaInfos_OttTypes_Rel);
 
 				db.SaveChanges();
 

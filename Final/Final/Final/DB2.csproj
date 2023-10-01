@@ -216,6 +216,7 @@
     <Compile Include="Models\Entities\MediaInfosOttTypesRelEntity.cs" />
     <Compile Include="Models\Entities\OttTypesEntity.cs" />
     <Compile Include="Models\Enum\CategoryName.cs" />
+    <Compile Include="Models\Infra\FileHelper.cs" />
     <Compile Include="Models\Infra\HashUtility.cs" />
     <Compile Include="Models\Infra\NullToDefaultConverter.cs" />
     <Compile Include="Models\Infra\UploadFileHelper.cs" />
@@ -441,7 +442,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\Utilities\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
