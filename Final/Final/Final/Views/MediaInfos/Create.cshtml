@@ -205,6 +205,9 @@
 
         // send 取得表單資料
         $("#send").click(function () {
+            if (!validateForm()) {
+                return;
+            }
             var formData = GetFormData();
             //console.log(formData.get("Backdrop")); // 取得 formFileFront 檔案
             submitForm(formData);
@@ -321,6 +324,9 @@
     // 取得表單資料，並轉換為 FormData 格式
 
     function GetFormData() {
+        // 驗證表單
+
+
         // 获取类别
         var categorySelect = $("#categorySelect").find('option:selected').data('id');
         var languageCodeSelect = $("#languageCodeSelect").find('option:selected').data('id');
@@ -371,6 +377,8 @@
             LanguageCodeId: languageCodeSelect
         };
         console.log(jsonData);
+
+
         // object convet to json
         var json = JSON.stringify(jsonData);
 
@@ -387,6 +395,82 @@
         var acceptedImageTypes = ["image/jpeg", "image/png", "image/gif", "image/svg+xml"]; // 可接受的图片文件类型
 
         return acceptedImageTypes.includes(file.type);
+    }
+
+    function validateForm() {
+        var categorySelect = $("#categorySelect").find('option:selected').data('id');
+        var languageCodeSelect = $("#languageCodeSelect").find('option:selected').data('id');
+        var selectedGenres = $("#typeSelect").find('option:selected').map(function () {
+            return $(this).data('id');
+        }).get();
+
+        // 驗證標題是否填寫
+        if ($("#Title").val() === "") {
+            alert("請填寫標題！");
+            return false;
+        }
+        // 驗證簡介是否填寫
+        if ($("#OverView").val() === "") {
+            alert("請填寫簡介！");
+            return false;
+        }
+
+
+        // 驗證 OTT 是否有填
+        var ottTypesElements = document.querySelectorAll('.ottTypes');
+        for (var i = 0; i < ottTypesElements.length; i++) {
+            var element = ottTypesElements[i];
+            var selectElement = element.querySelector('select');
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var ottPlatform = selectedOption.getAttribute("data-id");
+            var releaseDate = element.nextElementSibling.querySelector('input#startDate').value;
+            var removeDate = element.nextElementSibling.nextElementSibling.querySelector('input#endDate').value;
+
+            if (!ottPlatform || !releaseDate || !removeDate) {
+                alert("請填寫OTT項目所有資料！");
+                return false;
+            }
+        }
+
+        // 驗證類別是否有填
+        if (categorySelect === undefined) {
+            alert("請選擇類別！");
+            return false;
+        }
+
+        // 验证类型是否选择
+        if (selectedGenres.length === 0) {
+            alert("請至少選擇一個類型！");
+            return false;
+        }
+
+        // 驗證原始標題是否填寫
+        if ($("#OriginalTitle").val() === "") {
+            alert("請填寫原始標題！");
+            return false;
+        }
+        // 驗證成人片是否填寫
+        if ($("#Adult").val() === "") {
+            alert("請填寫成人片！");
+            return false;
+        }
+
+        // 验证语言代码是否选择
+        if (languageCodeSelect === undefined) {
+            alert("請選擇語言代碼！");
+            return false;
+        }
+
+        // 验证文件是否选择
+        var formFileBack = document.getElementById('formFileBack').files[0];
+        var formFileFront = document.getElementById('formFileFront').files[0];
+        if (!formFileBack || !formFileFront) {
+            alert("請選擇上傳的文件！");
+            return false;
+        }
+
+        // 所有验证通过
+        return true;
     }
 
 </script>

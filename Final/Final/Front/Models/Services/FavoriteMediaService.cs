@@ -50,5 +50,20 @@ namespace Project2.Models.Services
 
 			return vms;
 		}
+
+		// 檢查是否已經有收藏
+		public bool CheckFavoriteMedia(FavoriteMediaDTO dto)
+		{
+			bool result = new FavoriteMediaRepository().CheckFavoriteMedia(dto);
+
+			if (result)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 }

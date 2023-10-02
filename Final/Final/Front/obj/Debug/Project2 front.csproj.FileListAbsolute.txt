@@ -1042,3 +1042,6 @@ D:\user\Downloads\Final\Final\Front\obj\Debug\Project2 front.csproj.CoreCompileI
 D:\user\Downloads\Final\Final\Front\obj\Debug\Project2 front.csproj.CopyComplete
 D:\user\Downloads\Final\Final\Front\obj\Debug\Project2.dll
 D:\user\Downloads\Final\Final\Front\obj\Debug\Project2.pdb
+C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\JetBrains.Annotations.dll
+C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\X.PagedList.dll
+C:\Users\user\Documents\GitHub\Project02\Final\Final\Front\bin\JetBrains.Annotations.xml

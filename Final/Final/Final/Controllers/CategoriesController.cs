@@ -13,19 +13,22 @@ namespace Final.Controllers
     public class CategoriesController : Controller
     {
         // GET: Category
+        [Authorize]
         public ActionResult Index()
         {
             return View();
         }
 
-        // 新增 Category
-        public ActionResult Create()
+		// 新增 Category
+		[Authorize]
+		public ActionResult Create()
         {
 			return View();
 		}
 
         [HttpPost]
-        public ActionResult Create(Category vm)
+		[Authorize]
+		public ActionResult Create(Category vm)
         {
             // 檢查資料是否正確
             if (ModelState.IsValid)
@@ -42,6 +45,7 @@ namespace Final.Controllers
             }
 		}
 		// 修改 Category
+		[Authorize]
 		public ActionResult Edit(int id)
         {
             // Genres Service 取得指定 id genre 並傳給 View
@@ -51,7 +55,8 @@ namespace Final.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Category vm)
+		[Authorize]
+		public ActionResult Edit(Category vm)
         {
 			// 檢查資料是否正確
 			if (ModelState.IsValid)

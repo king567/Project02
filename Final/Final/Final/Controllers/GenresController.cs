@@ -11,8 +11,9 @@ namespace Final.Controllers
 {
     public class GenresController : Controller
     {
-        // GET: Genres
-        public ActionResult Index()
+		// GET: Genres
+		[Authorize]
+		public ActionResult Index()
         {
 			// 取得所有 genres 資料 和 ottTypes 資料 並傳給 View
 			var genres = new GenreRepository().GetAllGenres();
@@ -26,6 +27,7 @@ namespace Final.Controllers
         }
 
 		// 新增 Genre
+		[Authorize]
 		public ActionResult Create()
 		{
 			// Genres Service 取得所有 genres 並傳給 View
@@ -34,6 +36,7 @@ namespace Final.Controllers
 		}
 
 		[HttpPost]
+		[Authorize]
 		public ActionResult Create(Genre genre)
 		{
 			// Genres Service 新增 genre
@@ -47,6 +50,7 @@ namespace Final.Controllers
 		}
 
 		// 修改 Genre
+		[Authorize]
 		public ActionResult Edit(int id)
 		{
 			// Genres Service 取得指定 id genre 並傳給 View
@@ -56,6 +60,7 @@ namespace Final.Controllers
 		}
 
 		[HttpPost]
+		[Authorize]
 		public ActionResult Edit(Genre genre)
 		{
 			// Genres Service 修改 genre

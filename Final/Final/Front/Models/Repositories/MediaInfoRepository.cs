@@ -476,12 +476,13 @@ namespace Final.Models.Repositories
 			}
 		}
 		// 計算下架時間範圍的資料總數
-		public int GetMediaInfosByRemovalDateRangeCount(DateTime startDate, DateTime endDate)
+		public int GetMediaInfosByRemovalDateRangeCount(DateTime startDate, DateTime endDate,int categoryId)
 		{
 			using (var db = new AppDbContext())
 			{
 				var count = db.MediaInfos
 					.AsNoTracking()
+					.Where(m => m.CategoryId == categoryId)
 					.Where(m => m.MediaInfos_OttTypes_Rel.Any(x => x.Removal_Date >= startDate && x.Removal_Date <= endDate))
 					.Include(m => m.Category)
 					.Include(m => m.LanguageCode)
@@ -518,7 +519,7 @@ namespace Final.Models.Repositories
 			var startDate = DateTime.Now;
 			var endDate = DateTime.Now.AddMonths(1);
 
-			return GetMediaInfosByRemovalDateRangeCount(startDate, endDate);
+			return GetMediaInfosByRemovalDateRangeCount(startDate, endDate, categoryId);
 		}
 
 		// 取得未來一個月上映的分頁資料

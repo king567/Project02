@@ -1,4 +1,4 @@
-﻿.card-title {
+﻿.card-title-MediaInfo {
     /*height: 35px;*/
     font-size: 15px;
     font-weight: 800;
@@ -7,7 +7,7 @@
     /*background-color: rgb(216, 241, 248);*/
 }
 
-.card-body {
+.card-body-MediaInfo {
     height: 50px;
     overflow: hidden; /* 隱藏溢出的內容 */
     text-overflow: ellipsis; /* 當文字溢出時顯示省略號（...） */
@@ -16,24 +16,24 @@
     justify-content: center; /* 在垂直方向上置中內容 */
 }
 
-.card {
+.card-MediaInfo {
     background-color: rgb(216, 241, 248);
 }
 
-.card img {
+.card-MediaInfo img {
     object-fit: cover;
     height: 300px;
     /*border-radius: 5%*/
 }
 
-.card:hover {
+.card-MediaInfo:hover {
     transform: scale(1.05);
     /* 悬停时放大卡片 */
     transition: transform 0.3s ease-in-out;
     /* 添加过渡效果 */
 }
 
-.card:hover .card-details {
+.card-MediaInfo:hover .card-details {
     display: block;
     /* 悬停時顯示 */
     opacity: 1;

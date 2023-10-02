@@ -232,13 +232,18 @@ namespace Final.Models.Repositories
 		}
 
 		// 根據 Id 刪除 MediaInfo
-		public void DeleteMediaInfo(int id)
+		public bool DeleteMediaInfo(int id)
 		{
 			using (var db = new AppDbContext())
 			{
 				var mediaInfo = db.MediaInfos.Find(id);
+				if(mediaInfo == null)
+				{
+					return false;
+				}
 				db.MediaInfos.Remove(mediaInfo);
 				db.SaveChanges();
+				return true;
 			}
 		}
 

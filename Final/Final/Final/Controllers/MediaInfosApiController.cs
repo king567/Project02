@@ -18,6 +18,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Final.Models.Infra;
 using System.Net.Http.Formatting;
+using Antlr.Runtime.Misc;
 
 namespace Final.Controllers
 {
@@ -93,56 +94,8 @@ namespace Final.Controllers
 		[HttpDelete]
 		public IHttpActionResult Delete(int id)
 		{
-			var db = new AppDbContext();
-
-			var mediaInfo = db.MediaInfos.Find(id);
-
-			string posterWebPath = mediaInfo.PosterPath;
-			string backdropWebdPath = mediaInfo.BackdropPath;
-
-			if (mediaInfo == null)
-			{
-				return NotFound();
-			}
-
-			db.MediaInfos.Remove(mediaInfo);
-
-			
-			// 取得 posterWebPath 的絕對路徑
-			string posterFiletPath = HttpContext.Current.Server.MapPath(posterWebPath);
-			//posterFiletPath = posterFiletPath.Replace("Final\\Images", "Images");
-			// 前台圖片的Poster絕對路徑
-			string posterFileFrontPath = posterFiletPath.Replace("Final\\Images", "Front\\Images");
-			// 取得 backdropWebdPath 的絕對路徑
-			string backdropFilePath = HttpContext.Current.Server.MapPath(backdropWebdPath);
-			//backdropFilePath = backdropFilePath.Replace("Final\\Images", "Images");
-			// 前台圖片的Backdrop絕對路徑
-			string backdropFileFrontPath = backdropFilePath.Replace("Final\\Images", "Front\\Images");
-
-			// 刪除 posterWebPath 的圖片
-			if (File.Exists(posterFiletPath))
-			{
-				File.Delete(posterFiletPath);
-			}
-			// 刪除 backdropWebdPath 的圖片
-			if (File.Exists(backdropFilePath))
-			{
-				File.Delete(backdropFilePath);
-			}
-			
-			// 刪除前台圖片
-			if (File.Exists(posterFileFrontPath))
-			{
-				File.Delete(posterFileFrontPath);
-			}
-			if (File.Exists(backdropFileFrontPath))
-			{
-				File.Delete(backdropFileFrontPath);
-			}
-
-			db.SaveChanges();
-
-			return Ok("刪除成功");
+			if (DeleteRequest(id)) return Ok("刪除成功");
+			return BadRequest("刪除失敗");
 		}
 
 		[HttpPost]
@@ -261,10 +214,6 @@ namespace Final.Controllers
 
 		private bool IsValidImageFile(HttpPostedFile file)
 		{
-			// 在此处实现文件类型检查逻辑
-			// 例如，你可以检查文件扩展名或内容类型
-			// 如果文件有效，返回 true，否则返回 false
-			// 请根据你的需求实现这个方法
 			return true;
 		}
 
@@ -418,6 +367,68 @@ namespace Final.Controllers
 			}
 
 			return false;
+		}
+
+		private bool DeleteRequest(int mediaInfoId)
+		{
+			var db = new AppDbContext();
+
+			var mediaInfo = db.MediaInfos.Find(mediaInfoId);
+
+			string posterWebPath = mediaInfo.PosterPath;
+			string backdropWebdPath = mediaInfo.BackdropPath;
+
+			// 檢查是否有找到 MediaInfo Id 的資料
+			if (mediaInfo == null)
+			{
+				return false;
+			}
+
+			//db.MediaInfos.Remove(mediaInfo);
+
+			// 取得 posterWebPath 的絕對路徑
+			string posterFilePath = HttpContext.Current.Server.MapPath(posterWebPath);
+			// 前台圖片的Poster絕對路徑
+			string posterFileFrontPath = FileHelper.ReplaceFinalToFront(posterFilePath);
+			// 取得 backdropWebdPath 的絕對路徑
+			string backdropFilePath = HttpContext.Current.Server.MapPath(backdropWebdPath);
+			// 前台圖片的Backdrop絕對路徑
+			string backdropFileFrontPath = FileHelper.ReplaceFinalToFront(backdropFilePath);
+
+			// 刪除後台圖片
+			// 刪除 posterWebPath 的圖片
+			if (File.Exists(posterFilePath))
+			{
+				File.Delete(posterFilePath);
+			}
+
+			// 刪除 backdropWebdPath 的圖片
+			if (File.Exists(backdropFilePath))
+			{
+				File.Delete(backdropFilePath);
+			}
+
+			// 刪除前台圖片
+			if (File.Exists(posterFileFrontPath))
+			{
+				File.Delete(posterFileFrontPath);
+			}
+
+			if (File.Exists(backdropFileFrontPath))
+			{
+				File.Delete(backdropFileFrontPath);
+			}
+
+			bool isDelete = new MediaInfoRepository().DeleteMediaInfo(mediaInfoId);
+
+			if (!isDelete)
+			{
+				return false;
+			}
+
+			//db.SaveChanges();
+
+			return true;
 		}
 	}
 }

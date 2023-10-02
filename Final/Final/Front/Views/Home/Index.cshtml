@@ -124,11 +124,11 @@
         @foreach (var mediaInfo in Model.GetLastOneMonthMediaInfo)
         {
             <div class="col">
-                <div class="card Release">
+                <div class="card card-MediaInfo Release">
                     <img src="@mediaInfo.PosterPath" class="card-img-top" alt="...">
-                    <div class="card-body">
+                    <div class="card-body card-body-MediaInfo">
                         <a href="/MediaInfos/Details/@mediaInfo.Id">
-                            <h6 class="card-title">@mediaInfo.Title</h6>
+                            <h6 class="card-title card-title-MediaInfo">@mediaInfo.Title</h6>
                         </a>
                     </div>
                 </div>
@@ -154,11 +154,11 @@
         @foreach (var mediaInfo in Model.GetNextOneMonthRelease)
         {
             <div class="col">
-                <div class="card futureRelease">
+                <div class="card card-MediaInfo futureRelease">
                     <img src="@mediaInfo.PosterPath" class="card-img-top" alt="...">
-                    <div class="card-body">
+                    <div class="card-body card-body-MediaInfo">
                         <a href="/MediaInfos/Details/@mediaInfo.Id">
-                            <h6 class="card-title">@mediaInfo.Title</h6>
+                            <h6 class="card-title card-title-MediaInfo">@mediaInfo.Title</h6>
                         </a>
                     </div>
                 </div>
@@ -186,11 +186,11 @@
         @foreach (var mediaInfo in Model.GetNextOneMonthORemoval)
         {
             <div class="col">
-                <div class="card removal">
+                <div class="card card-MediaInfo removal">
                     <img src="@mediaInfo.PosterPath" class="card-img-top" alt="...">
-                    <div class="card-body">
+                    <div class="card-body card-body-MediaInfo">
                         <a href="/MediaInfos/Details/@mediaInfo.Id">
-                            <h6 class="card-title">@mediaInfo.Title</h6>
+                            <h6 class="card-title card-title-MediaInfo">@mediaInfo.Title</h6>
                         </a>
                     </div>
                 </div>

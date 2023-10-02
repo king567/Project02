@@ -2,6 +2,11 @@
 using Final.Models.Repositories;
 using Final.Models.Services;
 using Final.Models.ViewModels;
+using Microsoft.Ajax.Utilities;
+using Project2.Models.DTOs;
+using Project2.Models.EFModels;
+using Project2.Models.Repositories;
+using Project2.Models.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
@@ -45,7 +50,23 @@ namespace Project2.Controllers
 			var dto = new MediaInfoService().GetMediaInfo(id);
 			var vm = dto.Convert2VM();
 
+			var currentUserAccount = User.Identity.Name;
+
+            Models.EFModels.Member memberInfo = new Models.EFModels.Member();
+
+			if (currentUserAccount != null)
+			{
+				memberInfo = new MemberRepository().GetMemberByAccount(currentUserAccount);
+			}
+
 			ViewBag.MediaInfoId = id;
+			ViewBag.Member = memberInfo;
+			ViewBag.CheckFavoriteMedia = false;
+
+			if (memberInfo != null)
+			{
+				ViewBag.CheckFavoriteMedia = new FavoriteMediaService().CheckFavoriteMedia(new FavoriteMediaDTO { MediaInfoId = id, MemberId = memberInfo.Id });
+			}
 
 			return View(vm);
 		}

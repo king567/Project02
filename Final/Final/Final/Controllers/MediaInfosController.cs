@@ -13,7 +13,8 @@ namespace Final.Controllers
 {
     public class MediaInfosController : Controller
     {
-        // GET: MediaInfos
+		// GET: MediaInfos
+		[Authorize]
         public ActionResult Index()
         {
             // 取得所有 genres 資料 和 ottTypes 資料 並傳給 View
@@ -31,8 +32,8 @@ namespace Final.Controllers
 
 			return View(vm);
         }
-
-        public ActionResult Create()
+		[Authorize]
+		public ActionResult Create()
         {
 			// 取得所有 genres 資料 和 ottTypes 資料 並傳給 View
 			var genres = new GenreRepository().GetAllGenres();
@@ -52,7 +53,8 @@ namespace Final.Controllers
 			return View(vm);
 		}
 
-        // 更新 MediaInfo 資料
+		[Authorize]
+		// 更新 MediaInfo 資料
 		public ActionResult Edit(int id)
 		{
 			// 取得 MediaInfo Id 的資料,及 genres 資料 和 ottTypes 資料 並傳給 View

@@ -66,5 +66,25 @@ namespace Project2.Models.Repositories
 				return favoriteMedia;
 			}
 		}
+
+		// 檢查是否已經有收藏
+		public bool CheckFavoriteMedia(FavoriteMediaDTO dto)
+		{
+			using (var db = new AppDbContext())
+			{
+				var favoriteMedia = db.FavoriteMedias
+					.Where(x => x.MemberId == dto.MemberId && x.MediaInformId == dto.MediaInfoId)
+					.FirstOrDefault();
+
+				if (favoriteMedia != null)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
 	}
 }

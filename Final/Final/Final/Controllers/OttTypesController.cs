@@ -14,19 +14,22 @@ namespace Final.Controllers
     public class OttTypesController : Controller
     {
 		// GET: OttsTypes
+		[Authorize]
 		public ActionResult Index()
         {
             return View();
         }
 
-        // 新增 OttType
-        public ActionResult Create()
+		// 新增 OttType
+		[Authorize]
+		public ActionResult Create()
         {
 			return View();
 		}
 
         [HttpPost]
-        public ActionResult Create(OttTypesVm vm)
+		[Authorize]
+		public ActionResult Create(OttTypesVm vm)
         {
             // OttTypes Service 新增 ottType
             if (ModelState.IsValid)
@@ -54,8 +57,9 @@ namespace Final.Controllers
             return View();
         }
 
-        // 修改 OttType
-        public ActionResult Edit(int id)
+		// 修改 OttType
+		[Authorize]
+		public ActionResult Edit(int id)
         {
 			// OttTypes Service 取得指定的 OttType Id 資料
 			var entity = new OttRepository().GetOttType(id);
@@ -69,6 +73,7 @@ namespace Final.Controllers
 			return View(vm);
 		}
         [HttpPost]
+		[Authorize]
 		public ActionResult Edit(OttTypesVm vm)
         {
 			// OttTypes Service 修改 OttType

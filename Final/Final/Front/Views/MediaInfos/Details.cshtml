@@ -11,7 +11,7 @@
         </div>
 
         <div class="card" style="width: 100%;">
-            <img src="https://picsum.photos/1200/800" class="card-img-top" alt="...">
+            <img src="@Model.PosterPath" class="card-img-top" alt="...">
             <div class="card-body">
                 <h4 class="card-title text-center">標題：@Model.Title</h4>
                 <p class="card-text">簡介：@Model.OverView</p>
@@ -39,7 +39,33 @@
                     }
                 </li>
                 <li class="list-group-item">成人片：@(Model.Adult == false ? "不是" : "是")</li>
-                <li class="list-group-item"><button class="btn btn-primary addFav" data-id="@Model.Id">點我收藏</button></li>
+                <li class="list-group-item">
+                    @if (User.Identity.Name != string.Empty)
+                    {
+                        // 檢查是否有收藏
+                        if (ViewBag.CheckFavoriteMedia)
+                        {
+                            <label>點我收藏：</label>
+                            <button class="delFav" data-id="@Model.Id">
+                                <span class="fa-solid fa-heart" style="color: #ff0000;"></span>
+                            </button>
+
+                            <!--<li class="list-group-item fa-thin fa-heart" style="color: #f61c04;">-->
+                            @*<button class="addFav" data-id="@Model.Id">點我收藏</button>*@
+                            <!--</li>-->
+                        }
+                        else
+                        {
+                            <label>點我收藏：</label>
+                            <button class="addFav" data-id="@Model.Id">
+                                <span class="fa-regular fa-heart" style="color: #ff0000;"></span>
+                            </button>
+                            <!--<li class="list-group-item fa-solid fa-heart" style="color: #f61c04;">-->
+                            @*<button class="addFav" data-id="@Model.Id">點我收藏</button>*@
+                            <!--</li>-->
+                        }
+                    }
+                </li>
             </ul>
         </div>
         @Html.Partial("_RatingPartial")
@@ -57,7 +83,7 @@
 
                 // 創建包含要傳遞的數據的 JavaScript 對象
                 var data = {
-                    MemberId: 34,
+                    MemberId: @ViewBag.Member.Id,
                     MediaInfoId: id
                 };
 
@@ -70,10 +96,41 @@
                     success: function (response) {
                         // 在這裡處理成功的回應
                         alert(response);
+                        // 重新載入頁面
+                        location.reload();
                     },
                     error: function (error) {
                         // 在這裡處理錯誤
                         alert('加入失敗');
+                    }
+                });
+            });
+
+            $('.delFav').click(function () {
+                // 獲取按鈕上的 data-id 屬性的值
+                var id = $(this).data('id');
+
+                // 創建包含要傳遞的數據的 JavaScript 對象
+                var data = {
+                    MemberId: @ViewBag.Member.Id,
+                    MediaInfoId: id
+                };
+
+                // 發送 AJAX POST 請求
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/api/FavoriteMediaApi', // 替換成你的 Web API 端點 URL
+                    data: JSON.stringify(data), // 如果需要將數據作為 JSON 發送，需要將其轉換為 JSON 字符串
+                    contentType: 'application/json', // 設置請求的內容類型為 JSON
+                    success: function (response) {
+                        // 在這裡處理成功的回應
+                        alert(response);
+                        // 重新載入頁面
+                        location.reload();
+                    },
+                    error: function (error) {
+                        // 在這裡處理錯誤
+                        alert('刪除收藏失敗');
                     }
                 });
             });
