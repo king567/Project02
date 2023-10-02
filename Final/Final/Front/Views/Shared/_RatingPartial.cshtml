@@ -123,8 +123,31 @@
                     <textarea name="user_review" id="user_review" class="form-control mx-auto" placeholder="撰寫你的影評"></textarea>
                 </div>
                 <div class="form-group text-center mt-4">
-                    <button type="button" class="btn btn-primary" id="save_review">提交</button>
-                    <button type="button" class="btn btn-secondary" id="cancel_review">取消</button>
+                    @{ 
+                        // 判斷有沒有登錄
+                        var member = ViewBag.Member;
+                        if (member != null)
+                        {
+                            // 判斷是不是黑名單
+                            if (ViewBag.IsBlacklist == false)
+                            {
+                                <button type="button" class="btn btn-primary" id="save_review">提交</button>
+                                <button type="button" class="btn btn-secondary" id="cancel_review">取消</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary" id="save_review" disabled>提交</button>
+                                <button type="button" class="btn btn-secondary" id="cancel_review">取消</button>
+                            }
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary" id="save_review" disabled>提交</button>
+                            <button type="button" class="btn btn-secondary" id="cancel_review">取消</button>
+                            }
+                        }
+                    @*<button type="button" class="btn btn-primary" id="save_review">提交</button>
+                    <button type="button" class="btn btn-secondary" id="cancel_review">取消</button>*@
                 </div>
             </div>
         </div>
@@ -262,7 +285,7 @@
                     method: "POST",
                     data: JSON.stringify({
                         MediaInfoId: (@ViewBag.MediaInfoId),
-                        MemberId: 30,
+                        MemberId: @(ViewBag.MemberId),
                         Comment: user_review,
                         Rate: rating_data
                     }),
@@ -335,6 +358,8 @@
                     if (data.rating_data.length > 0) {
                         var html = '';
 
+                        var memberAccount = '@ViewBag.Member';
+
                         for (var count = 0; count < data.rating_data.length; count++) {
 
                             html += '<div class="row mb-3">';
@@ -347,7 +372,10 @@
                             html += '<div class="card-header d-flex justify-content-between align-items-center">';
                             html += '<b>' + data.rating_data[count].MemberAccount + '</b>';
                             html += '<div>';
-                            html += '<button type="button" class="btn btn-warning btn-xs delete" data-id="' + data.rating_data[count].Id + '">刪除</button>';
+                            if (data.rating_data[count].MemberAccount == memberAccount) {
+
+                                html += '<button type="button" class="btn btn-warning btn-xs delete" data-id="' + data.rating_data[count].Id + '">刪除</button>';
+                            }
                             html += '</div>';
                             html += '</div>';
 

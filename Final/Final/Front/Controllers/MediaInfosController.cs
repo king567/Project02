@@ -60,11 +60,42 @@ namespace Project2.Controllers
 			}
 
 			ViewBag.MediaInfoId = id;
-			ViewBag.Member = memberInfo;
+			ViewBag.Member = "";
+			ViewBag.MemberId = 0;
+
+			// 檢查 Member 是否在黑名單內
+			if (memberInfo != null)
+			{
+				using(var db = new AppDbContext())
+				{
+					var blacklist = db.Members
+						.Where(x => x.Id == memberInfo.Id && x.BlacklistEnddate > DateTime.Now)
+						.FirstOrDefault();
+
+					// to bool
+					bool isBlacklisted = blacklist != null ? true : false;
+
+					if (isBlacklisted)
+					{
+						ViewBag.IsBlacklist = true;
+					}
+					else
+					{
+						ViewBag.IsBlacklist = false;
+					}
+				}
+			}
+			else
+			{
+				ViewBag.IsBlacklist = false;
+			}
+
 			ViewBag.CheckFavoriteMedia = false;
 
 			if (memberInfo != null)
 			{
+				ViewBag.MemberId = memberInfo.Id;
+				ViewBag.Member = memberInfo.Account;
 				ViewBag.CheckFavoriteMedia = new FavoriteMediaService().CheckFavoriteMedia(new FavoriteMediaDTO { MediaInfoId = id, MemberId = memberInfo.Id });
 			}
 
