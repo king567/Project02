@@ -109,14 +109,14 @@ namespace Project2.Controllers
 				// 計算評論總數
 				var totalReview = ratingData.Count;
 
-				// 计算各个星级的数量
+				// 計算各個星級的數量
 				var fiveStarReview = ratingData.Count(r => r.Rate == 5);
 				var fourStarReview = ratingData.Count(r => r.Rate == 4);
 				var threeStarReview = ratingData.Count(r => r.Rate == 3);
 				var twoStarReview = ratingData.Count(r => r.Rate == 2);
 				var oneStarReview = ratingData.Count(r => r.Rate == 1);
 
-				// 构建包含评分信息的 JSON 数据
+				// 包含評分訊息的 JSON 數據
 				var result = new
 				{
 					average_rating = averageRating,
@@ -126,7 +126,7 @@ namespace Project2.Controllers
 					three_star_review = threeStarReview,
 					two_star_review = twoStarReview,
 					one_star_review = oneStarReview,
-					rating_data = ratingData // 包含用户提交的评分和评论
+					rating_data = ratingData //包含用戶提交的評分和評論
 				};
 
 				return Ok(result);
@@ -137,21 +137,22 @@ namespace Project2.Controllers
 			}
 		}
 
-		//[HttpDelete]
-		//public IHttpActionResult DeleteReviews(int id)
-		//{
-		//	var db = new AppDbContext();
-		//	Rating rating = db.Ratings.Find(id);
-		//	if (rating == null)
-		//	{
-		//		return NotFound();
-		//	}
+		[HttpDelete]
+		public IHttpActionResult DeleteComment(int id)
+		{
 
-		//	db.Ratings.Remove(rating);
-		//	db.SaveChanges();
+			var db = new AppDbContext();
+			Rating rating = db.Ratings.Find(id);
+			if (rating == null)
+			{
+				return NotFound();
+			}
 
-		//	return Ok(rating);
-		//}
+			db.Ratings.Remove(rating);
+			db.SaveChanges();
+
+			return Ok(rating);
+		}
 
 
 		public class RatingData

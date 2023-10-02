@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     ViewBag.Title = "Index";
 }
 
@@ -107,9 +108,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">留下你的評分</h5>
-                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>*@
 
             </div>
             <div class="modal-body">
@@ -120,14 +118,9 @@
                     <i class="fas fa-star star-light submit_star mr-1" id="submit_star_4" data-rating="4"></i>
                     <i class="fas fa-star star-light submit_star mr-1" id="submit_star_5" data-rating="5"></i>
                 </h4>
-                @*<div class="form-group">
-                        <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Enter Your Name" />
-                    </div>*@
+
                 <div class="form-group text-center mt-4">
                     <textarea name="user_review" id="user_review" class="form-control mx-auto" placeholder="撰寫你的影評"></textarea>
-                </div>
-                <div class="text-center">
-                    <p><strong>評論提交後，即不可編輯及刪除</strong></p>
                 </div>
                 <div class="form-group text-center mt-4">
                     <button type="button" class="btn btn-primary" id="save_review">提交</button>
@@ -138,6 +131,22 @@
     </div>
 </div>
 
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">確認刪除</h5>
+            </div>
+            <div class="modal-body">
+                確定要刪除這則評論嗎？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel_delete">取消</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">確認刪除</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -197,13 +206,49 @@
 
         });
 
-        /*var rating_data = 0;*/
 
         $(document).on('click', '.submit_star', function () {
 
             rating_data = $(this).data('rating');
 
         });
+
+        $(document).on('click', '.delete', function () {
+            var commentId = $(this).data('id');
+
+            // 設定要刪除的評論ID
+            $('#confirmDeleteButton').data('comment-id', commentId);
+
+            // 顯示確認刪除的模態框
+            $('#confirmDeleteModal').modal('show');
+        });
+
+        // 點選確認刪除按鈕時執行刪除動作
+        $('#confirmDeleteButton').click(function () {
+            var commentId = $(this).data('comment-id');
+
+            // 隱藏模態框
+            $('#confirmDeleteModal').modal('hide');
+
+            // 發送刪除請求，使用 commentId
+            $.ajax({
+                url: "/api/RatingApi/DeleteComment?id=" + commentId,
+                method: "DELETE",
+                success: function (data) {
+                    // 處理刪除成功後的邏輯，可以刷新評論清單或進行其他操作
+                    load_rating_data(); // 重新載入評論列表
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert("刪除註解時出現錯誤");
+                }
+            });
+        });
+
+        $('#cancel_delete').click(function () {
+            $('#confirmDeleteModal').modal('hide');
+        });
+
 
         $('#save_review').click(function () {
             var user_review = $('#user_review').val();
@@ -213,15 +258,8 @@
             }
             else {
                 $.ajax({
-                    url: "/api/RatingApi/SubmitRating", // 更改为API端点的URL
+                    url: "/api/RatingApi/SubmitRating",
                     method: "POST",
-                    //data: JSON.stringify(rating_data),
-                    //data: JSON.stringify({
-                    //    MediaInfoId: rating_data.MediaInfoId,
-                    //    MemberId: rating_data.MemberId,
-                    //    Comment: user_review,
-                    //    Rate: rating_data.Rate
-                    //}),
                     data: JSON.stringify({
                         MediaInfoId: (@ViewBag.MediaInfoId),
                         MemberId: 30,
@@ -242,18 +280,11 @@
             }
         });
 
-       ///* 捲動功能到頁面底部後加載更多riview_data*/
-       // $(window).scroll(function () {
-       //     if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-       //         load_rating_data();
-       //     }
-       // });
-
         function formatDateTime(dateTimeString) {
-            // 创建日期对象，假设服务器返回的是 ISO 8601 格式的日期时间字符串
+            // 創建日期對象
             var dateTime = new Date(dateTimeString);
 
-            // 使用toLocaleString()方法将日期时间格式化为特定格式
+            // 使用toLocaleString()方法將日期時間格式化為特定格式
             var formattedDateTime = dateTime.toLocaleString('zh-Tw', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
             return formattedDateTime;
@@ -262,9 +293,9 @@
         function load_rating_data() {
             var mediaInfoId = @ViewBag.MediaInfoId;
             $.ajax({
-                url: "/api/RatingApi/LoadData?mediaInfoId=" + mediaInfoId, // 更改为API端点的URLF
-                method: "GET", // 使用GET请求
-                dataType: "json", // 期望的响应数据类型
+                url: "/api/RatingApi/LoadData?mediaInfoId=" + mediaInfoId,
+                method: "GET", // 使用GET
+                dataType: "json",
                 success: function (data) {
                     $('#average_rating').text(data.average_rating.toFixed(1));
                     $('#total_review').text(data.total_review);
@@ -308,16 +339,16 @@
 
                             html += '<div class="row mb-3">';
 
-                            /* html += '<div class="col-sm-1"><div class="rounded-circle bg-danger text-white pt-2 pb-2"><h3 class="text-center">' + data.rating_data[count].user_name.charAt(0) + '</h3></div></div>';*/
-
                             html += '<div class="col-sm-11">';
 
                             html += '<div class="card">';
 
 
-                            html += '<div class="card-header"><b>' + data.rating_data[count].MemberAccount + '</b></div>';
+                            html += '<div class="card-header d-flex justify-content-between align-items-center">';
+                            html += '<b>' + data.rating_data[count].MemberAccount + '</b>';
                             html += '<div>';
-
+                            html += '<button type="button" class="btn btn-warning btn-xs delete" data-id="' + data.rating_data[count].Id + '">刪除</button>';
+                            html += '</div>';
                             html += '</div>';
 
                             html += '<div class="card-body">';

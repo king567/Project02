@@ -13,7 +13,7 @@
                 <div class="input-group">
                     <input type="text"
                            class="form-control"
-                           placeholder="請輸入欲查詢電影" />
+                           placeholder="請輸入欲查詢影片" />
                     <select id="categorySelect" class="selectpicker ml-2">
                         <option value="請選擇">請選擇</option>
                         <option value="電影">電影</option>
@@ -140,21 +140,28 @@
                     ],
                 });
 
-                // 搜尋button event handler
+                // 搜尋按鈕事件處理程序
                 $("#searchButton").click(function () {
-
-                    var searchTerm = $(".form-control").val(); // 獲取搜索詞
-                    var categorySelectValue = $("#categorySelect").val(); //獲取影片類別
+                    var searchTerm = $(".form-control").val(); // 取得搜尋詞
+                    var categorySelectValue = $("#categorySelect").val(); // 取得影片類別
                     if (searchTerm) {
-                        // 使用搜索框可以搜尋 MediaInfoTitle
-                        table.column(2).search(searchTerm).draw();
-                    } else if (categorySelectValue && categorySelectValue !== "請選擇") {
-                        // 使用選擇框也能搜尋
-                        table.column(1).search(categorySelectValue).draw();
+                        // 使用搜尋框可以搜尋 MediaInfoTitle
+                        table.column(2).search(searchTerm);
                     } else {
-                        // 如果都沒有選擇，清空搜尋並顯示所有數據
-                        table.search("").draw();
+                        // 若搜尋框為空，清空 MediaInfoTitle 的搜尋
+                        table.column(2).search("");
                     }
+
+                    if (categorySelectValue && categorySelectValue !== "請選擇") {
+                        // 使用選擇框也能搜尋
+                        table.column(1).search(categorySelectValue);
+                    } else {
+                        // 如果選擇框沒有選擇，清空影片類別的搜尋
+                        table.column(1).search("");
+                    }
+
+                    // 重新繪製資料表格
+                    table.draw();
                 });
 
                 //自訂日期時間格式
@@ -219,7 +226,5 @@
             });
 
         </script>
-
-
     </main>
 </body>

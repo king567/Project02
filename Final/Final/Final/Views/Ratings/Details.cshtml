@@ -79,7 +79,7 @@
                 <div class="modal-body">
                     <!-- 在這裡添加您想顯示的內容，例如確認訊息 -->
                     黑名單理由:
-                    @Html.DropDownList("BlacklistReasonId", ViewBag.BlacklistReasons as SelectList, "選擇原因", new { @class = "form-control" })
+                    @Html.DropDownList("BlacklistReasonId", ViewBag.BlacklistReasons as SelectList, "選擇原因", new { @class = "form-select" })
                     <br />
                     <p>您確定要將 <strong>@Model.MemberAccount</strong> 加入黑名單?</p>
                 </div>
@@ -121,23 +121,60 @@
          });
     }
 
-    function sendToBlacklist(memberId, blacklistReasonId) {
-         // 執行 AJAX 請求，將 memberId 和 blacklistReasonId 傳送到後端新增黑名單的操作
-         $.ajax({
-             url: "@Url.Action("AddToBlacklist", "Ratings")",
-             type: "POST",
-             data: { memberId: memberId, blacklistReasonId: blacklistReasonId },
-             success: function (data) {
-                 // 在這裡處理成功後的邏輯，例如顯示成功訊息
-                 alert("成功加入黑名單！");
-                 // 關閉模態框
-                 $('#blacklistModal').modal('hide');
-             },
-             error: function (error) {
-                 // 處理錯誤，例如顯示錯誤訊息
-                 alert("加入黑名單時發生錯誤：" + error);
+   function sendToBlacklist(memberId, blacklistReasonId) {
+          // 執行 AJAX 請求，將 memberId 和 blacklistReasonId 傳送到後端新增黑名單的操作
+          $.ajax({
+              url: "@Url.Action("AddToBlacklist", "Ratings")",
+              type: "POST",
+              data: { memberId: memberId, blacklistReasonId: blacklistReasonId },
+              success: function (data) {
+                  // 在這裡處理成功後的邏輯，例如顯示成功訊息
+                  alert("成功加入黑名單！");
+                  // 關閉模態框
+                  $('#blacklistModal').modal('hide');
+              },
+              error: function (error) {
+                  // 處理錯誤，例如顯示錯誤訊息
+                  alert("加入黑名單時發生錯誤：" + error);
+              }
+          });
+         }
+     function sendToBlacklist(memberId, blacklistReasonId) {
+     // 使用 AJAX 請求檢查成員是否在黑名單中
+     $.ajax({
+         url: "@Url.Action("CheckMemberInBlacklist", "Ratings")",
+         method: "GET",
+         data: { memberId: memberId },
+         dataType: "json",
+         success: function (isBlacklisted) {
+             if (isBlacklisted) {
+                 // 若成員已在黑名單中，顯示訊息不會執行加入黑名單動作
+                 alert("此會員已被加入黑名單，無法再加入。");
+             } else {
+                 // 如果成員不在黑名單中，執行加入黑名單作業
+                 $.ajax({
+                     url: "@Url.Action("AddToBlacklist", "Ratings")",
+                     type: "POST",
+                     data: { memberId: memberId, blacklistReasonId: blacklistReasonId },
+                     success: function (data) {
+                         // 在這裡處理成功後的邏輯，例如顯示成功訊息
+                         alert("成功加入黑名單！");
+                         // 關閉模態框
+                         $('#blacklistModal').modal('hide');
+                     },
+                     error: function (error) {
+                         // 處理錯誤，例如顯示錯誤訊息
+                         alert("加入黑名單時發生錯誤：" + error);
+                     }
+                 });
              }
-         });
-    }
+         },
+         error: function (error) {
+             // 處理錯誤，例如顯示錯誤訊息
+             alert("檢查成員是否在黑名單時發生錯誤：" + error);
+         }
+     });
+}
+
     </script>
 </p>

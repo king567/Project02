@@ -174,6 +174,12 @@ namespace Project2.App_Start
 
             // Creditcard 轉換成 CreditCardVm
             CreateMap<List<Creditcard>, List<CreditCardVm>>();
-        }
+
+			//FAQ轉換成FAQVm
+			CreateMap<FAQ, FAQVm>()
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
+				.ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Answer));
+		}
 	}
 }
