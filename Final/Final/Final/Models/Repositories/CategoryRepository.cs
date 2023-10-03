@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Dapper;
+
 
 namespace Final.Models.Repositories
 {
@@ -17,9 +19,15 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				var categories = db.Categories.ToList();
+				string query = "SELECT * FROM Categories";
+				// 用 Dapper 執行 sql command
+				var categoriesDapper = db.Database.Connection.Query<Category>(query).ToList();
 
-				return categories;
+				return categoriesDapper;
+
+				//var categories = db.Categories.ToList();
+
+				//return categories;
 			}
 		}
 
@@ -55,9 +63,15 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				var category = db.Categories.Find(id);
+				string query = "SELECT * FROM Categories WHERE Id = @Id";
+				// 用 Dapper 執行 sql command
+				var categoryDapper = db.Database.Connection.QueryFirstOrDefault<Category>(query, new { Id = id });
 
-				return category;
+				return categoryDapper;
+
+				//var category = db.Categories.Find(id);
+
+				//return category;
 			}
 		}
 
@@ -69,11 +83,17 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				var categoryToUpdate = db.Categories.Find(category.Id);
+				string query = "UPDATE Categories SET Name = @Name WHERE Id = @Id";
 
-				categoryToUpdate.Name = category.Name;
+				// 用 Dapper 執行 sql command
 
-				db.SaveChanges();
+				int effectRow = db.Database.Connection.Execute(query, new { Id = category.Id, Name = category.Name });
+
+				//var categoryToUpdate = db.Categories.Find(category.Id);
+
+				//categoryToUpdate.Name = category.Name;
+
+				//db.SaveChanges();
 			}
 		}
 

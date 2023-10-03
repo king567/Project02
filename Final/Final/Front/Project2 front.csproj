@@ -158,6 +158,7 @@
     <Compile Include="Controllers\CreditCardController.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
     <Compile Include="Controllers\FavoriteMediaApiController.cs" />
+    <Compile Include="Controllers\FavoriteMediaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MediaInfosController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
@@ -347,6 +348,7 @@
     <Content Include="Views\Shared\_ForgetPasswordPartial.cshtml" />
     <Content Include="Views\Shared\_MediaInfosCard.cshtml" />
     <Content Include="Views\FAQs\Index.cshtml" />
+    <Content Include="Views\FavoriteMedia\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

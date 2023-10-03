@@ -52,6 +52,15 @@
         #navbarNav {
             white-space: nowrap;
         }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .wrapper {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -92,7 +101,7 @@
                                 @(User.Identity.Name)
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">收藏</a></li>
+                                <li><a class="dropdown-item" href="/FavoriteMedia">收藏</a></li>
                                 <li><a class="dropdown-item" href="/Members/Index/">會員中心</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/Members/Logout">登出</a></li>
@@ -120,7 +129,7 @@
     </nav>
     <!-- 導覽列 end -->
 
-    <div class="body-content" style="padding-top:80px">
+    <div class="body-content wrapper" style="padding-top:80px">
         @RenderBody()
         <hr />
 

@@ -9,7 +9,7 @@ namespace Final.Models.ViewModels
 {
 	public class FavoriteMediaVm
 	{
-		public int MediaInfoId { get; set; }
+        public int MediaInfoId { get; set; }
 		public int MemberId { get; set; }
 	}
 
