@@ -1,0 +1,40 @@
+﻿@model Project2.Models.ViewModels.NewsVm
+
+@{
+    ViewBag.Title = "最新消息";
+}
+
+<h2 style="font-size:40px;">最新消息</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal" style=" margin-top: 25px;margin-left:50px;font-size:25px">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd style="margin-top:10px">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd style="margin-top:10px">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Publishdate)
+        </dt>
+
+        <dd style="margin-top:10px">
+            @Html.DisplayFor(model => model.Publishdate)
+        </dd>
+
+    </dl>
+</div>
+<div class="text-center" style="font-size:20px">
+    @Html.ActionLink("返回", "Index")
+</div>

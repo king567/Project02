@@ -180,6 +180,24 @@ namespace Project2.App_Start
 				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
 				.ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
 				.ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Answer));
-		}
+
+            // Vipitem 轉成  VipitemDto
+            CreateMap<Vipitem, VipItemDto>().ReverseMap();
+
+            // VipitemDto 轉成  VipitemVm
+            CreateMap<VipItemDto, VipitemVm>().ReverseMap();
+
+            // PayType 轉成  PayTypeDto
+            CreateMap<PayType, PayTypeDto>().ReverseMap();
+
+            // News 轉換成 NewsDto
+            CreateMap<News, NewsDto>().ReverseMap();
+
+            // NewsDto 轉換成 NewsVm
+            CreateMap<NewsDto, NewsVm>().ReverseMap();
+
+            // News 轉換成 NewsVm
+            CreateMap<News, NewsVm>().ReverseMap();
+        }
 	}
 }

@@ -13,7 +13,7 @@ namespace Project2.Models.ViewModels
         public int Id { get; set; }
 
         [Display(Name = "姓名")]
-        [Required]
+        [Required(ErrorMessage =DAHelper.Required)]
         [StringLength(50)]
         public string Name { get; set; }
 
@@ -23,13 +23,13 @@ namespace Project2.Models.ViewModels
         public string Account { get; set; }
 
         [Display(Name = "密碼")]
-        [Required]
+        [Required(ErrorMessage = DAHelper.Required)]
         [StringLength(50)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Display(Name = "確認密碼")]
-        [Required]
+        [Required(ErrorMessage = DAHelper.Required)]
         [StringLength(50)]
         [Compare(nameof(Password), ErrorMessage = DAHelper.Compare)]
         [DataType(DataType.Password)]
@@ -39,8 +39,8 @@ namespace Project2.Models.ViewModels
         [Required(ErrorMessage = DAHelper.Required)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm:SS}", ApplyFormatInEditMode = true)]
         public string BirthOfDay { get; set; }
-        
-        [Required]
+
+        [Required(ErrorMessage = DAHelper.Required)]
         [StringLength(256,ErrorMessage =DAHelper.EmailAdress)]
         [EmailAddress]
         public string Email { get; set; }

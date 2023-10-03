@@ -2,22 +2,46 @@
 @{
     ViewBag.Title = "首頁";
 }
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-success">
+        @ViewBag.Message
+    </div>
+}
+@if (!string.IsNullOrEmpty(ViewBag.JoinMember))
+{
+    <div class="alert alert-success">
+        @ViewBag.JoinMember
+    </div>
+}
+@if (!string.IsNullOrEmpty(ViewBag.ForgetPassword))
+{
+    <div class="alert alert-success">
+        @ViewBag.ForgetPassword
+    </div>
+}
+@if (!string.IsNullOrEmpty(ViewBag.ResetPassword))
+{
+    <div class="alert alert-success">
+        @ViewBag.ResetPassword
+    </div>
+}
 
 <head>
     <style>
         /*.card-title {*/
-            /*height: 35px;*/
-            /*font-size: 15px;
+        /*height: 35px;*/
+        /*font-size: 15px;
             font-weight: 800;
             text-align: center;
             color: rgb(12, 88, 103);*/
-            /*background-color: rgb(216, 241, 248);*/
+        /*background-color: rgb(216, 241, 248);*/
         /*}
         .card-body {
             height: 50px;
             overflow: hidden;*/ /* 隱藏溢出的內容 */
-            /*text-overflow: ellipsis;*/ /* 當文字溢出時顯示省略號（...） */
-            /*display: flex;
+        /*text-overflow: ellipsis;*/ /* 當文字溢出時顯示省略號（...） */
+        /*display: flex;
             flex-direction: column;
             justify-content: center;*/ /* 在垂直方向上置中內容 */
         /*}
@@ -27,18 +51,18 @@
         .card img {
             object-fit: cover;
             height: 300px;*/
-            /*border-radius: 5%*/
+        /*border-radius: 5%*/
         /*}
         .card:hover {
             transform: scale(1.05);*/
-            /* 悬停时放大卡片 */
-            /*transition: transform 0.3s ease-in-out;*/
-            /* 添加过渡效果 */
+        /* 悬停时放大卡片 */
+        /*transition: transform 0.3s ease-in-out;*/
+        /* 添加过渡效果 */
         /*}
         .card:hover .card-details {
             display: block;*/
-            /* 悬停時顯示 */
-            /*opacity: 1;
+        /* 悬停時顯示 */
+        /*opacity: 1;
         }
         a {
             text-decoration: none;
@@ -46,7 +70,7 @@
         .carousel-inner img {
             width: 100%;
             height: 500px;
-            object-fit:cover;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -106,7 +130,6 @@
            href="#">看更多</a>*@
 </div>
 <!-- 熱播前五 end -->
-
 <!-- 最新上映清單begin -->
 <div class="container">
     <div class="row">
@@ -137,7 +160,6 @@
     </div>
 </div>
 <!-- 最新上映清單end -->
-
 <!-- 即將上映清單begin -->
 <div class="container">
     <div class="row">
@@ -167,7 +189,6 @@
     </div>
 </div>
 <!-- 即將上映清單end -->
-
 <!-- 即將下架清單begin -->
 <div class="container">
     <div class="row">
@@ -216,12 +237,10 @@
             $cards.filter(':gt(' + (maxCards - 1) + ')').toggle();
 
             // 根据卡片是否可见来设置按钮文本
-            if ($cards.filter(':gt(' + (maxCards - 1) + '):visible').length > 0)
-            {
+            if ($cards.filter(':gt(' + (maxCards - 1) + '):visible').length > 0) {
                 $button.text('收合');
             }
-            else
-            {
+            else {
                 $button.text('看更多');
             }
         });

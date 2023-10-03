@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Final.Controllers
 {
+    [Authorize]
     public class GenresController : Controller
     {
 		// GET: Genres

@@ -12,6 +12,7 @@ using Final.Models.ViewModels;
 using static Final.AutoMapperHelper;
 namespace Final.Controllers
 {
+    [Authorize]
     public class NewsController : Controller
     {
         private AppDbContext db = new AppDbContext();

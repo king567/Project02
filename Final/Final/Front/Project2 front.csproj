@@ -155,15 +155,17 @@
     <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\CreditCardController.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
     <Compile Include="Controllers\FavoriteMediaApiController.cs" />
     <Compile Include="Controllers\FavoriteMediaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MediaInfosController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\PayTypeController.cs" />
     <Compile Include="Controllers\RatingApiController.cs" />
     <Compile Include="Controllers\RatingController.cs" />
+    <Compile Include="Controllers\VIPController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -177,8 +179,10 @@
     <Compile Include="Models\DTOs\MediaInfosOttTypesRelDTO.cs" />
     <Compile Include="Models\DTOs\MediaInfosRelDTO.cs" />
     <Compile Include="Models\DTOs\MediaInfosRelPageDTO.cs" />
+    <Compile Include="Models\DTOs\NewsDto.cs" />
     <Compile Include="Models\DTOs\OttTypesDTO.cs" />
     <Compile Include="Models\DTOs\OttTypesRelDTO.cs" />
+    <Compile Include="Models\DTOs\PayTypeDto.cs" />
     <Compile Include="Models\DTOs\RatingDTO.cs" />
     <Compile Include="Models\DTOs\RatingsRelDTO.cs" />
     <Compile Include="Models\DTOs\VipItemDto.cs" />
@@ -208,15 +212,18 @@
     <Compile Include="Models\Infra\HashUtility.cs" />
     <Compile Include="Models\Repositories\FavoriteMediaRepository.cs" />
     <Compile Include="Models\Repositories\MemberRepository.cs" />
+    <Compile Include="Models\Repositories\NewsRepository.cs" />
     <Compile Include="Models\Repositories\RateingRepository.cs" />
     <Compile Include="Models\Services\CategoryService.cs" />
     <Compile Include="Models\Services\FavoriteMediaService.cs" />
     <Compile Include="Models\Services\GenreService.cs" />
     <Compile Include="Models\Services\MediaInfoService.cs" />
+    <Compile Include="Models\Services\NewsService.cs" />
     <Compile Include="Models\Services\OttsService.cs" />
     <Compile Include="Models\Services\RatingService.cs" />
     <Compile Include="Models\ViewModels\BlacklistVm.cs" />
     <Compile Include="Models\ViewModels\CategoryVm.cs" />
+    <Compile Include="Models\ViewModels\CheckoutVm.cs" />
     <Compile Include="Models\ViewModels\CreditCardVm.cs" />
     <Compile Include="Models\ViewModels\EditInitVm.cs" />
     <Compile Include="Models\ViewModels\EditPasswordVm.cs" />
@@ -232,8 +239,10 @@
     <Compile Include="Models\ViewModels\MediaInfosRelVm.cs" />
     <Compile Include="Models\ViewModels\MemberCenterVm.cs" />
     <Compile Include="Models\ViewModels\MemberVm.cs" />
+    <Compile Include="Models\ViewModels\NewsVm.cs" />
     <Compile Include="Models\ViewModels\OttTypesRelVm.cs" />
     <Compile Include="Models\ViewModels\OttTypesVm.cs" />
+    <Compile Include="Models\ViewModels\PayTypeVm.cs" />
     <Compile Include="Models\ViewModels\RatingVm.cs" />
     <Compile Include="Models\ViewModels\RegisterExts.cs" />
     <Compile Include="Models\ViewModels\RegisterVm.cs" />
@@ -319,8 +328,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Members\Register.cshtml" />
     <Content Include="Views\Members\ActiveRegister.cshtml" />
@@ -338,17 +345,18 @@
     <Content Include="Views\MediaInfos\Search.cshtml" />
     <Content Include="Views\Rating\Index.cshtml" />
     <Content Include="Views\Shared\_RatingPartial.cshtml" />
-    <Content Include="Views\CreditCard\Create.cshtml" />
-    <Content Include="Views\CreditCard\Index.cshtml" />
     <Content Include="Views\Members\EditPassword.cshtml" />
     <Content Include="Views\Home\Project.cshtml" />
     <Content Include="Views\Members\ForgetPassword.cshtml" />
-    <Content Include="Views\Members\ForgetPasswordConfirm.cshtml" />
     <Content Include="Views\Members\ResetPassword.cshtml" />
     <Content Include="Views\Shared\_ForgetPasswordPartial.cshtml" />
     <Content Include="Views\Shared\_MediaInfosCard.cshtml" />
     <Content Include="Views\FAQs\Index.cshtml" />
     <Content Include="Views\FavoriteMedia\Index.cshtml" />
+    <Content Include="Views\News\Details.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\PayType\Index.cshtml" />
+    <Content Include="Views\VIP\Checkout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

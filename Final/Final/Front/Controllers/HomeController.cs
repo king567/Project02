@@ -15,15 +15,43 @@ namespace Project2.Controllers
     {
         public ActionResult Index()
         {
-			//int page = 1;
-			//int pageSize = 10;
+            //int page = 1;
+            //int pageSize = 10;
 
-			//List<MediaInfosRelDTO> dtos = new MediaInfoService().GetMediaInfosPage(page, pageSize);
+            //List<MediaInfosRelDTO> dtos = new MediaInfoService().GetMediaInfosPage(page, pageSize);
 
-			//// DTO 轉成 VM
-			//List<MediaInfosRelVm> vm = dtos.Convert2VM();
+            //// DTO 轉成 VM
+            //List<MediaInfosRelVm> vm = dtos.Convert2VM();
 
-			ViewBag.TopFive = new RatingService().GetTopFive().Convert2VM();
+            var message = TempData["Message"] as string;
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                ViewBag.Message = message;
+            }
+
+            var joinmember = TempData["JoinMember"] as string;
+
+            if (!string.IsNullOrEmpty(joinmember))
+            {
+                ViewBag.JoinMember = joinmember;
+            }
+
+            var forgetPassword = TempData["ForgetPassword"] as string;
+
+            if (!string.IsNullOrEmpty(forgetPassword))
+            {
+                ViewBag.JoinMember = forgetPassword;
+            }
+
+            var resetPassword = TempData["ResetPassword"] as string;
+
+            if (!string.IsNullOrEmpty(resetPassword))
+            {
+                ViewBag.JoinMember = resetPassword;
+            }
+
+            ViewBag.TopFive = new RatingService().GetTopFive().Convert2VM();
 
 			HomesVm vm = new HomesVm()
             {
@@ -37,13 +65,6 @@ namespace Project2.Controllers
 
         public ActionResult Project()
         {
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
             return View();
         }

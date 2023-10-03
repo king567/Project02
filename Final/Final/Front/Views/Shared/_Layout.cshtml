@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - 我的 ASP.NET 應用程式</title>
+    <title>@ViewBag.Title - 我的 OTT搜尋</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -19,6 +19,7 @@
     <link href="~/Content/CardInfo.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @RenderSection("css", required: false)
     <style>
         .navbar {
             font-size: 26px;
@@ -52,6 +53,7 @@
         #navbarNav {
             white-space: nowrap;
         }
+
         body {
             display: flex;
             flex-direction: column;
@@ -66,7 +68,7 @@
 <body>
     <!-- 導覽列 begin -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top bg-body-tertiary">
-        <a class="navbar-brand" href="/Home/Index">Brand</a>
+        <a class="navbar-brand" href="/Home/Index">OTT搜尋</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -86,7 +88,7 @@
                     <a class="nav-link" href="/MediaInfos/Category/3">動 畫</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/最新消息.html">最新消息</a>
+                    <a class="nav-link" href="/News/Index">最新消息</a>
                 </li>
                 <form class="d-flex ms-auto " action="/MediaInfos/Search" method="get" style="display: flex; -ms-flex-align: end;">
                     <input class="form-control me-2 " id="titleKeyWord" type="search" name="title" placeholder="影片搜尋" aria-label="Search" style="width:500px;">
@@ -117,12 +119,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/Members/Register">註 冊</a>
                         </li>
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/Project" style="margin-right:20px;">方案介紹</a>
+                        </li>
                     }
                 }
-                <li class="nav-item">
-                    <a class="nav-link" href="/Home/Project" style="margin-right:20px;">方案介紹</a>
-                </li>
             </ul>
 
         </div>
@@ -157,7 +158,7 @@
             </div>
         </div>
         <div class="text-center py-3">
-            &copy; 2023 Brand。保留所有權利。
+            &copy; 2023 OTT搜尋。保留所有權利。
         </div>
     </footer>
     <!--底部end-->

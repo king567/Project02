@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace Final.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         // GET: Category
