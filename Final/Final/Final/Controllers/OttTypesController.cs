@@ -11,7 +11,6 @@ using System.Web.Mvc;
 
 namespace Final.Controllers
 {
-    [Authorize]
     public class OttTypesController : Controller
     {
 		// GET: OttsTypes

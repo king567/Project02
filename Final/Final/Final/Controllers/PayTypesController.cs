@@ -12,7 +12,6 @@ using static Final.AutoMapperHelper;
 
 namespace Final.Controllers
 {
-    [Authorize]
     public class PayTypesController : Controller
     {
         private AppDbContext db = new AppDbContext();

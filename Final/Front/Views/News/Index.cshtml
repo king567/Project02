@@ -1,0 +1,80 @@
+﻿@using Project2.Controllers;
+@model IEnumerable<Project2.Models.ViewModels.NewsVm>
+
+@{
+    ViewBag.Title = "最新消息";
+    var paginationInfo = ViewBag.PaginationInfo as PaginationInfo;
+}
+
+<h2 style="font-size:40px;">最新消息</h2>
+    <div class="row">
+        <table class="table table-striped table-hover mx-auto" style="width:100rem;margin-top:20px;">
+            <tr class="text-center" style="font-size:20px;">
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Publishdate)
+                </th>
+
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr style="font-size:19px;">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.ActionLink("看更多", "Details", new { id = item.Id })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Publishdate)
+                    </td>
+
+                </tr>
+            }
+
+        </table>
+</div>
+<div class="container">
+    <div class="row">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center" id="paginationBS5">
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+
+@section scripts{
+    @{
+        <div>total:@paginationInfo.Total</div>
+    }
+    <script>
+        let current = @(paginationInfo.PageIndex);
+        let pageSize = @(paginationInfo.PageSize);
+        let showPages = 5;
+        let total = @(paginationInfo.Total);
+
+        let options = Pagination.getDefaultOptions();
+        options.total = total;
+        options.current = current;
+        options.pageSize = pageSize;
+        options.showPages = showPages;
+        options.containerSelector = "#paginationBS5";
+
+        options.urlTemplate = `/News/Index?pageIndex={page}`;
+        let pagination = new Pagination().render(options);
+
+
+    </script>
+}

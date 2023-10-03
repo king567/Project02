@@ -49,7 +49,7 @@ namespace Final.Controllers
             Response.Cookies.Add(processResult.Cookie);
             return Redirect(processResult.ReturnUrl);
         }
-        [Authorize]
+
         public ActionResult Logout()
         {
             Session.Abandon();

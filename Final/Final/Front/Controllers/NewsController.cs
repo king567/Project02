@@ -15,21 +15,25 @@ namespace Project2.Controllers
     public class NewsController : Controller
     {
         // GET: News
-        public ActionResult Index(int pageIndex = 0)
+        public ActionResult Index( int pageIndex = 0)
         {
             int pageSize = 10;
-            var news = new NewsService().GetAll(pageIndex, pageSize);
-            var total = new NewsRepository().NewsCount("");
+            var news= new NewsService().GetAll(pageIndex,pageSize);
+            var total= new NewsRepository().NewsCount("");
             var vm = MapperObj.Map<List<NewsVm>>(news);
             ViewBag.PaginationInfo = new PaginationInfo(pageSize, pageIndex, total);
 
             return View(vm);
+            //var news=new NewsService().GetAll();
+            //var vm=MapperObj.Map<List<NewsVm>>(news);
+
+            //return View(vm);
         }
 
         // GET: News/Details/5
         public ActionResult Details(int? id)
         {
-            var db = new AppDbContext();
+            var db= new AppDbContext();
 
             if (id == null)
             {
@@ -40,8 +44,27 @@ namespace Project2.Controllers
             {
                 return HttpNotFound();
             }
-            var vm = MapperObj.Map<NewsVm>(news);
-            return View(vm);
+            return View(news);
         }
+
+        //private Paged<NewsVm> GetPagedNews(string criteria, int pageSize, int pageIndex)
+        //{
+        //    var allProducts = Enumerable.Range(1, 10000).Select(n => new NewsVm { Id = n, Title = "Title", Description = "Description",Publishdate=DateTime.Now }).ToList();
+        //    int skip = pageIndex * pageSize;
+
+        //    IEnumerable<NewsVm> query = allProducts;
+        //    if (!string.IsNullOrEmpty(criteria))
+        //    {
+        //        query = query.Where(p => p.Title.Contains(criteria));
+        //    }
+
+        //    var singlePageProducts = query.Skip(skip).Take(pageSize).ToList();
+        //    int total = query.Count();
+
+        //    return new Paged<NewsVm>(singlePageProducts, pageSize, pageIndex, total);
+        //}
     }
+    
+    
+    
 }

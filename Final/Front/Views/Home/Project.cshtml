@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "方案介紹";
+}
+
+<div class="container text-center" style="margin-top:30px;margin-bottom:50px;">
+    <!-- 使用容器包住內容並置中 -->
+    <h2 class="mb-4">方案介紹</h2> <!-- 將標題置中 -->
+    <div class="container custom-card">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">一般會員</h5>
+                        <p class="card-text">✔️可搜尋影片</p>
+                        <p class="card-text">✔️得知最新上架,即將上架,下架影片</p>
+                        <p class="card-text">✔️可對有興趣的影片進行討論</p>
+                        <a href="/Members/Register" class="btn btn-outline-info" style="margin-top: 80px;width: 15rem;">註冊</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">付費會員</h5>
+                        <p class="card-text">✔️可搜尋影片</p>
+                        <p class="card-text">✔️得知最新上架,即將上架,下架影片</p>
+                        <p class="card-text">✔️可對有興趣的影片進行討論</p>
+                        <p class="card-text">✔️可收藏影片知</p>
+                        @*<button type="button" class="btn btn-outline-info " data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="width: 15rem;margin-top:30px">購買</button>*@
+                        <a href="#" class="btn btn-outline-info mt-5" onclick="showWarning()" style="width: 15rem">購買</a>
+                        <!-- <a href="/購買方案.html" class="btn btn-outline-info btn-lg">購買</a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table mt-4 mb-3">
+        <thead>
+            <tr class="table-info">
+                <th scope="col"></th>
+                <th scope="col">一般會員</th>
+                <th scope="col">付費會員</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">得知最新上架<br>即將上架,下架影片</th>
+                <td> ✓</td>
+                <td> ✓</td>
+            </tr>
+            <tr>
+                <th scope="row">可搜尋影片</th>
+                <td>✓</td>
+                <td>✓</td>
+            </tr>
+            <tr>
+                <th scope="row">可對有興趣的影片進行討論</th>
+                <td>✓</td>
+                <td>✓</td>
+            </tr>
+            <tr>
+                <th scope="row">可收藏影片</th>
+                <td> </td>
+                <td>✓</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    function showWarning() {
+        alert("請先登入會員在進行方案的購買,若還未註冊請先註冊會員,謝謝。");
+    }
+</script>

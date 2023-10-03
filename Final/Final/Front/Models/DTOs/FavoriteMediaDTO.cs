@@ -8,7 +8,7 @@ namespace Project2.Models.DTOs
 {
 	public class FavoriteMediaDTO
 	{
-        [Required]
+		[Required]
         public int MediaInfoId { get; set; }
 		[Required]
 		public int MemberId { get; set; }

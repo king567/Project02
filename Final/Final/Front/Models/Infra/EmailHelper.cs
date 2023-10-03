@@ -30,7 +30,7 @@ namespace Project2.Models.Infra
         public void SendConfirmRegisterEmail(string url, string name, string email)
         {
             var subject = "[重設密碼通知]";
-            var body = $@"Hi{name},
+            var body = $@"親愛的 {name},
 <br/>
 請點擊此連結 [<a href='{url}'target='_blank'>]的確是我申請會員</a>],如果您沒有提出申請,請忽略此信,謝謝";
 

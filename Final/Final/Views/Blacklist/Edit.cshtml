@@ -1,0 +1,64 @@
+﻿@model Final.Models.ViewModels.BlacklistVm
+
+@{
+    ViewBag.Title = "編輯黑名單";
+}
+
+<h2>編輯黑名單</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+
+    <div class="mb-3">
+        @Html.LabelFor(model => model.MemberAccount, htmlAttributes: new { @class = "form-lable col-md-2" })
+
+        @Html.EditorFor(model => model.MemberAccount, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.MemberAccount, "", new { @class = "text-danger" })
+
+    </div>
+    <div class="mb-3">
+        @Html.LabelFor(model => model.BlacklistReasonId, "黑名單理由", htmlAttributes: new { @class = "form-lable col-md-2" })
+
+        @Html.DropDownListFor(model => model.BlacklistReasonId, (SelectList)ViewBag.BlacklistReasons, "請選擇", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.BlacklistReasonId, "", new { @class = "text-danger" })
+
+
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(model => model.BlacklistTime, htmlAttributes: new { @class = "form-lable col-md-2" })
+
+        @Html.EditorFor(model => model.BlacklistTime, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.BlacklistTime, "", new { @class = "text-danger" })
+
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(model => model.NextRestorationTime, htmlAttributes: new { @class = "form-lable col-md-2" })
+
+        @Html.EditorFor(model => model.NextRestorationTime, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.NextRestorationTime, "", new { @class = "text-danger" })
+
+    </div>
+
+    <div class="mb-3">
+        <div class="text-end">
+            <input type="submit" value="更新" class="btn btn-primary" />
+            @Html.ActionLink("回清單頁", "Index", null, new { @class = "btn btn-success" })
+        </div>
+    </div>
+</div>
+}
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

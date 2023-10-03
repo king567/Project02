@@ -175,12 +175,6 @@ namespace Project2.App_Start
             // Creditcard 轉換成 CreditCardVm
             CreateMap<List<Creditcard>, List<CreditCardVm>>();
 
-			//FAQ轉換成FAQVm
-			CreateMap<FAQ, FAQVm>()
-				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-				.ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
-				.ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Answer));
-
             // Vipitem 轉成  VipitemDto
             CreateMap<Vipitem, VipItemDto>().ReverseMap();
 
@@ -196,8 +190,11 @@ namespace Project2.App_Start
             // NewsDto 轉換成 NewsVm
             CreateMap<NewsDto, NewsVm>().ReverseMap();
 
-            // News 轉換成 NewsVm
-            CreateMap<News, NewsVm>().ReverseMap();
-        }
+            //FAQ轉換成FAQVm
+            CreateMap<FAQ, FAQVm>()
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
+				.ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Answer));
+		}
 	}
 }

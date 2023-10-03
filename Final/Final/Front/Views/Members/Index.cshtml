@@ -85,6 +85,9 @@
                             {
                                 <div class="card-subtitle mb-2 row text-body-secondary align-items-center">
                                     <label for="staticVip" class="col-sm-6 col-form-label">付費會員</label>
+                                    <div class="col-sm-6 d-flex justify-content-end">
+                                        <a class="btn btn-outline-secondary btn-lg" href="#">取消付費會員資格</a>
+                                    </div>
                                     <ul style="margin-left:20px;">
                                         <li class="m-2 ">得知最新上架,即將上架,下架影片</li>
                                         <li class="m-2 ">可使用搜尋功能</li>
@@ -93,7 +96,8 @@
                                     </ul>
                                 </div>
                                 <div class="col-sm-2 d-flex justify-content-end">
-                                    <h5 class="card-title col-12">付款資訊</h5>
+                                    <h5 class="card-title col-6 mt-4">付款資訊</h5>
+                                    <a class="btn btn-secondary btn-sm col-6" href="/CreditCard/Index">管理付款資訊</a>
                                 </div>
                                 <div class="card-subtitle mb-2 row text-body-secondary">
                                     <label for="staticRecord" class="col-sm-2 col-form-label ">交易紀錄</label>
@@ -112,17 +116,17 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @*@foreach (var vipitem in Model.Vipitem)
-                                                {*@
+                                                @foreach (var vipitem in Model.Vipitem)
+                                                {
                                                     <tr>
                                                         <th scope="row"></th>
-                                                        <td>@vipitems.Type</td>
-                                                        <td>@vipitems.PaymentDate</td>
-                                                        <td>@vipitems.StartDate.ToString("yyyy-MM-dd")~@vipitems.ExpiryDate.ToString("yyyy-MM-dd")</td>
-                                                        <td>@vipitems.CardNumber</td>
-                                                        <td>@vipitems.Fee</td>
+                                                        <td>@vipitem.Type</td>
+                                                        <td>@vipitem.PaymentDate</td>
+                                                        <td>@vipitem.StartDate.ToString("yyyy-MM-dd")~@vipitem.ExpiryDate.ToString("yyyy-MM-dd")</td>
+                                                        <td>@vipitem.CardNumber</td>
+                                                        <td>@vipitem.Fee</td>
                                                     </tr>
-                                                @*}*@
+                                                }
                                             </tbody>
                                         </table>
                                     </div>
@@ -167,6 +171,8 @@
                         </div>
                     </div>
                 }
+
+
             </div>
         </div>
     </div>

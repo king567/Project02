@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Dapper;
-using System.Data;
 
 namespace Final.Models.Repositories
 {
@@ -19,15 +17,9 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				string query = "SELECT * FROM Categories";
-				// 用 Dapper 執行 sql command
-				var categoriesDapper = db.Database.Connection.Query<Category>(query).ToList();
+				var categories = db.Categories.ToList();
 
-				return categoriesDapper;
-
-				//var categories = db.Categories.ToList();
-
-				//return categories;
+				return categories;
 			}
 		}
 
@@ -63,15 +55,9 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				string query = "SELECT * FROM Categories WHERE Id = @Id";
-				// 用 Dapper 執行 sql command
-				var categoryDapper = db.Database.Connection.QueryFirstOrDefault<Category>(query, new { Id = id });
+				var category = db.Categories.Find(id);
 
-				return categoryDapper;
-
-				//var category = db.Categories.Find(id);
-
-				//return category;
+				return category;
 			}
 		}
 
@@ -83,25 +69,11 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				// 使用 stored procedure 更新資料
-				string storedProcedureName = "UpdateCategory";
+				var categoryToUpdate = db.Categories.Find(category.Id);
 
-				int effectRow = db.Database.Connection
-					.Execute(storedProcedureName,
-					new { Id = category.Id, Name = category.Name },
-					commandType: CommandType.StoredProcedure);
+				categoryToUpdate.Name = category.Name;
 
-				//string query = "UPDATE Categories SET Name = @Name WHERE Id = @Id";
-
-				// 用 Dapper 執行 sql command
-
-				//int effectRow = db.Database.Connection.Execute(query, new { Id = category.Id, Name = category.Name });
-
-				//var categoryToUpdate = db.Categories.Find(category.Id);
-
-				//categoryToUpdate.Name = category.Name;
-
-				//db.SaveChanges();
+				db.SaveChanges();
 			}
 		}
 

@@ -8,10 +8,8 @@ using System.Web.Mvc;
 
 namespace Project2.Controllers
 {
-    [Authorize]
     public class PayTypeController : Controller
     {
-        
         // GET: PayType
         public ActionResult Index()
         {

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Final.Models.ViewModels.BlacklistVm>
+
+@{
+    ViewBag.Title = "維護黑名單";
+}
+
+<h2>維護黑名單</h2>
+
+@*<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>*@
+<table class="table table-striped table-hover table-bordered table-sm text-center">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.MemberAccount) <!-- 使用 MemberAccount 屬性 -->
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Reason) <!-- 使用 Reason 屬性 -->
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.BlacklistTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NextRestorationTime)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reason)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.BlacklistTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NextRestorationTime)
+            </td>
+            <td>
+                @Html.ActionLink("編輯", "Edit", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

@@ -13,7 +13,6 @@ using static Final.AutoMapperHelper;
 
 namespace Final.Controllers
 {
-    [Authorize]
     public class BlacklistController : Controller
     {
 		private AppDbContext db = new AppDbContext();

@@ -1,0 +1,480 @@
+﻿@model Final.Models.ViewModels.MediaInfosInitVm
+
+
+
+@{
+    ViewBag.Title = "新增影片資訊";
+    ViewBag.GenreId = new List<int> { };
+}
+
+<h2>新增影片資訊</h2>
+<hr />
+<div class="container">
+    <div class="row">
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+
+            <div class="mb-3 col-12">
+                <label class="form-label" for="Title">標題:</label>
+                <input class="form-control text-box single-line" data-val="true" data-val-length="欄位 Title 必須是最大長度為 150 的字串。" data-val-length-max="150" id="Title" name="Title" type="text" value="" />
+                <span class="field-validation-valid text-danger" data-valmsg-for="Title" data-valmsg-replace="true"></span>
+            </div>
+
+            <div class="mb-3 col-12">
+                <label class="form-label" for="OverView">簡介:</label>
+                <textarea class="form-control" id="OverView" name="OverView" style="height: 150px; overflow-y: scroll;"></textarea>
+                <span class="field-validation-valid text-danger" data-valmsg-for="OverView" data-valmsg-replace="true"></span>
+            </div>
+
+            <div class="mb-3 col-12">
+                <div class="ottContainer">
+                    <div id="ottItems" class="row">
+                        <div class="col-5 mb-3 ottTypes" data-ottIndex="1">
+                            <label for="OttsSelect">上映OTT平台：</label>
+                            <select class="form-control" id="ottsSelect">
+                                <option>請選擇</option>
+                                @foreach (var otts in Model.OttTypes)
+                                {
+                                    <option data-id="@otts.Id" data-name="@otts.Name">@otts.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-3 mb-3 releaseDate" data-releaseDateIndex="1">
+                            <label for="startDate">上映日期:</label>
+                            <input type="date" class="form-control" id="startDate">
+                        </div>
+                        <div class="col-3 mb-3 removeDate" data-removeDate="1">
+                            <label for="endDate">下架日期:</label>
+                            <input type="date" class="form-control" id="endDate">
+                        </div>
+                        <div class="col-1 mb-3 text-end deleteBtn" data-deleteBtn="1">
+                            <button type="button" class="btn btn-danger" style="margin-top:32px; margin-right:2px;">X</button>
+                        </div>
+                    </div>
+                </div>
+             
+                <div class="row mt-3">
+                    <div class="text-end">
+                        <button id="newOttitem" type="button" class="btn btn-primary">新增OTT項目</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 col-12">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        @* 引入影片類別 部分檢視 *@
+                        @Html.Partial("CategoryDropdownListPartial", Model)
+                    </div>
+                    <div class="col-6">
+                        @* 引入影片類型 部分檢視 *@
+                        @Html.Partial("GenreDropdownListPartial", Model)
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label text-nowrap" for="Adult">成人片:</label>
+                        <select class="form-control list-box tri-state" id="Adult" name="Adult">
+                            <option selected="selected" value="">未設定</option>
+                            <option value="true">是</option>
+                            <option value="false">否</option>
+                        </select>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="Adult" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="col-6">
+                        <label for="languageCode">原始語言：</label>
+                        <select class="form-control" id="languageCodeSelect">
+                            <option>請選擇</option>
+                            @foreach (var languageCode in Model.LanguageCodes)
+                            {
+                                <option data-id="@languageCode.Id" data-name="@languageCode.LanguageName">@languageCode.LanguageName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mb-3 col-12">
+                <div class="row">
+
+
+                    <div class="mb-3 col-12">
+                        <label class="form-label" for="OriginalTitle">原始標題:</label>
+                        <input class="form-control text-box single-line" data-val="true" data-val-length="欄位 OriginalTitle 必須是最大長度為 255 的字串。" data-val-length-max="255" id="OriginalTitle" name="OriginalTitle" type="text" value="" />
+                        <span class="field-validation-valid text-danger" data-valmsg-for="OriginalTitle" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="mb-3 col-10">
+                        <label for="formFile" class="form-label">背景圖:</label>
+                        <input class="form-control" type="file" id="formFileBack">
+                    </div>
+                    <div class="mb-3 col-2 text-end">
+                        <img src="~/Images/背景預覽.svg" id="previewBackdropImage" class="img-thumbnail" style="width: 100%; height: 100%; " alt="預覽背景圖" />
+                    </div>
+
+                    <div class="mb-3 col-10">
+                        <label for="formFile" class="form-label">封面圖:</label>
+                        <input class="form-control" type="file" id="formFileFront">
+                    </div>
+                    <div class="mb-3 col-2 text-end">
+                        <img src="~/Images/封面預覽.svg" id="previewPosterImage" class="img-thumbnail" style="width: 100%; height: 100%;" alt="預覽封面圖" />
+                    </div>
+                    <div class="mb-3">
+                        <div class="text-end">
+                            <input type="button" id="create" value="創建" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">新增以影片資訊</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            確認要將資料送出嗎?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                            <button type="button" id="send" class="btn btn-primary">送出</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @*<div>
+                @Html.ActionLink("返回清單", "Index")
+            </div>*@
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        init();
+
+        // 預覽封面圖
+        $("#formFileFront").change(function () {
+            var file = this.files[0];
+            if (isImageFile(file)) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#previewPosterImage").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+            else {
+                alert("請選擇圖片檔案");
+                // 清空檔案選擇
+                $(this).val(null);
+
+                // 清空檔案名稱
+                $(this).next(".custom-file-label").html("選擇圖片檔案");
+            }
+        });
+
+        // 預覽背景圖
+        $("#formFileBack").change(function () {
+            var file = this.files[0];
+            if (isImageFile(file)) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#previewBackdropImage").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+            else {
+                alert("請選擇圖片檔案");
+                // 清空檔案選擇
+                $(this).val(null);
+
+                // 清空檔案名稱
+                $(this).next(".custom-file-label").html("選擇圖片檔案");
+            }
+        });
+
+        // send 取得表單資料
+        $("#send").click(function () {
+            if (!validateForm()) {
+                return;
+            }
+            var formData = GetFormData();
+            //console.log(formData.get("Backdrop")); // 取得 formFileFront 檔案
+            submitForm(formData);
+        });
+    });
+
+    function submitForm(formData) {
+        // 获取表单数据
+
+        // 使用Ajax发送表单数据
+        $.ajax({
+            type: "POST",
+            url: "/api/MediaInfosApi/Create", // 替换为您的API端点URL
+            data: formData,
+            contentType: false, // 设置为 false，以便让jQuery自动识别内容类型
+            processData: false, // 设置为 false，以便让jQuery不处理数据
+            success: function (response) {
+                // 显示成功消息
+                alert("新增成功");
+
+                // 重新导航到 Index 页面或其他页面
+                window.location.href = "/MediaInfos/Index";
+            },
+            error: function (response) {
+                alert("出錯啦：" + response.statusText);
+            }
+        });
+    }
+
+    function init() {
+        // 初始化 Bootstrap Select
+        $(".selectpicker").selectpicker();
+
+        var ottTemplate = $(".ottTypes").first().closest(".ottContainer").clone();
+        var lastOttIndex = $(".deleteBtn").last().data("deletebtn");
+        var currentIndex = lastOttIndex;
+
+        // 清除模板的内容
+        ottTemplate.find(".ottTypes option").removeAttr("selected");
+        ottTemplate.find(".releaseDate input[type='date']").val('');
+        ottTemplate.find(".removeDate input[type='date']").val('');
+        ottTemplate.find(".deleteBtn").data("deletebtn", "");
+
+        // 新增OTT項目
+        $("#newOttitem").click(function () {
+
+            currentIndex++;
+
+            // 克隆OTT项模板及其相关元素
+            var clonedOttContainer = ottTemplate.clone();
+
+            // 更新索引值并添加到相应的data属性
+            clonedOttContainer.find(".ottTypes").attr("data-ottIndex", currentIndex);
+            clonedOttContainer.find(".releaseDate").attr("data-releaseDateIndex", currentIndex);
+            clonedOttContainer.find(".removeDate").attr("data-removeDate", currentIndex);
+            clonedOttContainer.find(".deleteBtn").attr("data-deleteBtn", currentIndex);
+
+            // 添加新的OTT项及相关元素到 #ottItems 中
+            $(".ottContainer").last().append(clonedOttContainer);
+        });
+
+        // 删除OTT項目
+        $(".ottContainer").on("click", ".deleteBtn button", function () {
+            // 获取所点击的删除按钮所在的父元素（带有data-deleteBtn属性）
+            var parentDiv = $(this).closest(".deleteBtn");
+
+            // 获取父元素的data-deleteBtn值
+            var deleteBtnIndex = parentDiv.attr("data-deleteBtn");
+
+            // 使用deleteBtnIndex来删除具有相同data-deleteBtn值的所有元素
+            $(".ottTypes[data-ottIndex='" + deleteBtnIndex + "']").remove();
+            $(".releaseDate[data-releaseDateIndex='" + deleteBtnIndex + "']").remove();
+            $(".removeDate[data-removeDate='" + deleteBtnIndex + "']").remove();
+            $(".deleteBtn[data-deleteBtn='" + deleteBtnIndex + "']").remove();
+        });
+
+        checkUploadOption("#formFileFront");
+        checkUploadOption("#formFileBack");
+    }
+
+    // 檢查上傳選項是否為圖片
+
+    function checkUploadOption(elementId) {
+        $(elementId).change(function () {
+            // 驗證選擇的檔案數量是否超過 1 個
+            if (this.files.length > 1) {
+                alert("只能選擇一個檔案");
+                // 清空檔案選擇
+                $(this).val(null);
+
+                // 清空檔案名稱
+                $(this).next(".custom-file-label").html("選擇圖片檔案");
+                return;
+            }
+            else {
+                var file = this.files[0];
+
+                if (isImageFile(file)) {
+                    // 獲取檔案名稱並顯示在 label 元素上
+                    var fileName = file.name;
+                    $(this).next(".custom-file-label").html(fileName);
+                } else {
+                    alert("請選擇圖片檔案");
+                    // 清空檔案選擇
+                    $(this).val(null);
+
+                    // 清空檔案名稱
+                    $(this).next(".custom-file-label").html("選擇圖片檔案");
+                }
+            }
+        });
+    }
+
+    // 取得表單資料，並轉換為 FormData 格式
+
+    function GetFormData() {
+        // 驗證表單
+
+
+        // 获取类别
+        var categorySelect = $("#categorySelect").find('option:selected').data('id');
+        var languageCodeSelect = $("#languageCodeSelect").find('option:selected').data('id');
+
+        // 获取类型
+        var selectedGenres = $("#typeSelect").find('option:selected').map(function () {
+            return $(this).data('id');
+        }).get();
+
+        // 获取OTT项目
+        var ottTypesElements = document.querySelectorAll('.ottTypes');
+
+        var ottsData = [];
+
+        ottTypesElements.forEach(function (element) {
+
+            var selectElement = element.querySelector('select');
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var ottPlatform = selectedOption.getAttribute("data-id");
+            var releaseDate = element.nextElementSibling.querySelector('input#startDate').value;
+            var removeDate = element.nextElementSibling.nextElementSibling.querySelector('input#endDate').value;
+
+            ottsData.push({
+                ottPlatform: ottPlatform,
+                releaseDate: releaseDate,
+                removeDate: removeDate
+            });
+        });
+
+        
+
+        // 获取formFileBack文件
+        var formFileBack = document.getElementById('formFileBack').files[0];
+        // 获取formFileFront文件
+        var formFileFront = document.getElementById('formFileFront').files[0];
+
+        // 创建包含表单数据的JSON对象
+        var jsonData = {
+            Title: $("#Title").val(),
+            OverView: $("#OverView").val(),
+            OriginalLanguage: $("#OriginalLanguage").val(),
+            OriginalTitle: $("#OriginalTitle").val(),
+            Adult: $("#Adult").val(),
+            Video: $("#Video").val(),
+            OttItems: ottsData,
+            Genres: selectedGenres,
+            CategoryId: categorySelect,
+            LanguageCodeId: languageCodeSelect
+        };
+        console.log(jsonData);
+
+
+        // object convet to json
+        var json = JSON.stringify(jsonData);
+
+        // 创建一个FormData对象来包含文件数据
+        var formData = new FormData();
+        formData.append('Backdrop', formFileBack);
+        formData.append('Poster', formFileFront);
+        formData.append('MediaInfo', json);
+
+        return formData;
+    }
+
+    function isImageFile(file) {
+        var acceptedImageTypes = ["image/jpeg", "image/png", "image/gif", "image/svg+xml"]; // 可接受的图片文件类型
+
+        return acceptedImageTypes.includes(file.type);
+    }
+
+    function validateForm() {
+        var categorySelect = $("#categorySelect").find('option:selected').data('id');
+        var languageCodeSelect = $("#languageCodeSelect").find('option:selected').data('id');
+        var selectedGenres = $("#typeSelect").find('option:selected').map(function () {
+            return $(this).data('id');
+        }).get();
+
+        // 驗證標題是否填寫
+        if ($("#Title").val() === "") {
+            alert("請填寫標題！");
+            return false;
+        }
+        // 驗證簡介是否填寫
+        if ($("#OverView").val() === "") {
+            alert("請填寫簡介！");
+            return false;
+        }
+
+
+        // 驗證 OTT 是否有填
+        var ottTypesElements = document.querySelectorAll('.ottTypes');
+        for (var i = 0; i < ottTypesElements.length; i++) {
+            var element = ottTypesElements[i];
+            var selectElement = element.querySelector('select');
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var ottPlatform = selectedOption.getAttribute("data-id");
+            var releaseDate = element.nextElementSibling.querySelector('input#startDate').value;
+            var removeDate = element.nextElementSibling.nextElementSibling.querySelector('input#endDate').value;
+
+            if (!ottPlatform || !releaseDate || !removeDate) {
+                alert("請填寫OTT項目所有資料！");
+                return false;
+            }
+        }
+
+        // 驗證類別是否有填
+        if (categorySelect === undefined) {
+            alert("請選擇類別！");
+            return false;
+        }
+
+        // 验证类型是否选择
+        if (selectedGenres.length === 0) {
+            alert("請至少選擇一個類型！");
+            return false;
+        }
+
+        // 驗證原始標題是否填寫
+        if ($("#OriginalTitle").val() === "") {
+            alert("請填寫原始標題！");
+            return false;
+        }
+        // 驗證成人片是否填寫
+        if ($("#Adult").val() === "") {
+            alert("請填寫成人片！");
+            return false;
+        }
+
+        // 验证语言代码是否选择
+        if (languageCodeSelect === undefined) {
+            alert("請選擇語言代碼！");
+            return false;
+        }
+
+        // 验证文件是否选择
+        var formFileBack = document.getElementById('formFileBack').files[0];
+        var formFileFront = document.getElementById('formFileFront').files[0];
+        if (!formFileBack || !formFileFront) {
+            alert("請選擇上傳的文件！");
+            return false;
+        }
+
+        // 所有验证通过
+        return true;
+    }
+
+</script>
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

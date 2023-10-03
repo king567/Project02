@@ -1,0 +1,417 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+    .progress-label-left {
+        float: left;
+        margin-right: 0.5em;
+        line-height: 1em;
+    }
+
+    .progress-label-right {
+        float: right;
+        margin-left: 0.3em;
+        line-height: 1em;
+    }
+
+    .star-light {
+        color: #e9ecef;
+    }
+</style>
+
+<div class="container">
+    @*<h1 class="mt-5 mb-5">評分及評論</h1>*@
+    <div class="card mt-3" style="width: 63rem;">
+        <div class="card-header">評分</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-4 text-center">
+                    <h1 class="text-warning mt-4 mb-4">
+                        <b><span id="average_rating">0.0</span> / 5</b>
+                    </h1>
+                    <div class="mb-3">
+                        <i class="fas fa-star star-light mr-1 main_star"></i>
+                        <i class="fas fa-star star-light mr-1 main_star"></i>
+                        <i class="fas fa-star star-light mr-1 main_star"></i>
+                        <i class="fas fa-star star-light mr-1 main_star"></i>
+                        <i class="fas fa-star star-light mr-1 main_star"></i>
+                    </div>
+                    <h3><span id="total_review"></span>筆評分</h3>
+                </div>
+                <div class="col-sm-4">
+                    <p>
+                        <div class="progress-label-left"><b>5</b> <i class="fas fa-star text-warning"></i></div>
+
+                        <div class="progress-label-right">(<span id="total_five_star_review">0</span>)</div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="five_star_progress"></div>
+                        </div>
+                    </p>
+                    <p>
+                        <div class="progress-label-left"><b>4</b> <i class="fas fa-star text-warning"></i></div>
+
+                        <div class="progress-label-right">(<span id="total_four_star_review">0</span>)</div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="four_star_progress"></div>
+                        </div>
+                    </p>
+                    <p>
+                        <div class="progress-label-left"><b>3</b> <i class="fas fa-star text-warning"></i></div>
+
+                        <div class="progress-label-right">(<span id="total_three_star_review">0</span>)</div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="three_star_progress"></div>
+                        </div>
+                    </p>
+                    <p>
+                        <div class="progress-label-left"><b>2</b> <i class="fas fa-star text-warning"></i></div>
+
+                        <div class="progress-label-right">(<span id="total_two_star_review">0</span>)</div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="two_star_progress"></div>
+                        </div>
+                    </p>
+                    <p>
+                        <div class="progress-label-left"><b>1</b> <i class="fas fa-star text-warning"></i></div>
+
+                        <div class="progress-label-right">(<span id="total_one_star_review">0</span>)</div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="one_star_progress"></div>
+                        </div>
+                    </p>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <h3 class="mt-4 mb-3">我要評分</h3>
+                    <button type="button" name="add_review" id="add_review" class="btn btn-primary">評分</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*顯示評論*@
+    <div class="mt-5" id="review_content"></div>
+
+</div>
+
+<div id="review_modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">留下你的評分</h5>
+
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center mt-2 mb-4">
+                    <i class="fas fa-star star-light submit_star mr-1" id="submit_star_1" data-rating="1"></i>
+                    <i class="fas fa-star star-light submit_star mr-1" id="submit_star_2" data-rating="2"></i>
+                    <i class="fas fa-star star-light submit_star mr-1" id="submit_star_3" data-rating="3"></i>
+                    <i class="fas fa-star star-light submit_star mr-1" id="submit_star_4" data-rating="4"></i>
+                    <i class="fas fa-star star-light submit_star mr-1" id="submit_star_5" data-rating="5"></i>
+                </h4>
+
+                <div class="form-group text-center mt-4">
+                    <textarea name="user_review" id="user_review" class="form-control mx-auto" placeholder="撰寫你的影評"></textarea>
+                </div>
+                <div class="form-group text-center mt-4">
+                    @{ 
+                        // 判斷有沒有登錄
+                        var member = ViewBag.Member;
+                        if (member != null)
+                        {
+                            // 判斷是不是黑名單
+                            if (ViewBag.IsBlacklist == false)
+                            {
+                                <button type="button" class="btn btn-primary" id="save_review">提交</button>
+                                <button type="button" class="btn btn-secondary" id="cancel_review">取消</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary" id="save_review" disabled>提交</button>
+                                <button type="button" class="btn btn-secondary" id="cancel_review">取消</button>
+                            }
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary" id="save_review" disabled>提交</button>
+                            <button type="button" class="btn btn-secondary" id="cancel_review">取消</button>
+                            }
+                        }
+                    @*<button type="button" class="btn btn-primary" id="save_review">提交</button>
+                    <button type="button" class="btn btn-secondary" id="cancel_review">取消</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">確認刪除</h5>
+            </div>
+            <div class="modal-body">
+                確定要刪除這則評論嗎？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel_delete">取消</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">確認刪除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        var MediaInfoId = '@ViewBag.MediaInfoId';
+
+        load_rating_data();
+
+        $('#add_review').click(function () {
+
+            $('#review_modal').modal('show');
+
+        });
+
+        $('#cancel_review').click(function () {
+            $('#review_modal').modal('hide');
+        });
+
+
+        $(document).on('mouseenter', '.submit_star', function () {
+
+            var rating = $(this).data('rating');
+
+            reset_background();
+
+            for (var count = 1; count <= rating; count++) {
+
+                $('#submit_star_' + count).addClass('text-warning');
+
+            }
+
+        });
+
+        function reset_background() {
+            for (var count = 1; count <= 5; count++) {
+
+                $('#submit_star_' + count).addClass('star-light');
+
+                $('#submit_star_' + count).removeClass('text-warning');
+
+            }
+        }
+
+        $(document).on('mouseleave', '.submit_star', function () {
+
+            reset_background();
+
+            for (var count = 1; count <= rating_data; count++) {
+
+                $('#submit_star_' + count).removeClass('star-light');
+
+                $('#submit_star_' + count).addClass('text-warning');
+            }
+
+        });
+
+
+        $(document).on('click', '.submit_star', function () {
+
+            rating_data = $(this).data('rating');
+
+        });
+
+        $(document).on('click', '.delete', function () {
+            var commentId = $(this).data('id');
+
+            // 設定要刪除的評論ID
+            $('#confirmDeleteButton').data('comment-id', commentId);
+
+            // 顯示確認刪除的模態框
+            $('#confirmDeleteModal').modal('show');
+        });
+
+        // 點選確認刪除按鈕時執行刪除動作
+        $('#confirmDeleteButton').click(function () {
+            var commentId = $(this).data('comment-id');
+
+            // 隱藏模態框
+            $('#confirmDeleteModal').modal('hide');
+
+            // 發送刪除請求，使用 commentId
+            $.ajax({
+                url: "/api/RatingApi/DeleteComment?id=" + commentId,
+                method: "DELETE",
+                success: function (data) {
+                    // 處理刪除成功後的邏輯，可以刷新評論清單或進行其他操作
+                    load_rating_data(); // 重新載入評論列表
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert("刪除註解時出現錯誤");
+                }
+            });
+        });
+
+        $('#cancel_delete').click(function () {
+            $('#confirmDeleteModal').modal('hide');
+        });
+
+
+        $('#save_review').click(function () {
+            var user_review = $('#user_review').val();
+            if (user_review == '') {
+                alert("請填寫評分及評論");
+                return false;
+            }
+            else {
+                $.ajax({
+                    url: "/api/RatingApi/SubmitRating",
+                    method: "POST",
+                    data: JSON.stringify({
+                        MediaInfoId: (@ViewBag.MediaInfoId),
+                        MemberId: @(ViewBag.MemberId),
+                        Comment: user_review,
+                        Rate: rating_data
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $('#review_modal').modal('hide');
+                        load_rating_data();
+                        alert(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert("提交評論時出現錯誤");
+                    }
+                });
+            }
+        });
+
+        function formatDateTime(dateTimeString) {
+            // 創建日期對象
+            var dateTime = new Date(dateTimeString);
+
+            // 使用toLocaleString()方法將日期時間格式化為特定格式
+            var formattedDateTime = dateTime.toLocaleString('zh-Tw', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            return formattedDateTime;
+        }
+
+        function load_rating_data() {
+            var mediaInfoId = @ViewBag.MediaInfoId;
+            $.ajax({
+                url: "/api/RatingApi/LoadData?mediaInfoId=" + mediaInfoId,
+                method: "GET", // 使用GET
+                dataType: "json",
+                success: function (data) {
+                    $('#average_rating').text(data.average_rating.toFixed(1));
+                    $('#total_review').text(data.total_review);
+
+                    var count_star = 0;
+
+                    $('.main_star').each(function () {
+                        count_star++;
+                        if (Math.ceil(data.average_rating) >= count_star) {
+                            $(this).addClass('text-warning');
+                            $(this).addClass('star-light');
+                        }
+                    });
+
+                    $('#total_five_star_review').text(data.five_star_review);
+
+                    $('#total_four_star_review').text(data.four_star_review);
+
+                    $('#total_three_star_review').text(data.three_star_review);
+
+                    $('#total_two_star_review').text(data.two_star_review);
+
+                    $('#total_one_star_review').text(data.one_star_review);
+
+                    $('#five_star_progress').css('width', (data.five_star_review / data.total_review) * 100 + '%');
+
+                    $('#four_star_progress').css('width', (data.four_star_review / data.total_review) * 100 + '%');
+
+                    $('#three_star_progress').css('width', (data.three_star_review / data.total_review) * 100 + '%');
+
+                    $('#two_star_progress').css('width', (data.two_star_review / data.total_review) * 100 + '%');
+
+                    $('#one_star_progress').css('width', (data.one_star_review / data.total_review) * 100 + '%');
+
+                    console.log(data.rating_data);
+                    // 加載評論數據
+                    if (data.rating_data.length > 0) {
+                        var html = '';
+
+                        var memberAccount = '@ViewBag.Member';
+
+                        for (var count = 0; count < data.rating_data.length; count++) {
+
+                            html += '<div class="row mb-3">';
+
+                            html += '<div class="col-sm-11">';
+
+                            html += '<div class="card">';
+
+
+                            html += '<div class="card-header d-flex justify-content-between align-items-center">';
+                            html += '<b>' + data.rating_data[count].MemberAccount + '</b>';
+                            html += '<div>';
+                            if (data.rating_data[count].MemberAccount == memberAccount) {
+
+                                html += '<button type="button" class="btn btn-warning btn-xs delete" data-id="' + data.rating_data[count].Id + '">刪除</button>';
+                            }
+                            html += '</div>';
+                            html += '</div>';
+
+                            html += '<div class="card-body">';
+
+                            for (var star = 1; star <= 5; star++) {
+                                var class_name = '';
+
+                                if (data.rating_data[count].Rate >= star) {
+                                    class_name = 'text-warning';
+                                } else {
+                                    class_name = 'star-light';
+                                }
+
+                                html += '<i class="fas fa-star ' + class_name + ' mr-1"></i>';
+                            }
+
+                            html += '<br />';
+
+                            html += data.rating_data[count].Comment;
+
+                            html += '</div>';
+
+                            html += '<div class="card-footer text-right">On ' + formatDateTime(data.rating_data[count].CreatedTime) + '</div>';
+
+                            html += '</div>';
+
+                            html += '</div>';
+
+                            html += '</div>';
+                        }
+
+                        $('#review_content').html(html);
+                    }
+                }
+            })
+        }
+    });
+</script>

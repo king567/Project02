@@ -16,7 +16,6 @@ namespace Project2.Controllers
     public class MembersController : Controller
     {
         // GET: Members
-        [Authorize]
         public ActionResult Index()
         {
             var currentUserAccount = User.Identity.Name;
@@ -45,34 +44,31 @@ namespace Project2.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(vm);
             }
-
-            TempData["JoinMember"] = "感謝您的加入,已成為本站會員,登入帳號後可以與人討論!";
-
-            return RedirectToAction("Index", "Home");
+            return View("ConfirmCode");
         }
 
-        //public ActionResult ActiveRegister(int memberId, string confirmCode)
-        //{
-        //    if (memberId <= 0 || string.IsNullOrEmpty(confirmCode))
-        //    {
-        //        return View();
-        //    }
+        public ActionResult ActiveRegister(int memberId, string confirmCode)
+        {
+            if (memberId <= 0 || string.IsNullOrEmpty(confirmCode))
+            {
+                return View();
+            }
 
-        //    var db = new AppDbContext();
+            var db = new AppDbContext();
 
-        //    //根據 memberId,confirmCode 取得 Member
-        //    var member = db.Members.FirstOrDefault(p => p.Id == memberId && p.ConfirmedCode == confirmCode && p.IsConfirmed == false);
-        //    if (member == null)
-        //    {
-        //        return View();
-        //    }
-        //    //將他更新為已確認
-        //    member.IsConfirmed = true;
-        //    member.ConfirmedCode = null;
-        //    db.SaveChanges();
+            //根據 memberId,confirmCode 取得 Member
+            var member = db.Members.FirstOrDefault(p => p.Id == memberId && p.ConfirmedCode == confirmCode && p.IsConfirmed == false);
+            if (member == null)
+            {
+                return View();
+            }
+            //將他更新為已確認
+            member.IsConfirmed = true;
+            member.ConfirmedCode = null;
+            db.SaveChanges();
 
-        //    return View();
-        //}
+            return View();
+        }
 
         public ActionResult Login()
         {
@@ -103,7 +99,6 @@ namespace Project2.Controllers
             return Redirect(processResult.ReturnUrl);
         }
 
-        [Authorize]
         public ActionResult Logout()
         {
             Session.Abandon();
@@ -162,10 +157,8 @@ namespace Project2.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(vm);
             }
-
-            TempData["ForgetPassword"] = "已收到您重設密碼的申請,請您至信箱收信,並按下信裡的超連結來進行重設密碼的工作。";
-
-            return RedirectToAction("Index", "Home");
+            //return PartialView("_ForgetPasswordPartial");
+            return View("ForgetPasswordConfirm"); //目前小視窗是怪怪的,無法驗證當隊時才出現
         }
 
         public ActionResult ResetPassword(int memberId, string confirmedCode)
@@ -192,9 +185,7 @@ namespace Project2.Controllers
                 return View(vm);
             }
             //顯示重設密碼成功畫面
-            TempData["ResetPassword"] = "恭喜您已成功變更密碼,您可以用新密碼來登入本網站。";
-
-            return RedirectToAction("Index", "Home");
+            return View("ConfirmResetPassword");
         }
 
         private void ProcessResetPassword(int memberId, string confirmedCode, ResetPasswordVm vm)
@@ -230,11 +221,11 @@ namespace Project2.Controllers
                 throw new Exception("帳號或Emil錯誤");
             }
 
-            ////檢查IsConfirmed必須是true,因為只有已啟用帳號才能重設密碼
-            //if (memberInDb.IsConfirmed == false)
-            //{
-            //    throw new Exception("您還沒有啟用本帳號,請先完成才能重設密碼");
-            //}
+            //檢查IsConfirmed必須是true,因為只有已啟用帳號才能重設密碼
+            if (memberInDb.IsConfirmed == false)
+            {
+                throw new Exception("您還沒有啟用本帳號,請先完成才能重設密碼");
+            }
 
             //更新紀錄,填入confirmCode
             var confirmCode = Guid.NewGuid().ToString("N");
@@ -272,11 +263,11 @@ namespace Project2.Controllers
                 throw new Exception("帳號或密碼有誤");
             }
 
-            ////檢查是否已確認
-            //if (member.IsConfirmed == false)
-            //{
-            //    throw new Exception("您尚未開通會員資格,請先收確認信,並點選信裡的連結,完成認證,才能登入本網站");
-            //}
+            //檢查是否已確認
+            if (member.IsConfirmed == false)
+            {
+                throw new Exception("您尚未開通會員資格,請先收確認信,並點選信裡的連結,完成認證,才能登入本網站");
+            }
 
             //將vm裡的密碼先雜湊後,在與db裡的密碼比對
             var salt = HashUtility.GetSalt();

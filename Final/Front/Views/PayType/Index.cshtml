@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Project2.Models.ViewModels.PayTypeVm>
+
+@{
+    ViewBag.Title = "方案選擇";
+}
+
+<h2 style="font-size:40px;">方案選擇</h2>
+<table class="table mx-auto" style="width:80rem;margin-top:40px">
+        <tr style="font-size:33px;">
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fee)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr style="font-size:30px;">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fee)
+                </td>
+                <td>
+                    <button class="choose" data-id="@item.Id">選擇此方案</button>
+                </td>
+            </tr>
+        }
+
+    </table>
+@section css{
+    <style>
+        .choose {
+            background-color:paleturquoise;
+            border: 0;
+            
+        }
+    </style>
+}
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".choose").each(function () {
+                $(this).on("click", function () {
+                    var self = $(this);
+
+                    var paytypeId = self.attr("data-id");
+
+                    window.location.href = "/VIP/JoinVip?paytypeId=" + paytypeId;
+
+                });
+            });
+        })
+    </script>
+}

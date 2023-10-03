@@ -1,0 +1,240 @@
+﻿@{
+    ViewBag.Title = "會員";
+}
+@*Title*@
+<div class="home-content" >
+    <span class="text" style="font-size:35px; font-weight:500; margin-left:10px;">會員</span>
+</div>
+
+@*搜尋欄位和複選框*@
+<div class="scrollable-container">
+    <div class="content m-3 ">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" id="memberNameInput" placeholder="搜尋姓名" class="form-control" >
+                </div>
+                <div class="col-md-2" style="margin-left: 20px">
+                    <div class="form-check">
+                        <input type="checkbox" id="vipCheckbox" class="form-check-input">
+                        <label for="vipCheckbox" class="form-check-label" style="font-size: 20px; ">VIP會員</label>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-check">
+                        <input type="checkbox" id="blacklistCheckbox" class="form-check-input">
+                        <label for="blacklistCheckbox" class="form-check-label" style="font-size: 20px">黑名單</label>
+                    </div>
+                </div>
+
+                <div class="col-md-2 text-right">
+                    <button id="searchButton" class="btn btn-outline-secondary type="button" style="width:100px; height:40px; font-size:20px">搜尋</button>
+                </div>
+            </div>
+        </div>
+        @*<input type="text" id="memberNameInput" placeholder="搜尋姓名" style="width:300px;height:35px;">
+        <input type="checkbox" id="vipCheckbox">
+        <label for="vipCheckbox">VIP會員</label>
+        <input type="checkbox" id="blacklistCheckbox">
+        <label for="blacklistCheckbox">黑名單</label>
+        <button id="searchButton" class="btn btn-outline-secondary" type="button">搜尋</button>*@
+    </div>
+</div>
+<div class="table-container">
+    <table id="memberTable" class="table table-striped table-hover table-bordered table-sm" style="width:100%;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>帳號</th>
+                <th>姓名</th>
+                <th>生日</th>
+                <th>Email</th>
+                <th>VIP結束日</th>
+                <th>停權結束日</th>
+                <th>創建日期</th>
+                <th>詳情</th>
+                <th>刪除</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+ @*刪除確認的模態對話框*@ 
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">刪除確認</h5>
+            </div>
+            <div class="modal-body">
+                確定要刪除嗎？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancleDelete" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">確定刪除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        var table = $("#memberTable").DataTable({
+            // DataTable 選項設置
+            dom: "lrtp",
+            responsive: true,
+            pageLength: 10,
+            pagingType: "full_numbers",
+            ajax: {
+                url: "/api/MembersApi/",
+                method: "POST",
+                dataType: "json",
+                data: function (d) {
+                    d.name = $("#memberNameInput").val();
+                    d.vip = $("#vipCheckbox").is(":checked");
+                    d.blacklist = $("#blacklistCheckbox").is(":checked");
+                },
+                dataSrc: ""
+            },
+            columns: [
+                { data: "Id" },
+                { data: "Account" },
+                { data: "Name" },
+                {
+                    //使用 DataTables 的 render 選項来自定義日期的顯示方式
+                    data: "BirthOfDate",
+                    render: function (data, type, row) {
+                        //僅在數據類型是顯示時（非排序或搜索等情况下）才格式化日期
+                        if (type === 'display') {
+                            // 使用 JavaScript 的日期對象將日期格式化為年月日
+                            var date = new Date(data);
+                            return date.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                        }
+                        return data;
+                    }
+                },
+                { data: "Email" },
+                {
+                    data: "VipEnddate",
+                    render: function (data, type, row) {
+                        if (type === 'display' && data) {
+                            return formatDateTime(data);
+                        }
+                        return data;
+                    }
+
+                },
+                {
+                    data: "BlacklistEnddate",
+                    render: function (data, type, row) {
+                        if (type === 'display' && data) {
+                            return formatDateTime(data);
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: "CreatedTime",
+                    render: function (data, type, row) {
+                        if (type === 'display') {
+                            var date = new Date(data);
+                            return date.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        var detailUrl = '/Members/Details/' + row.Id; // 將Id附加到URL
+                        return '<a href="' + detailUrl + '" type="button" class="btn btn-warning">詳情</a>';
+                    },
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return '<button type="button" class="btn btn-danger delete-button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="' + data.Id + '"> 刪除 </button>';
+                    },
+                },
+            ]
+        });
+
+        // 更新表格數據的函数
+        function updateTable() {
+            var memberName = $("#memberNameInput").val();
+            var isVIP = $("#vipCheckbox").is(":checked");
+            var isBlacklist = $("#blacklistCheckbox").is(":checked");
+
+            table.ajax.url("/api/MembersApi/Search?name=" + memberName + "&vip=" + isVIP + "&blacklist=" + isBlacklist).load();
+        }
+
+        // 監聽搜尋按鈕點擊事件
+        $("#searchButton").click(function () {
+            updateTable();
+        });
+
+        // 監聽會員名稱输入框的 Enter 鍵按下事件
+        $("#memberNameInput").keypress(function (e) {
+            if (e.which === 13) { // 13 代表 Enter 鍵
+                updateTable();
+            }
+        });
+
+
+        var tempDeleteId ;
+        //console.log("tempDeleteId", tempDeleteId);
+        /* 捕獲刪除按鈕點擊事件，並將要刪除的會員的 ID 存儲在變數中*/
+        $("#memberTable").on("click", ".delete-button", function () {
+            tempDeleteId = $(this).data("id");
+            console.log("tempDeleteId", tempDeleteId);
+        });
+
+        $("#cancleDelete").on("click", function () {
+            $('#deleteModal').modal('hide'); // 關閉模態對話框
+        });
+
+
+        $("#confirmDelete").on("click", function () {
+            // 使用存儲的會員 ID 進行刪除操作
+            if (tempDeleteId) {
+                $.ajax({
+                    url: "/api/MembersApi/" + tempDeleteId, // 假設這是刪除的API端點
+                    method: "DELETE",
+                    success: function (data) {
+                        // 刪除成功後，重新載入表格數據
+                        tempDeleteId = null; // 清除存儲的會員 ID
+                        $('#deleteModal').modal('hide'); // 關閉模態對話框
+                        table.ajax.reload(); // 重新載入表格數據
+                    },
+                    error: function (error) {
+                        console.error("刪除會員時發生錯誤：", error);
+                    }
+                });
+            }
+        });
+
+
+    });
+
+
+    //自訂日期時間格式
+    function formatDateTime(dateTimeString) {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+
+        const dateTime = new Date(dateTimeString);
+        return dateTime.toLocaleDateString('zh-TW', options);
+    }
+
+</script>
+
+

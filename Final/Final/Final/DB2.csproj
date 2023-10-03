@@ -359,7 +359,6 @@
     <Content Include="Content\bootstrap-4.5.2.css" />
     <Content Include="Content\dataTables.bootstrap4" />
     <Content Include="Scripts\dataTables.bootstrap4" />
-    <Content Include="Content\Json\datatable-lang-zh.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\dashboard.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -434,6 +433,8 @@
     <Content Include="Views\Genres\Create.cshtml" />
     <Content Include="Views\Genres\Edit.cshtml" />
     <Content Include="Views\Genres\Index.cshtml" />
+    <Content Include="Views\MediaInfos\Test.cshtml" />
+    <Content Include="Views\MediaInfos\testEdit.cshtml" />
     <Content Include="Views\OttTypes\Create.cshtml" />
     <Content Include="Views\OttTypes\Edit.cshtml" />
     <Content Include="Views\OttTypes\Index.cshtml" />

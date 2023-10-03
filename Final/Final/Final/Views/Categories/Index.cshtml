@@ -13,13 +13,6 @@
     td {
         height: 45px;
     }
-    #mediaInfosList_length > label > select {
-        width: 46px;
-    }
-
-    #mediaInfosList_length {
-        margin-top: 10px;
-    }
 </style>
 <div class="container text-center mt-5" id="customSearchInput">
     <div class="row align-items-center">
@@ -46,7 +39,7 @@
 </div>
 <div class="table-container">
     <!-- 列出影片表 begin -->
-    <table id="mediaInfosList"
+    <table id="example"
            class="table table-striped table-bordered"
            style="width: 100%; height:80%;">
         <thead>
@@ -63,14 +56,11 @@
 <script>
     $(document).ready(function () {
         // 初始化 DataTable
-        var table = $("#mediaInfosList").DataTable({
+        var table = $("#example").DataTable({
             dom: "lrtp",
             responsive: true,
             pageLength: 10,
             pagingType: "full_numbers",
-            language: {
-                "url": "/Content/Json/datatable-lang-zh.json"
-            },
             searching: true, // 启用搜索功能
             data: {
                 Name: "",
@@ -86,7 +76,7 @@
                 {
                     data: null,
                     render: function (data, type, row) {
-                        return '<a class="btn btn-success" href="/Categories/Edit/' + data.Id + '" data-id="' + data.Id + '">編輯</a>';
+                        return '<a class="btn btn-success" href="/Categories/Edit/' + data.Id + '" data-id="' + data.Id + '">Edit</a>';
                     },
                 },
                 {
@@ -94,7 +84,7 @@
                     render: function (data, type, row) {
 
 
-                        return '<button type="button" class="btn deleteBtn btn-danger" data-id="' + data.Id + '">刪除</button>';
+                        return '<button type="button" class="btn deleteBtn btn-danger" data-id="' + data.Id + '">Delete</button>';
                     },
                 },
             ]
@@ -107,7 +97,7 @@
 
 
         // Delete button click event
-        $("#mediaInfosList tbody").on("click", "button.deleteBtn", function () {
+        $("#example tbody").on("click", "button.deleteBtn", function () {
             var id = $(this).data("id");
             console.log(id);
             $.ajax({
@@ -139,10 +129,10 @@
                 success: function (response) {
                     console.log(response);
                     // 清空Datatable数据
-                    $('#mediaInfosList').DataTable().clear().draw();
+                    $('#example').DataTable().clear().draw();
 
                     // 在Datatable中添加新数据
-                    $('#mediaInfosList').DataTable().rows.add(response).draw();
+                    $('#example').DataTable().rows.add(response).draw();
                 },
                 error: function (err) {
                     console.log(err);

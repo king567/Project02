@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace Final.Controllers
 {
-    [Authorize]
     public class VipItemsController : Controller
     {
         // GET: VipItems

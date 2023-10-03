@@ -6,17 +6,15 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
-//using System.Web.Http;
+using System.Web.Http;
 using System.Web.Mvc;
 
 using static Final.AutoMapperHelper;
 namespace Final.Controllers
 {
-    [Authorize]
     public class MembersController : Controller
     {
         // GET: Members
-        
         public ActionResult Index()
         {
             var db=new AppDbContext();

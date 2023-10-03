@@ -1,19 +1,19 @@
-﻿@model Project2.Models.ViewModels.NewsVm
+﻿@model Project2.Models.EFModels.News
 
 @{
     ViewBag.Title = "最新消息";
 }
 
-<h2 style="font-size:40px;">最新消息</h2>
+<h2>最新消息</h2>
 
 <div>
     <hr />
-    <dl class="dl-horizontal" style=" margin-top: 25px;margin-left:50px;font-size:25px">
+    <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Title)
         </dt>
 
-        <dd style="margin-top:10px">
+        <dd>
             @Html.DisplayFor(model => model.Title)
         </dd>
 
@@ -21,7 +21,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </dt>
 
-        <dd style="margin-top:10px">
+        <dd>
             @Html.DisplayFor(model => model.Description)
         </dd>
 
@@ -29,12 +29,12 @@
             @Html.DisplayNameFor(model => model.Publishdate)
         </dt>
 
-        <dd style="margin-top:10px">
+        <dd>
             @Html.DisplayFor(model => model.Publishdate)
         </dd>
 
     </dl>
 </div>
-<div class="text-center" style="font-size:20px">
+<p>
     @Html.ActionLink("返回", "Index")
-</div>
+</p>

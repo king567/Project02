@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Project2.Models.ViewModels.FAQVm>
+
+@{
+    ViewBag.Title = "常見問答";
+}
+
+<style>
+
+    .custom-accordion .accordion-button {
+        text-align: center; /* 將Accordion的文字置中 */
+        font-weight: bold; /* 可選：加粗字體 */
+    }
+
+    .custom-accordion .accordion-item {
+        margin-top: 20px;
+        margin-bottom: 20px; /* 增加Accordion項與底部容器的距離 */
+    }
+</style>
+
+
+<h2 style="font-size:40px;margin-bottom:15px">常見問答</h2>
+
+<container>
+    <div class="accordion custom-accordion" id="accordionExample">
+        @foreach (var item in Model)
+        {
+            <div class="accordion-item mx-auto" style="width:100rem">
+                <h2 class="accordion-header" id="heading@(item.Id)">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(item.Id)" aria-expanded="true" aria-controls="collapse@(item.Id)" style="font-size:20px">
+                        @item.Question
+                    </button>
+                </h2>
+                <div id="collapse@(item.Id)" class="accordion-collapse collapse" aria-labelledby="heading@(item.Id)" data-bs-parent="#accordionExample">
+                    <div class="accordion-body" style="font-size:19px">
+                        @item.Answer
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</container>

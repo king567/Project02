@@ -10,7 +10,6 @@ using System.Web.Mvc;
 using static Project2.AutoMapperHelper;
 namespace Project2.Controllers
 {
-    [Authorize]
     public class VIPController : Controller
     {
         // GET: VIP
@@ -39,10 +38,7 @@ namespace Project2.Controllers
 
 
             ProcessCheckout(buyer, paytypeId, vm);
-
-            TempData["Message"] = "恭喜您已成為付費會員,可至會員中心查看交易紀錄。";
-
-            return RedirectToAction("Index", "Home");
+            return View("ConfirmCheckout");
 
         }
 

@@ -1,0 +1,444 @@
+﻿@model Final.Models.ViewModels.MediaInfosInitVm
+
+@{
+    ViewBag.Title = "影片資訊維護";
+}
+<style>
+    table th {
+        white-space: nowrap;
+    }
+
+    td {
+        height: 45px;
+    }
+
+    .btn {
+        white-space: nowrap;
+    }
+    #mediaInfosList_length > label > select{
+        width:46px;
+    }
+
+    #mediaInfosList_length{
+        margin-top:10px;
+    }
+</style>
+<div class="container text-center mt-5" id="customSearchInput">
+    <div class="row align-items-center">
+        <div class="col-12 d-flex justify-content-between">
+            <div class="col-9 input-group">
+                <input id="titleId" type="text"
+                       class="form-control"
+                       placeholder="請輸入欲查詢內容" />
+                <button class="btn btn-outline-secondary"
+                        type="button"
+                        id="btnSearch"
+                        data-toggle="collapse"
+                        data-target="#searchResults"
+                        aria-expanded="false"
+                        aria-controls="searchResults">
+                    搜尋
+                </button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#advancedSearch"
+                        aria-expanded="false"
+                        aria-controls="advancedSearch">
+                    篩選條件
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="collapse mt-3" id="advancedSearch">
+        <div class="card card-body">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-lg-4 mb-3">
+                            <label for="categorySelect">影片類別：</label>
+                            <select class="form-control" id="categorySelect">
+                                <option>請選擇</option>
+                                @foreach (var category in Model.categories)
+                                {
+                                    <option data-id="@category.Id" data-name="@category.Name">@category.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-lg-4 mb-3">
+                            <label for="platformSelect">OTT平台：</label>
+                            <select class="selectpicker form-control"
+                                    multiple
+                                    data-live-search="true"
+                                    id="platformSelect">
+                                @foreach (var ott in Model.OttTypes)
+                                {
+                                    <option data-id="@ott.Id" data-name="@ott.Name">@ott.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-lg-4 mb-3">
+                            <label for="typeSelect">影片類型:</label>
+                            <select class="selectpicker form-control"
+                                    multiple
+                                    data-live-search="true"
+                                    id="typeSelect">
+                                @foreach (var genre in Model.Genres)
+                                {
+                                    <option data-id="@genre.Id" data-name="@genre.Name">@genre.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="startDatePicker">起始時間：</label>
+                            <div class="input-group date"
+                                 id="startDatePicker"
+                                 data-target-input="nearest">
+                                <input type="text"
+                                       class="form-control datetimepicker-input"
+                                       data-target="#startDatePicker" />
+                                <div class="input-group-append"
+                                     data-target="#startDatePicker"
+                                     data-toggle="datetimepicker">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="endDatePicker">最終時間：</label>
+                            <div class="input-group date"
+                                 id="endDatePicker"
+                                 data-target-input="nearest">
+                                <input type="text"
+                                       class="form-control datetimepicker-input"
+                                       data-target="#endDatePicker" />
+                                <div class="input-group-append"
+                                     data-target="#endDatePicker"
+                                     data-toggle="datetimepicker">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="table-container">
+    <!-- 列出影片表 begin -->
+    <table id="mediaInfosList"
+           class="table table-striped table-bordered"
+           style="width: 100%; height:80%;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>標題</th>
+                <th>簡介</th>
+                <th>影片類別</th>
+                <th>影片類型</th>
+                <th>上映平台</th>
+                <th>封面</th>
+                <th>背景</th>
+                <th>編輯</th>
+                <th>刪除</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<!-- 列出影片表 end -->
+<!-- 模态框 -->
+<!-- 模态框 -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="mediaInfosListModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediaInfosListModalLabel">圖片預覽</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 预览的图片 -->
+                <img id="previewImage" class="img-fluid" alt="預覽圖片">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var jsonData = [];
+
+    var tempData = [];
+
+    $(document).ready(function () {
+
+        // preview-btn click event
+        $("#mediaInfosList tbody").on("click", "button.preview-btn", function () {
+            // 获取按钮上的图片路径
+            var imagePath = $(this).data('image');
+
+            // 将图片路径设置到预览图片的 src 属性中
+            $('#previewImage').attr('src', imagePath);
+
+            // 显示模态框
+            $('#imageModal').modal('show');
+        });
+
+        //$(".preview-btn").click(function () {
+        //    // 获取按钮上的图片路径
+        //    var imagePath = $(this).data('image');
+
+        //    console.log(imagePath);
+
+        //    // 将图片路径设置到预览图片的 src 属性中
+        //    $('#previewImage').attr('src', imagePath);
+
+        //    // 显示模态框
+        //    $('#imageModal').modal('show');
+        //});
+
+        //自訂日期時間格式
+        function formatDateTime(dateTimeString) {
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            };
+
+            const dateTime = new Date(dateTimeString);
+            return dateTime.toLocaleDateString('zh-TW', options);
+        }
+
+        // 取得api資料
+
+        // 初始化 Bootstrap Select
+        $(".selectpicker").selectpicker();
+
+        // 初始化 DateTimePickers
+        $(function () {
+            $("#startDatePicker").datetimepicker({
+                format: "YYYY-MM-DD",
+                locale: "zh-tw", // 使用中文本地化
+            });
+
+            $("#endDatePicker").datetimepicker({
+                format: "YYYY-MM-DD",
+                locale: "zh-tw", // 使用中文本地化
+            });
+        });
+
+        // 初始化Datatables
+        var table = $("#mediaInfosList").DataTable({
+            dom: "lrtp",
+            responsive: true,
+            pagelength: 10,
+            pagingType: "full_numbers",
+            language: {
+                "url": "/Content/Json/datatable-lang-zh.json"
+            },
+            searching: false,
+            ajax: {
+                url: "/api/Search",
+                type: "Post",
+                dataType: "json",
+                "dataSrc": "",
+                data: function (d) {
+                    d.Title = $("#titleId").val();
+                    d.CateggoryId = $("#categorySelect").val();
+                    d.Genres = $("#platformSelect").val();
+                    d.Otts = $("#typeSelect").val();
+                    d.BeginTime = $("#startDatePicker").find("input").val();
+                    d.EndTine = $("#endDatePicker").find("input").val();
+                }
+                //success: function (data) {
+                //    //jsonData = data;
+                //},
+            },
+            columns: [
+                { data: "Id" },
+                { data: "Title" },
+                {
+                    data: "OverView",
+                    render: function (data, type, row) {
+                        // 在這裡自定義列的內容，只顯示前50個字
+                        return data.substring(0, 50) + "...";
+                    },
+                },
+                { data: "CategoryName" },
+                {
+                    data: "Genres",
+                    render: function (data, type, row) {
+                        // 在这里自定义列的内容，添加徽章
+                        var badgeHtml = "";
+                        for (var i = 0; i < data.length; i++) {
+                            badgeHtml +=
+                                '<span class="badge rounded-pill bg-info text-white">' +
+                                data[i].Name +
+                                "</span> ";
+                        }
+                        return badgeHtml;
+                    },
+                },
+                {
+                    data: "OttTypes",
+                    render: function (data, type, row) {
+                        // 在这里自定义列的内容，添加徽章
+                        var badgeHtml = "";
+                        for (var i = 0; i < data.length; i++) {
+                            badgeHtml +=
+                                '<span class="badge rounded-pill bg-info text-white">' +
+                                data[i].Name + ' 上映日期:' + formatDateTime(data[i].ReleaseDate) +
+                                "</span><br> ";
+                        }
+                        return badgeHtml;
+                    },
+                },
+                {
+                    data: "PosterPath", render: function (data, type, row) {
+                        return '<button class="btn btn-primary preview-btn" data-image="' + data + '">封面預覽</button>';
+                        //return '<a href="#" class="link-underline-dark">' + data + '</a>';
+                    }
+                },
+                {
+                    data: "BackdropPath", render: function (data, type, row) {
+                        return '<button class="btn btn-primary preview-btn" data-image="' + data + '">背景預覽</button>';
+                        //return '<a href="#" class="link-underline-dark">' + data + '</a>';
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        // <a href="/ControllerName/Edit/data.Id" class="btn btn-success">Edit</a>
+                        //return '<button type="button" class="btn btn-success" data-id="' + data.Id + '">Edit</button>';
+                        return '<a class="btn btn-success" data-toggle="modal" data-target="#imageModal" href="/MediaInfos/Edit/' + data.Id + '" data-id="' + data.Id + '">編輯</a>';
+                    },
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+
+
+                        return '<button type="button" class="btn deleteBtn btn-danger" data-id="' + data.Id + '">刪除</button>';
+                    },
+                },
+            ],
+        });
+
+        function filterByKey(data, inputValue, filterKey) {
+            // 檢查傳入的參數是否為陣列
+            if (!Array.isArray(inputValue) || inputValue.length === 0) {
+                console.error("無效的篩選條件");
+                return [];
+            }
+
+            // 使用 filter 函数筛选匹配的电影数据
+            var filteredData = data.filter(function (movie) {
+
+                return inputValue.every(function (inputValue) {
+                    return movie[filterKey].includes(inputValue);
+                });
+            });
+
+            tempData = filteredData;
+
+            return filteredData;
+        }
+
+        function mapJsonData() {
+
+            var title = $("#titleId").val();
+
+            var categorySelect = $("#categorySelect").find('option:selected').data('id');
+
+            var selectedOtts = $("#platformSelect").find('option:selected').map(function () {
+                return $(this).data('id');
+            }).get();
+
+            var selectedGenres = $("#typeSelect").find('option:selected').map(function () {
+                return $(this).data('id');
+            }).get();
+
+            var jsonData = {
+                Title: title,
+                CategoryId: categorySelect,
+                Otts: selectedOtts,
+                Genres: selectedGenres,
+                BeginTime: $("#startDatePicker").find("input").val(),
+                EndTine: $("#endDatePicker").find("input").val()
+            };
+
+            return jsonData;
+        }
+
+        // 更新表格數據的函数
+        function updateTable() {
+
+            var selectedOtts = $("#platformSelect").find('option:selected').map(function () {
+                return $(this).data('id');
+            }).get();
+
+            var selectedGenres = $("#typeSelect").find('option:selected').map(function () {
+                return $(this).data('id');
+            }).get();
+
+            var jsonData = mapJsonData();
+
+            $.ajax({
+                url: "/api/Search",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    // 清空Datatable数据
+                    $('#mediaInfosList').DataTable().clear().draw();
+
+                    // 在Datatable中添加新数据
+                    $('#mediaInfosList').DataTable().rows.add(response).draw();
+                },
+                error: function (error) {
+
+                }
+            });
+        }
+
+        $("#btnSearch").click(function () {
+            updateTable();
+        });
+
+        // Delete button click event
+        $("#mediaInfosList tbody").on("click", "button.deleteBtn", function () {
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/api/MediaInfosApi/" + id,
+                type: "DELETE",
+                success: function (response) {
+                    // 更新表格數據
+                    alert("刪除成功");
+                    updateTable();
+                },
+                error: function (error) {
+                    console.log(error);
+                },
+            });
+        });
+
+
+    });
+</script>
+

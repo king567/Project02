@@ -13,8 +13,7 @@ using System.Web.UI.WebControls;
 
 namespace Final.Controllers
 {
-    [Authorize]
-    public class RatingsController : Controller
+	public class RatingsController : Controller
 	{
 		private AppDbContext db = new AppDbContext();
 

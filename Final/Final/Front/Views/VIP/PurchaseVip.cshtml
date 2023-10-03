@@ -1,0 +1,38 @@
+﻿@model Project2.Models.ViewModels.VipPurchaseVm
+
+@{
+    ViewBag.Title = "PurchaseVip";
+}
+
+<!-- 显示方案信息 -->
+<h5 class="table-title bx bx-target-lock" style="font-weight: 700;font-size: 20px;">您的方案</h5>
+<div>
+    <table class="table table-sm col-12 text-center mt-3" style="width: 600px; margin-left:100px;">
+        <thead>
+            <tr>
+                <th scope="col">商品名稱</th>
+                <th scope="col">方案價格</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.Type</td>
+                <td>@Model.Fee</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 显示信用卡信息 -->
+<h2>信用卡</h2>
+
+    <p>您的信用卡</p>
+    <!-- 允许用户输入新的信用卡信息 -->
+    @Html.ActionLink("添加信用卡信息", "AddCreditCard", "VIP")
+    <!-- 你可以使用表单来收集新信用卡信息 -->
+  
+
+<!-- 提交按钮 -->
+<input type="submit" value="购买VIP" />
+<!-- 提交按钮 -->
+
