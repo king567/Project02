@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Dapper;
-
+using System.Data;
 
 namespace Final.Models.Repositories
 {
@@ -83,11 +83,19 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				string query = "UPDATE Categories SET Name = @Name WHERE Id = @Id";
+				// 使用 stored procedure 更新資料
+				string storedProcedureName = "UpdateCategory";
+
+				int effectRow = db.Database.Connection
+					.Execute(storedProcedureName,
+					new { Id = category.Id, Name = category.Name },
+					commandType: CommandType.StoredProcedure);
+
+				//string query = "UPDATE Categories SET Name = @Name WHERE Id = @Id";
 
 				// 用 Dapper 執行 sql command
 
-				int effectRow = db.Database.Connection.Execute(query, new { Id = category.Id, Name = category.Name });
+				//int effectRow = db.Database.Connection.Execute(query, new { Id = category.Id, Name = category.Name });
 
 				//var categoryToUpdate = db.Categories.Find(category.Id);
 

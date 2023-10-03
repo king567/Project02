@@ -16,8 +16,10 @@ namespace Project2.Controllers
     {
         // GET: FavoriteMedia
         [Authorize]
-        public ActionResult Index()
+        public ActionResult Index(int pageIndex = 0)
         {
+            int pageSize = 10;
+
 			// 取得會員編號，並傳入 GetFavoriteMedia 方法
 			var currentUserAccount = User.Identity.Name;
 
@@ -36,13 +38,20 @@ namespace Project2.Controllers
 
             var mediaInfos = new MediaInfoRepository().GetMediaInfosInRange(vms.Select(x => x.MediaInfoId).ToList());
 
-            // 將 mediaInfos 轉換成 MediaInfosRelDTO
+			int total = vms.Count();
 
-            var mediaInfosRelDTO = AutoMapperHelper.MapperObj.Map<List<MediaInfosRelDTO>>(mediaInfos);
+            // 取得分頁資料
+            var pageData = new MediaInfoRepository().GetMediaInfosInRangePage(vms.Select(x => x.MediaInfoId).ToList(), pageIndex, pageSize);
+
+			// 將 mediaInfos 轉換成 MediaInfosRelDTO
+
+			var mediaInfosRelDTO = AutoMapperHelper.MapperObj.Map<List<MediaInfosRelDTO>>(pageData);
 
             // 將 mediaInfosRelDTO 轉換成 MediaInfosRelVm
 
             var mediaInfosRelVm = AutoMapperHelper.MapperObj.Map<List<MediaInfosRelVm>>(mediaInfosRelDTO);
+
+			ViewBag.PaginationInfo = new PaginationInfo(pageSize, pageIndex, total);
 
 			return View(mediaInfosRelVm);
         }

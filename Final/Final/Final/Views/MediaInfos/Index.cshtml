@@ -11,6 +11,17 @@
     td {
         height: 45px;
     }
+
+    .btn {
+        white-space: nowrap;
+    }
+    #mediaInfosList_length > label > select{
+        width:46px;
+    }
+
+    #mediaInfosList_length{
+        margin-top:10px;
+    }
 </style>
 <div class="container text-center mt-5" id="customSearchInput">
     <div class="row align-items-center">
@@ -126,7 +137,7 @@
 </div>
 <div class="table-container">
     <!-- 列出影片表 begin -->
-    <table id="example"
+    <table id="mediaInfosList"
            class="table table-striped table-bordered"
            style="width: 100%; height:80%;">
         <thead>
@@ -137,7 +148,8 @@
                 <th>影片類別</th>
                 <th>影片類型</th>
                 <th>上映平台</th>
-                <th>封面路徑</th>
+                <th>封面</th>
+                <th>背景</th>
                 <th>編輯</th>
                 <th>刪除</th>
             </tr>
@@ -146,6 +158,25 @@
     </table>
 </div>
 <!-- 列出影片表 end -->
+<!-- 模态框 -->
+<!-- 模态框 -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="mediaInfosListModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediaInfosListModalLabel">圖片預覽</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 预览的图片 -->
+                <img id="previewImage" class="img-fluid" alt="預覽圖片">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -155,6 +186,31 @@
     var tempData = [];
 
     $(document).ready(function () {
+
+        // preview-btn click event
+        $("#mediaInfosList tbody").on("click", "button.preview-btn", function () {
+            // 获取按钮上的图片路径
+            var imagePath = $(this).data('image');
+
+            // 将图片路径设置到预览图片的 src 属性中
+            $('#previewImage').attr('src', imagePath);
+
+            // 显示模态框
+            $('#imageModal').modal('show');
+        });
+
+        //$(".preview-btn").click(function () {
+        //    // 获取按钮上的图片路径
+        //    var imagePath = $(this).data('image');
+
+        //    console.log(imagePath);
+
+        //    // 将图片路径设置到预览图片的 src 属性中
+        //    $('#previewImage').attr('src', imagePath);
+
+        //    // 显示模态框
+        //    $('#imageModal').modal('show');
+        //});
 
         //自訂日期時間格式
         function formatDateTime(dateTimeString) {
@@ -187,11 +243,14 @@
         });
 
         // 初始化Datatables
-        var table = $("#example").DataTable({
+        var table = $("#mediaInfosList").DataTable({
             dom: "lrtp",
             responsive: true,
             pagelength: 10,
             pagingType: "full_numbers",
+            language: {
+                "url": "/Content/Json/datatable-lang-zh.json"
+            },
             searching: false,
             ajax: {
                 url: "/api/Search",
@@ -205,7 +264,6 @@
                     d.Otts = $("#typeSelect").val();
                     d.BeginTime = $("#startDatePicker").find("input").val();
                     d.EndTine = $("#endDatePicker").find("input").val();
-                    console.log(d);
                 }
                 //success: function (data) {
                 //    //jsonData = data;
@@ -252,7 +310,14 @@
                 },
                 {
                     data: "PosterPath", render: function (data, type, row) {
-                        return '<a href="#" class="link-underline-dark">' + data + '</a>';
+                        return '<button class="btn btn-primary preview-btn" data-image="' + data + '">封面預覽</button>';
+                        //return '<a href="#" class="link-underline-dark">' + data + '</a>';
+                    }
+                },
+                {
+                    data: "BackdropPath", render: function (data, type, row) {
+                        return '<button class="btn btn-primary preview-btn" data-image="' + data + '">背景預覽</button>';
+                        //return '<a href="#" class="link-underline-dark">' + data + '</a>';
                     }
                 },
                 {
@@ -260,15 +325,15 @@
                     render: function (data, type, row) {
                         // <a href="/ControllerName/Edit/data.Id" class="btn btn-success">Edit</a>
                         //return '<button type="button" class="btn btn-success" data-id="' + data.Id + '">Edit</button>';
-                        return '<a class="btn btn-success" href="/MediaInfos/Edit/' + data.Id +'" data-id="' + data.Id + '">Edit</a>';
+                        return '<a class="btn btn-success" data-toggle="modal" data-target="#imageModal" href="/MediaInfos/Edit/' + data.Id + '" data-id="' + data.Id + '">編輯</a>';
                     },
                 },
                 {
                     data: null,
                     render: function (data, type, row) {
-                           
 
-                        return '<button type="button" class="btn deleteBtn btn-danger" data-id="' + data.Id + '">Delete</button>';
+
+                        return '<button type="button" class="btn deleteBtn btn-danger" data-id="' + data.Id + '">刪除</button>';
                     },
                 },
             ],
@@ -287,9 +352,6 @@
                 return inputValue.every(function (inputValue) {
                     return movie[filterKey].includes(inputValue);
                 });
-                // return inputValue.some(function (inputValue) {
-                //   return movie[filterKey].includes(inputValue);
-                // });
             });
 
             tempData = filteredData;
@@ -336,8 +398,6 @@
 
             var jsonData = mapJsonData();
 
-            console.log(jsonData);
-
             $.ajax({
                 url: "/api/Search",
                 type: "POST",
@@ -346,10 +406,10 @@
                 data: JSON.stringify(jsonData),
                 success: function (response) {
                     // 清空Datatable数据
-                    $('#example').DataTable().clear().draw();
+                    $('#mediaInfosList').DataTable().clear().draw();
 
                     // 在Datatable中添加新数据
-                    $('#example').DataTable().rows.add(response).draw();
+                    $('#mediaInfosList').DataTable().rows.add(response).draw();
                 },
                 error: function (error) {
 
@@ -362,9 +422,8 @@
         });
 
         // Delete button click event
-        $("#example tbody").on("click", "button.deleteBtn", function () {
+        $("#mediaInfosList tbody").on("click", "button.deleteBtn", function () {
             var id = $(this).data("id");
-            console.log(id);
             $.ajax({
                 url: "/api/MediaInfosApi/" + id,
                 type: "DELETE",
@@ -378,6 +437,8 @@
                 },
             });
         });
+
+
     });
 </script>
 

@@ -1,53 +1,85 @@
-﻿@model IEnumerable<Final.Models.ViewModels.MediaInfosRelVm>
+﻿@using Project2.Controllers;
+@model IEnumerable<Final.Models.ViewModels.MediaInfosRelVm>
 
 @{
     ViewBag.Title = "Index";
+    var paginationInfo = ViewBag.PaginationInfo as PaginationInfo;
 }
 
 <style>
-    .vertical-center {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-    }
+/*    td {
+        vertical-align: middle;
+    }*/
 </style>
 
 <h2>會員收藏列表</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            標題
-        </th>
-        <th>
-            上映日期
-        </th>
-        <th></th>
-    </tr>
+<div class="container text-center">
+    <div class="row">
+        <table class="table table-striped table-hover table-bordered align-middle">
+            <tr>
+                <th>
+                    標題
+                </th>
+                <th>
+                    上映日期
+                </th>
+                <th>
+                    取消收藏
+                </th>
+            </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @foreach (var ottitem in item.OttTypes)
+            @foreach (var item in Model)
             {
-                <span class="badge rounded-pill bg-info text-white">上映平台：@ottitem.Name , 上映日期：@ottitem.ReleaseDate</span><br>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @foreach (var ottitem in item.OttTypes)
+                        {
+                            <span class="badge rounded-pill bg-info text-white">上映平台：@ottitem.Name , 上映日期：@ottitem.ReleaseDate</span><br>
+                        }
+                    </td>
+                    <td>
+                        <button class="btn btn-danger delFav" data-id="@item.Id">取消收藏</button>
+                    </td>
+                </tr>
             }
-        </td>
-        <td>
-            <button class="btn btn-danger delFav" data-id="@item.Id">取消收藏</button>
-        </td>
-    </tr>
-}
 
-</table>
+        </table>
+    </div>
+</div>
+
+
+
+<div class="container">
+    <div class="row">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center" id="paginationBS5">
+            </ul>
+        </nav>
+    </div>
+</div>
 
 @section Scripts {
     <script>
+
+        let current = @(paginationInfo.PageIndex);
+        let pageSize = @(paginationInfo.PageSize);
+        let showPages = 5;
+        let total = @(paginationInfo.Total);
+
+        let options = Pagination.getDefaultOptions();
+        options.total = total;
+        options.current = current;
+        options.pageSize = pageSize;
+        options.showPages = showPages;
+        options.containerSelector = "#paginationBS5";
+
+        options.urlTemplate = `/FavoriteMedia?pageIndex={page}`;
+        let pagination = new Pagination().render(options);
+
         $(function () {
        $('.delFav').click(function () {
                 // 獲取按鈕上的 data-id 屬性的值
