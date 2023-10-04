@@ -41,6 +41,33 @@ namespace Project2.Models.Services
 			return ratings;
 		}
 
+		//獲取評分列表
+		public List<RatingDTO> GetRatingsPage(int mediaInfoId, int page, int pageSize)
+		{
+			var ratings = db.Ratings
+				.Where(r => r.MediaInfoId == mediaInfoId)
+				.OrderByDescending(r => r.CreatedTime)
+				.Select(r => new RatingDTO
+				{
+					Id = r.Id,
+					MemberAccount = r.Member.Account,
+					MovieTitle = r.MediaInfo.Title,
+					Comment = r.Comment,
+					Rate = r.Rate ?? 0, // 使用 null 合併運算子設置默認值
+					CreatedTime = r.CreatedTime ?? DateTime.MinValue // 使用 null 合併運算子設置默認日期/時間
+				})
+				.Skip(page * pageSize)
+				.Take(pageSize)
+				.ToList();
+
+			return ratings;
+		}
+
+		// 獲取評分數據總數
+		public int GetRatingsCount(int mediaInfoId)
+		{
+			return db.Ratings.Where(r => r.MediaInfoId == mediaInfoId).Count();
+		}
 
 		//計算平均評分
 		public double CalculateAverageRating(int mediaInfoId)

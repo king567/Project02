@@ -93,10 +93,10 @@ namespace Project2.Controllers
 			var ratingService = new RatingService();
 
 			// 檢查mediaInfoId是否為null或無效，並在必要時設置其值為26
-			if (!mediaInfoId.HasValue || mediaInfoId <= 0)
-			{
-				mediaInfoId = 26;
-			}
+			//if (!mediaInfoId.HasValue || mediaInfoId <= 0)
+			//{
+			//	mediaInfoId = 26;
+			//}
 
 			//獲取評分數據
 			var ratingData = ratingService.GetRatings(mediaInfoId.Value);
@@ -108,6 +108,56 @@ namespace Project2.Controllers
 
 				// 計算評論總數
 				var totalReview = ratingData.Count;
+
+				// 計算各個星級的數量
+				var fiveStarReview = ratingData.Count(r => r.Rate == 5);
+				var fourStarReview = ratingData.Count(r => r.Rate == 4);
+				var threeStarReview = ratingData.Count(r => r.Rate == 3);
+				var twoStarReview = ratingData.Count(r => r.Rate == 2);
+				var oneStarReview = ratingData.Count(r => r.Rate == 1);
+
+				// 包含評分訊息的 JSON 數據
+				var result = new
+				{
+					average_rating = averageRating,
+					total_review = totalReview,
+					five_star_review = fiveStarReview,
+					four_star_review = fourStarReview,
+					three_star_review = threeStarReview,
+					two_star_review = twoStarReview,
+					one_star_review = oneStarReview,
+					rating_data = ratingData //包含用戶提交的評分和評論
+				};
+
+				return Ok(result);
+			}
+			else
+			{
+				return NotFound();
+			}
+		}
+
+		[HttpGet]
+		[Route("api/RatingApi/LoadDataPage")]
+		public IHttpActionResult LoadDataPage(int page, int? mediaInfoId = null)
+		{
+			int pageSize = 10;
+
+			//使用RatingService處理評分相關的邏輯
+			var ratingService = new RatingService();
+
+			int totalReview = 0;
+
+			//獲取評分數據
+			var ratingData = ratingService.GetRatingsPage(mediaInfoId.Value, page, pageSize);
+
+			if (ratingData != null)
+			{
+				// 計算平均評分
+				var averageRating = ratingService.CalculateAverageRating(mediaInfoId.Value);
+
+				// 計算評論總數
+				totalReview = ratingService.GetRatingsCount(mediaInfoId.Value);
 
 				// 計算各個星級的數量
 				var fiveStarReview = ratingData.Count(r => r.Rate == 5);

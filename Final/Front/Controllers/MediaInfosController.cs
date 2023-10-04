@@ -45,7 +45,7 @@ namespace Project2.Controllers
 		}
 
 		// GET: MediaInfos/Details/5
-		public ActionResult Details(int id)
+		public ActionResult Details(int id, int pageIndex = 0)
 		{
 			var dto = new MediaInfoService().GetMediaInfo(id);
 			var vm = dto.Convert2VM();
@@ -62,6 +62,7 @@ namespace Project2.Controllers
 			ViewBag.MediaInfoId = id;
 			ViewBag.Member = "";
 			ViewBag.MemberId = 0;
+			ViewBag.PageIndex = pageIndex;
 
 			// 檢查 Member 是否在黑名單內
 			if (memberInfo != null)
@@ -98,6 +99,12 @@ namespace Project2.Controllers
 				ViewBag.Member = memberInfo.Account;
 				ViewBag.CheckFavoriteMedia = new FavoriteMediaService().CheckFavoriteMedia(new FavoriteMediaDTO { MediaInfoId = id, MemberId = memberInfo.Id });
 			}
+
+			int total = new RatingService().GetRatingsCount(id);
+
+			int pageSize = 10;
+
+			ViewBag.PaginationInfo = new PaginationInfo(pageSize, pageIndex, total);
 
 			return View(vm);
 		}
