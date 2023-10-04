@@ -110,7 +110,7 @@
                         row.append($("<td>").text(item.Fee));
 
                         // 使用 moment.js 格式化日期
-                        var formattedPaymentDate = moment(item.PaymentDate).format("YYYY-MM-DD HH:MM:SS");
+                        var formattedPaymentDate = moment(item.PaymentDate).format("YYYY-MM-DD");
                         var formattedStartDate = moment(item.StartDate).format("YYYY-MM-DD HH:MM:SS");
                         var formattedExpiryDate = moment(item.ExpiryDate).format("YYYY-MM-DD HH:MM:SS");
 

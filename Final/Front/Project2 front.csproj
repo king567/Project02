@@ -349,7 +349,6 @@
     <Content Include="Views\Home\Project.cshtml" />
     <Content Include="Views\Members\ForgetPassword.cshtml" />
     <Content Include="Views\Members\ResetPassword.cshtml" />
-    <Content Include="Views\Shared\_ForgetPasswordPartial.cshtml" />
     <Content Include="Views\Shared\_MediaInfosCard.cshtml" />
     <Content Include="Views\FAQs\Index.cshtml" />
     <Content Include="Views\FavoriteMedia\Index.cshtml" />
