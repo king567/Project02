@@ -87,6 +87,7 @@ namespace Final.Controllers
 
 				// 將黑名單記錄加入資料庫
 				db.Blacklists.Add(blacklist);
+				db.Members.Where(m => m.Id == memberId).FirstOrDefault().BlacklistEnddate = blacklist.NextRestorationTime;
 				db.SaveChanges();
 
 				// 這裡你可以加入其他邏輯，例如發送通知給會員
