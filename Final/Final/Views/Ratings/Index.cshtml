@@ -3,6 +3,18 @@
     ViewBag.Title = "Index";
     //Layout = null;
 }
+<style>
+    #rating_length > label > select {
+        width: 46px;
+    }
+
+    #rating_length {
+        margin-top: 10px;
+    }
+    .btn{
+        white-space:nowrap;
+    }
+</style>
 <body>
     <div class="home-content">
         <span class="text" style="font-size:32px; font-weight:500; margin-left:10px;">評論</span>
@@ -50,8 +62,8 @@
                         <th style="width:40px">評分</th>
                         <th>評論</th>
                         <th>評分時間</th>
-                        <th>刪除</th>
                         <th>詳細</th>
+                        <th>刪除</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -84,6 +96,9 @@
                 var table = $("#rating").DataTable({
                     dom: "lrtp",
                     responsive: true,
+                    language: {
+                        "url": "/Content/Json/datatable-lang-zh.json"
+                    },
                     pagelength: 10,
                     pagingType: "full_numbers",
                     ajax: {
@@ -127,14 +142,14 @@
                         {
                             data: null,
                             render: function (data, type, row) {
-                                return '<button class="btn btn-danger delete-button" data-id="' + data.Id + '" data-toggle="modal" data-target="#deleteModal">Delete</button>';
+                                var detailUrl = '/Ratings/Details/' + row.Id; // 將Id附加到URL
+                                return '<a href="' + detailUrl + '" type="button" class="btn btn-warning">詳情</a>';
                             },
                         },
                         {
                             data: null,
                             render: function (data, type, row) {
-                                var detailUrl = '/Ratings/Details/' + row.Id; // 將Id附加到URL
-                                return '<a href="' + detailUrl + '" type="button" class="btn btn-warning">Detail</a>';
+                                return '<button class="btn btn-danger delete-button" data-id="' + data.Id + '" data-toggle="modal" data-target="#deleteModal">刪除</button>';
                             },
                         },
                     ],

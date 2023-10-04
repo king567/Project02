@@ -1,6 +1,15 @@
 ﻿@{
     ViewBag.Title = "會員";
 }
+<style>
+    #memberTable_length > label > select {
+        width: 46px;
+    }
+
+    #memberTable_length {
+        margin-top: 10px;
+    }
+</style>
 @*Title*@
 <div class="home-content" >
     <span class="text" style="font-size:35px; font-weight:500; margin-left:10px;">會員</span>
@@ -86,6 +95,9 @@
             // DataTable 選項設置
             dom: "lrtp",
             responsive: true,
+            language: {
+                "url": "/Content/Json/datatable-lang-zh.json"
+            },
             pageLength: 10,
             pagingType: "full_numbers",
             ajax: {

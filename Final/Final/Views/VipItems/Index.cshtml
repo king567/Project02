@@ -83,14 +83,19 @@
         function populateTable() {
             // 在这里执行您的 AJAX 请求或使用其他方法获取表格数据
             // 例如，使用 $.ajax() 请求获取数据
+            console.log($("#endDatePicker input").val());
+
+            var startDate = $("#startDatePicker input").val();
+            var endDate = $("#endDatePicker input").val();
+
             $.ajax({
                 url: "/api/VipItemApi/",
                 method: "POST",
                 dataType: "json",
                 data: {
                     MemberAccount: $("#memberAccount").val(),
-                    StartDate: $("#startDatePicker input").val(),
-                    EndDate: $("#endDatePicker input").val()
+                    StartDate: startDate,
+                    EndDate: endDate
                 },
                 success: function (data) {
                     // 清空表格内容
@@ -135,6 +140,7 @@
 
         // 搜索按钮点击事件
         $("#searchButton").click(function () {
+            
             populateTable(); // 搜索后重新填充表格数据
         });
     });

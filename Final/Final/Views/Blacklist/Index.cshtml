@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.NextRestorationTime)
             </td>
             <td>
-                @Html.ActionLink("編輯", "Edit", new { id = item.Id })
+                @Html.ActionLink("編輯", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
             </td>
         </tr>
     }
