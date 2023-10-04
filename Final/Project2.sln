@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB2", "Final\DB2.csproj", "{13D8B896-F86A-4807-A401-0A808885C6F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Back", "Final\Back.csproj", "{13D8B896-F86A-4807-A401-0A808885C6F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project2 front", "Front\Project2 front.csproj", "{C1FB64C1-AE1A-4F09-BD68-E0432CC51288}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Front", "Front\Front.csproj", "{C1FB64C1-AE1A-4F09-BD68-E0432CC51288}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
