@@ -44,6 +44,11 @@ namespace Final.Models.Repositories
                 {
                     vipitem = vipitem.Where(v => v.PaymentDate <= search.EndDate).ToList();
                 }
+                if (search.SelectedPayTypeId != null && search.SelectedPayTypeId > 0)
+                {
+                    // 使用所選的 PayType 的 ID 進行篩選
+                    vipitem = vipitem.Where(v => v.PayTypeId == search.SelectedPayTypeId).ToList();
+                }
 
                 return vipitem.ToList();
             }  

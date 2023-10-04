@@ -40,6 +40,7 @@ namespace Final.App_Start
             //VipItemDto 轉換成 VipItemVm
             CreateMap<VipItemDto, VipItemVm>()
                 .ForMember(dest => dest.MemberAccount, opt => opt.MapFrom(src => src.MemberAccount))
+                .ForMember(dest => dest.PaytypeId, opt => opt.MapFrom(src => src.PayTypeId))
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
                 .ForMember(dest => dest.Fee, opt => opt.MapFrom(src => src.Fee));
 

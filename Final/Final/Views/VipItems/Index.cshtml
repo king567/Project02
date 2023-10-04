@@ -15,6 +15,14 @@
         <div class="col-3 text-center mt-4">
             <input type="text" class="form-control" id="memberAccount" placeholder="搜尋帳號" style="height:40px; width:200px;">
         </div>
+        <div class="col-2">
+            <label for="PayType">方案：</label>
+            <select id="SelectedPayType" class="selectpicker ml-2">
+                <option value="0">請選擇</option>
+                <option value="1">月費</option>
+                <option value="2">季費</option>
+            </select>
+        </div>
         <div class="col-lg-4">
             <div class="row">
                 <div class="col-md-6 mb-3">
@@ -87,6 +95,7 @@
 
             var startDate = $("#startDatePicker input").val();
             var endDate = $("#endDatePicker input").val();
+            var selectedPayType = $("#SelectedPayType").val(); // 獲取所選的 PayType
 
             $.ajax({
                 url: "/api/VipItemApi/",
@@ -95,7 +104,8 @@
                 data: {
                     MemberAccount: $("#memberAccount").val(),
                     StartDate: startDate,
-                    EndDate: endDate
+                    EndDate: endDate,
+                    SelectedPayTypeId: selectedPayType
                 },
                 success: function (data) {
                     // 清空表格内容
