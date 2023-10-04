@@ -342,7 +342,6 @@
     <Content Include="Views\MediaInfos\RecentRemovalWithCategory.cshtml" />
     <Content Include="Views\MediaInfos\CategoryWithOttType.cshtml" />
     <Content Include="Views\MediaInfos\Search.cshtml" />
-    <Content Include="Views\Rating\Index.cshtml" />
     <Content Include="Views\Shared\_RatingPartial.cshtml" />
     <Content Include="Views\Members\EditPassword.cshtml" />
     <Content Include="Views\Home\Project.cshtml" />
