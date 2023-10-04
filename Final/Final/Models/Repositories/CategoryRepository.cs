@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using Dapper;
 using System.Data;
+using System.Xml.Linq;
 
 namespace Final.Models.Repositories
 {
@@ -19,38 +20,27 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				string query = "SELECT * FROM Categories";
-				// 用 Dapper 執行 sql command
-				var categoriesDapper = db.Database.Connection.Query<Category>(query).ToList();
+				var categoriesDapper = db.Database.Connection.Query<Category>("GetAllCategories", commandType: CommandType.StoredProcedure).ToList();
 
 				return categoriesDapper;
-
-				//var categories = db.Categories.ToList();
-
-				//return categories;
 			}
 		}
 
-		// 搜尋 Category Name
+		/// <summary>
+		/// 搜尋 Category Name
+		/// </summary>
+		/// <param name="criteria"></param>
+		/// <returns></returns>
 		public List<Category> Search(CriteriaCategoriesDTO criteria)
 		{
 			using (var db = new AppDbContext())
 			{
-				var categories = db.Categories
-					.AsNoTracking();
+				var parameters = new DynamicParameters();
+				parameters.Add("@Name", criteria?.Name, DbType.String, ParameterDirection.Input);
 
-				if (criteria == null)
-				{
-					return categories.ToList();
-				}
+				var categoriesDapper = db.Database.Connection.Query<Category>("SearchCategories", parameters, commandType: CommandType.StoredProcedure).ToList();
 
-				if (!string.IsNullOrEmpty(criteria.Name))
-				{
-					var filteredGenres = categories.Where(x => x.Name.Contains(criteria.Name)).ToList();
-					return filteredGenres;
-				}
-
-				return categories.ToList();
+				return categoriesDapper;
 			}
 		}
 
@@ -63,15 +53,14 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				string query = "SELECT * FROM Categories WHERE Id = @Id";
-				// 用 Dapper 執行 sql command
-				var categoryDapper = db.Database.Connection.QueryFirstOrDefault<Category>(query, new { Id = id });
+				var parameters = new DynamicParameters();
+				parameters.Add("@Id", id, DbType.Int32, ParameterDirection.Input);
+				var categoryDapper = db.Database.Connection.QueryFirstOrDefault<Category>(
+				"GetCategoryById",
+				parameters,
+				commandType: CommandType.StoredProcedure);
 
-				return categoryDapper;
-
-				//var category = db.Categories.Find(id);
-
-				//return category;
+				         return categoryDapper;
 			}
 		}
 
@@ -83,25 +72,12 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
-				// 使用 stored procedure 更新資料
 				string storedProcedureName = "UpdateCategory";
 
 				int effectRow = db.Database.Connection
 					.Execute(storedProcedureName,
 					new { Id = category.Id, Name = category.Name },
 					commandType: CommandType.StoredProcedure);
-
-				//string query = "UPDATE Categories SET Name = @Name WHERE Id = @Id";
-
-				// 用 Dapper 執行 sql command
-
-				//int effectRow = db.Database.Connection.Execute(query, new { Id = category.Id, Name = category.Name });
-
-				//var categoryToUpdate = db.Categories.Find(category.Id);
-
-				//categoryToUpdate.Name = category.Name;
-
-				//db.SaveChanges();
 			}
 		}
 
@@ -113,11 +89,12 @@ namespace Final.Models.Repositories
 		{
 			using (var db = new AppDbContext())
 			{
+				var parameters = new DynamicParameters();
+				parameters.Add("@Name", category.Name, DbType.String, ParameterDirection.Input);
+
 				try
 				{
-					db.Categories.Add(category);
-
-					db.SaveChanges();
+					db.Database.Connection.Execute("CreateCategory", parameters, commandType: CommandType.StoredProcedure);
 
 					return true;
 				}
@@ -130,24 +107,24 @@ namespace Final.Models.Repositories
 		/// <summary>
 		/// 刪除指定Category資料
 		/// </summary>
-		/// <param name="id"></param>
+		/// <param name="id">Category Id</param>
 		public bool DeleteCategory(int id)
 		{
 			using (var db = new AppDbContext())
 			{
-				var categoryToDelete = db.Categories.Find(id);
+				var parameters = new DynamicParameters();
+				parameters.Add("@Id", id, DbType.Int32, ParameterDirection.Input);
 
-				if (categoryToDelete == null)
+				try
 				{
-					return false;
-				}
-				else
-				{
-					db.Categories.Remove(categoryToDelete);
-
-					db.SaveChanges();
+					// 調用存儲過程來刪除類別記錄
+					db.Database.Connection.Execute("DeleteCategory", parameters, commandType: CommandType.StoredProcedure);
 
 					return true;
+				}
+				catch
+				{
+					return false;
 				}
 			}
 		}
