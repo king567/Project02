@@ -10,6 +10,18 @@ namespace Final.Models.Services
 {
 	public class OttsService
 	{
+		// 取得所有 OttType
+		public List<OttTypesDTO> GetAllOttTypes()
+		{
+			var entities = new OttRepository().GetAllOttTypes();
+
+			// Entity 轉成 DTO autoMapper
+
+			List<OttTypesDTO> dtos = AutoMapperHelper.MapperObj.Map<List<OttTypesDTO>>(entities);
+
+			return dtos;
+		}
+
 		// 搜尋 ottType Name
 		public List<OttTypesDTO> SearchOtts(CriteriaOttsDTO criteria)
 		{

@@ -9,6 +9,18 @@ namespace Final.Models.Services
 {
 	public class CategoryService
 	{
+		// 取得所有 Category
+		public List<CategoryDTO> GetAllCategories()
+		{
+			var entities = new CategoryRepository().GetAllCategories();
+
+			// Entity 轉成 DTO autoMapper
+
+			List<CategoryDTO> dtos = AutoMapperHelper.MapperObj.Map<List<CategoryDTO>>(entities);
+
+			return dtos;
+		}
+
 		// 搜尋 Category Name
 		public List<CategoryDTO> SearchCategories(CriteriaCategoriesDTO criteria)
 		{

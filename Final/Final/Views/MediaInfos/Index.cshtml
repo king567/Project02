@@ -270,9 +270,6 @@
                     d.BeginTime = $("#startDatePicker").find("input").val();
                     d.EndTine = $("#endDatePicker").find("input").val();
                 }
-                //success: function (data) {
-                //    //jsonData = data;
-                //},
             },
             columns: [
                 { data: "Id" },
@@ -330,7 +327,7 @@
                     render: function (data, type, row) {
                         // <a href="/ControllerName/Edit/data.Id" class="btn btn-success">Edit</a>
                         //return '<button type="button" class="btn btn-success" data-id="' + data.Id + '">Edit</button>';
-                        return '<a class="btn btn-success" data-toggle="modal" data-target="#imageModal" href="/MediaInfos/Edit/' + data.Id + '" data-id="' + data.Id + '">編輯</a>';
+                        return '<a class="btn btn-success" href="/MediaInfos/Edit/' + data.Id + '" data-id="' + data.Id + '">編輯</a>';
                     },
                 },
                 {
