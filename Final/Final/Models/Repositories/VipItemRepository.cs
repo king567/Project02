@@ -30,27 +30,7 @@ namespace Final.Models.Repositories
                               .Include(v => v.PayType)
                               .ToList();
 
-
-                if ( !string.IsNullOrEmpty(search.MemberAccount))
-                {
-                    vipitem= vipitem.Where(v => v.Member.Account.Contains(search.MemberAccount)).ToList();
-                }
-                if ( search.StartDate != null)
-                {
-                    vipitem =vipitem.Where(v => v.PaymentDate>= search.StartDate).ToList();
-                }
-
-                if ( search.EndDate != null)
-                {
-                    vipitem = vipitem.Where(v => v.PaymentDate <= search.EndDate).ToList();
-                }
-                if (search.SelectedPayTypeId != null && search.SelectedPayTypeId > 0)
-                {
-                    // 使用所選的 PayType 的 ID 進行篩選
-                    vipitem = vipitem.Where(v => v.PayTypeId == search.SelectedPayTypeId).ToList();
-                }
-
-                return vipitem.ToList();
+                return vipitem;
             }  
         }
     }

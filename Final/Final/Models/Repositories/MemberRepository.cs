@@ -9,6 +9,13 @@ namespace Final.Models.Repositories
 {
     public class MemberRepository
     {
+        public int CalculateTotalMembers()
+        {
+            using (var db = new AppDbContext())
+            {
+                return db.Members.Count();
+            }
+        }
         public void Delete(int id)
         {
             string sql = "DELETE FROM Members WHERE Id=@Id";

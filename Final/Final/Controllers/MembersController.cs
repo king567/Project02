@@ -1,4 +1,5 @@
 ﻿using Final.Models.EFModels;
+using Final.Models.Services;
 using Final.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,9 @@ namespace Final.Controllers
         
         public ActionResult Index()
         {
-            var totalMembers = CalculateTotalMembers(); // 計算會員總數的函數
-            ViewBag.TotalMembers = totalMembers; // 將總數傳遞到前端
+            var totalMembers = new MemberService().TotalMembers(); 
+            ViewBag.TotalMembers = totalMembers; 
+
             var db=new AppDbContext();
             var members = db.Members.ToList();
             return View(members);
@@ -56,13 +58,7 @@ namespace Final.Controllers
 
             return View(data);
         }
-        public int CalculateTotalMembers()
-        {
-            using (var db = new AppDbContext())
-            {
-                return db.Members.Count();
-            }
-        }
+       
     }
 
    

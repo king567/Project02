@@ -223,6 +223,7 @@
     <Compile Include="Models\Repositories\CategoryRepository.cs" />
     <Compile Include="Models\Services\CategoryService.cs" />
     <Compile Include="Models\Services\GenreService.cs" />
+    <Compile Include="Models\Services\MemberService.cs" />
     <Compile Include="Models\Services\OttsService.cs" />
     <Compile Include="Models\ViewModels\BlacklistVm.cs" />
     <Compile Include="Models\ViewModels\CategoryVm.cs" />
