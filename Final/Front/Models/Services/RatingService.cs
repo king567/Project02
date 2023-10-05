@@ -89,7 +89,7 @@ namespace Project2.Models.Services
 		// 取得平均評分 最高的前五部影片
 		public List<MediaInfosRelDTO> GetTopFive()
 		{
-			var topFive = new RateingRepository().GetTopFive();
+			var topFive = new RatingRepository().GetTopFive();
 
 			// 取得 MediaInfo 的資料
 			var Entities = new MediaInfoRepository().GetMediaInfosInRange(topFive.Select(x => x.MediaInfoId).ToList());

@@ -21,22 +21,6 @@ namespace Project2.Controllers
 			{
 				var connection = db.Database.Connection;
 
-				//檢查Member是否還在Blacklist中且黑名單時間還未結束
-
-				//var isBlacklisted = "SELECT * FROM Blacklists WHERE UserId = @UserId AND NextRestorationTime > @CurrentTime";
-				//var blacklist = connection.Query<Blacklist>(isBlacklisted, new
-				//{
-				//	MemberId = ratingData.MemberId,
-				//	CurrentTime = DateTime.Now
-				//}).FirstOrDefault();
-
-				//if (blacklist != null)
-				//{
-				//	// 成員在黑名單名單中，不允許提交評分
-				//	return BadRequest("您在黑名單名單中，不能提交評分。");
-				//}
-
-
 				// 執行 SQL 查詢，插入新的評分數據
 				var insertQuery = "INSERT INTO Ratings (MediaInfoId, MemberId, Comment, Rate, CreatedTime) " +
 								  "VALUES (@MediaInfoId, @MemberId, @Comment, @Rate, @CreatedTime)";
@@ -51,39 +35,9 @@ namespace Project2.Controllers
 					CreatedTime = DateTime.Now // 或者您可以使用評分數據中提供的時間
 				});
 
-
-				// 使用 Dapper 查詢評分數據，包括影片標題
-				var selectQuery = "SELECT r.Id, m.Account AS MemberAccount, mi.Title AS MovieTitle, r.Comment, r.Rate, r.CreatedTime " +
-								  "FROM Ratings r " +
-								  "INNER JOIN Members m ON r.MemberId = m.Id " +
-								  "INNER JOIN MediaInfos mi ON r.MediaInfoId = mi.Id";
-				var ratings = connection.Query<RatingVm>(selectQuery).ToList();
-
-				//返回JSON數據
 				return Ok("已成功提交評論");
 			}
 		}
-
-		//[HttpGet]
-		//[Route("api/RatingApi/GetRatings")]
-		//public IHttpActionResult GetRatings()
-		//{
-		//	//獲取評分數據
-		//	using (var db = new AppDbContext())
-		//	{
-		//		var connection = db.Database.Connection;
-
-		//		// 使用 Dapper 查詢評分數據，包括影片標題
-		//		var selectQuery = "SELECT r.Id, m.Account AS MemberAccount, mi.Title AS MovieTitle, r.Comment, r.Rate, r.CreatedTime " +
-		//						  "FROM Ratings r " +
-		//						  "INNER JOIN Members m ON r.MemberId = m.Id " +
-		//						  "INNER JOIN MediaInfos mi ON r.MediaInfoId = mi.Id";
-		//		var ratings = connection.Query<RatingVm>(selectQuery).ToList();
-
-		//		//返回JSON數據
-		//		return Ok(ratings);
-		//	}
-		//}
 
 		[HttpGet]
 		[Route("api/RatingApi/LoadData")]
@@ -91,12 +45,6 @@ namespace Project2.Controllers
 		{
 			//使用RatingService處理評分相關的邏輯
 			var ratingService = new RatingService();
-
-			// 檢查mediaInfoId是否為null或無效，並在必要時設置其值為26
-			//if (!mediaInfoId.HasValue || mediaInfoId <= 0)
-			//{
-			//	mediaInfoId = 26;
-			//}
 
 			//獲取評分數據
 			var ratingData = ratingService.GetRatings(mediaInfoId.Value);

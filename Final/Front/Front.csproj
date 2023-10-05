@@ -164,7 +164,6 @@
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\PayTypeController.cs" />
     <Compile Include="Controllers\RatingApiController.cs" />
-    <Compile Include="Controllers\RatingController.cs" />
     <Compile Include="Controllers\VIPController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -213,7 +212,7 @@
     <Compile Include="Models\Repositories\FavoriteMediaRepository.cs" />
     <Compile Include="Models\Repositories\MemberRepository.cs" />
     <Compile Include="Models\Repositories\NewsRepository.cs" />
-    <Compile Include="Models\Repositories\RateingRepository.cs" />
+    <Compile Include="Models\Repositories\RatingRepository.cs" />
     <Compile Include="Models\Services\CategoryService.cs" />
     <Compile Include="Models\Services\FavoriteMediaService.cs" />
     <Compile Include="Models\Services\GenreService.cs" />
