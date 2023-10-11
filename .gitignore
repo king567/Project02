@@ -1,0 +1,10 @@
+
+*.vsidx
+*.cache
+Final/Front/obj/Debug/Project2.pdb
+Final/Front/obj/Debug/Project2.dll
+Final/Front/bin/Project2.pdb
+Final/Front/bin/Project2.dll
+Final/.vs/Project2/v17/.suo
+Final/.vs/Project2/v17/fileList.bin
+Final/.vs/Project2/config/applicationhost.config
